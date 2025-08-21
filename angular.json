@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Angular18Project": {
+    "gest-riesgos-front": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -59,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "Angular18Project:build:production"
+              "buildTarget": "gest-riesgos-front:build:production"
             },
             "development": {
-              "buildTarget": "Angular18Project:build:development"
+              "buildTarget": "gest-riesgos-front:build:development"
             }
           },
           "defaultConfiguration": "development"
