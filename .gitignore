@@ -41,5 +41,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Environment variables .env
+# Environment variables
 .env
+src/environments/environment.ts
