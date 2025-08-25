@@ -46,13 +46,17 @@ export class SupabaseService {
       password: user.password,
     })
     if (error) {
-      console.log('Registration error:', error)
+      if (error.message === 'User already registered') {
+        return {
+          success: false,
+          message: 'Correo ya se encuentra registrado',
+        }
+      }
       return {
         success: false,
-        message: 'Error al registrar usuario',
+        message: 'Ocurrió un error al registrar el usuario, intente de nuevo',
       }
     }
-    console.log('Registration successful:', data)
     return {
       success: true,
     }
