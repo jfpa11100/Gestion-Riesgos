@@ -14,9 +14,18 @@ export class AuthService {
   _session: AuthSession | null = null;
 
   async getSession() {
-    const { data } = await this.supabase.auth.getSession();
-    this._session = data.session;
+    if (!this._session){
+      const { data } = await this.supabase.auth.getSession();
+      this._session = data.session;
+    }
     return this._session;
+  }
+
+  async getUserId(): Promise<string> {
+    if (!this._session) {
+      await this.getSession();
+    }
+    return this._session!.user.id;
   }
 
   async login(user: UserLogin): Promise<LoginResponse> {

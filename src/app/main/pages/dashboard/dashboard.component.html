@@ -1,0 +1,15 @@
+<main class="w-lg">
+  <h1>Proyectos</h1>
+
+</main>
+@for (pj of projects; track $index) {
+
+  <div>
+    <h3>{{ pj.name }}</h3>
+    <p>{{ pj.created_at }}</p>
+  </div>
+
+}@empty{
+  <p>Aun no tienes proyectos</p>
+  <h6>Crea tu primer proyecto</h6>
+}
