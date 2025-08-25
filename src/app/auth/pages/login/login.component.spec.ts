@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { LoginComponent } from './login.component';
-import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
+import { AuthService } from '../../services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -23,7 +22,7 @@ describe('LoginComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LoginComponent, ReactiveFormsModule],
       providers: [
-        { provide: SupabaseService, useValue: authServiceMock },
+        { provide: AuthService, useValue: authServiceMock },
         { provide: Router, useValue: routerMock },
       ],
     }).compileComponents();

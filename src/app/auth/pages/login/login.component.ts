@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UserLogin } from '../../interfaces/user.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: SupabaseService
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: [''],
