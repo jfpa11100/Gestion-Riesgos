@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { UserRegister } from '../../interfaces/user.interface';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -22,7 +22,7 @@ export class SignupComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: SupabaseService
+    private authService: AuthService
   ) {
     this.registerForm = this.fb.group({
       name: [

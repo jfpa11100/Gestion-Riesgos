@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/pages/login/login.component';
 import { SignupComponent } from './auth/pages/signup/signup.component';
-import { HomeComponent } from './main/home/home.component';
+import { DashboardComponent } from './main/pages/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -19,7 +19,11 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    redirectTo: '/dashboard'
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent
   },
   {
     path: '**',

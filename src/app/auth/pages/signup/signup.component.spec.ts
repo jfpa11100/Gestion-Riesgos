@@ -2,23 +2,22 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { SignupComponent } from './signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
-import { of } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
-  let mockAuthService: jasmine.SpyObj<SupabaseService>;
+  let mockAuthService: jasmine.SpyObj<AuthService>;
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj('SupabaseService', ['register']);
+    mockAuthService = jasmine.createSpyObj('AuthService', ['register']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       imports: [SignupComponent, ReactiveFormsModule],
       providers: [
-        { provide: SupabaseService, useValue: mockAuthService },
+        { provide: AuthService, useValue: mockAuthService },
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
