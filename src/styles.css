@@ -1,2 +1,48 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+@theme {
+  --color-main-black: #0D1B2A;
+  --color-secondary-blue: #273469;
+  --color-white-letter: #D1D2DB;
+  --color-gray-background: #E0E1DD;
+  --color-complementary-purple: #5A189A;
+}
+
+html {
+  background-color: var(--color-gray-background);
+  font-family: serif;
+  color: var(--color-main-black);
+}
+
+@layer components {
+  .btn-primary {
+    background-color: var(--color-secondary-blue);
+    color: var(--color-white-letter);
+    border-radius: 10px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-complementary-purple);
+        transition: transform 0.3s ease;
+        transform: scale(1.03);
+      }
+    }
+  }
+
+  .btn-secondary {
+    background-color: var(--color-white-letter);
+    color: var(--color-complementary-purple);
+    border-color: var(--color-complementary-purple);
+    border-radius: 10px;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    &:hover {
+      @media (hover: hover) {
+        transition: transform 0.3s ease;
+        transform: scale(1.05);
+      }
+    }
+  }
+}
