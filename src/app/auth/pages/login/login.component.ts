@@ -23,6 +23,7 @@ export class LoginComponent {
     private router: Router,
     private authService: AuthService
   ) {
+    authService.signOut()
     this.loginForm = this.fb.group({
       email: [''],
       password: [''],

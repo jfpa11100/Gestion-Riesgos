@@ -24,6 +24,7 @@ export class SignupComponent {
     private router: Router,
     private authService: AuthService
   ) {
+    authService.signOut()
     this.registerForm = this.fb.group({
       name: [
         '',
