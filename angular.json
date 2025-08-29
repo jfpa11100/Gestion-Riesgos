@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "gest-riesgos-front": {
+    "GestRiesgosFront": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gest-riesgos-front:build:production"
+              "buildTarget": "GestRiesgosFront:build:production"
             },
             "development": {
-              "buildTarget": "gest-riesgos-front:build:development"
+              "buildTarget": "GestRiesgosFront:build:development"
             }
           },
           "defaultConfiguration": "development"
