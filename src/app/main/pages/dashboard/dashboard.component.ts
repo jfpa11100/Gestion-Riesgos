@@ -3,11 +3,10 @@ import { Project } from '../../interfaces/project.interface';
 import { ProjectService } from '../../services/project.service';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [],
-  templateUrl: './dashboard.component.html',
-  styles: ''
+    selector: 'app-dashboard',
+    imports: [],
+    templateUrl: './dashboard.component.html',
+    styles: ''
 })
 export class DashboardComponent implements OnInit {
   loading = true;
