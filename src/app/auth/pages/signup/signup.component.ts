@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './signup.component.html',
-  styles: '',
+    selector: 'app-signup',
+    imports: [ReactiveFormsModule],
+    templateUrl: './signup.component.html',
+    styles: ''
 })
 export class SignupComponent {
   user: UserRegister = {

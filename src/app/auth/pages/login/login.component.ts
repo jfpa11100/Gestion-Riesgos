@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [ReactiveFormsModule],
-  templateUrl: './login.component.html',
-  styles: '',
+    selector: 'app-login',
+    imports: [ReactiveFormsModule],
+    templateUrl: './login.component.html',
+    styles: ''
 })
 export class LoginComponent {
   user: UserLogin = {

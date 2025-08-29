@@ -6,7 +6,7 @@
   --color-secondary-blue: #273469;
   --color-white-letter: #D1D2DB;
   --color-gray-background: #E0E1DD;
-  --color-complementary-purple: #5A189A;
+  --color-complementary-purple: #965AD3;
 }
 
 html {
@@ -19,7 +19,7 @@ html {
   .btn-primary {
     background-color: var(--color-secondary-blue);
     color: var(--color-white-letter);
-    border-radius: 10px;
+    border-radius: 7px;
     font-weight: 500;
     box-shadow: var(--shadow-md);
     &:hover {
@@ -32,12 +32,14 @@ html {
   }
 
   .btn-secondary {
+    font-size: small;
     background-color: var(--color-white-letter);
     color: var(--color-complementary-purple);
-    border-color: var(--color-complementary-purple);
-    border-radius: 10px;
+    border: 2px solid var(--color-complementary-purple);
+    border-radius: 7px;
     font-weight: 500;
     box-shadow: var(--shadow-md);
+    cursor: pointer;
     &:hover {
       @media (hover: hover) {
         transition: transform 0.3s ease;
