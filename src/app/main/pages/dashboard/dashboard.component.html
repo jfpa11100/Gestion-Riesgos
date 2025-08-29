@@ -1,15 +1,51 @@
-<main class="w-lg">
-  <h1>Proyectos</h1>
+<main class="flex flex-col justify-center p-20">
+  <h1 class="text-3xl text-center md:text-left md:ml-20 md:text-5xl  font-medium ">Proyectos</h1>
+
+  @if (loading){
+    <div class="mx-auto">
+      Loading ...
+    </div>
+  }@else{
+    <section class="flex flex-wrap">
+      @for (pj of projects; track $index) {
+      <div>
+        <h3>{{ pj.name }}</h3>
+        <p>{{ pj.created_at }}</p>
+      </div>
+
+      }@empty{
+      <div
+        class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue"
+      >
+        <div
+          class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px] bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]"
+        >
+          <h2 class="text-2xl md:text-4xl font-medium mt-2">
+            Gestiona riesgos con
+            <span
+              class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent"
+              >Gamificación: </span
+            >
+            <br>
+            ¡Crea Valor Real en Tus Sprints!
+          </h2>
+          <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
+            Descubre cómo la gamificación hace que identificar y mitigar riesgos sea divertido
+            y efectivo. Personaliza tu estrategia en metodologías ágiles y ve resultados inmediatos.
+          </p>
+          <footer class="inline-flex justify-center mt-4 items-center gap-3">
+            <button
+              type="button"
+              class="btn-secondary py-0.5 px-1.5"
+            >
+              Crea tu primer proyecto
+            </button>
+            <img class="size-6" src="graph.svg" alt="">
+          </footer>
+        </div>
+      </div>
+      }
+    </section>
+  }
 
 </main>
-@for (pj of projects; track $index) {
-
-  <div>
-    <h3>{{ pj.name }}</h3>
-    <p>{{ pj.created_at }}</p>
-  </div>
-
-}@empty{
-  <p>Aun no tienes proyectos</p>
-  <h6>Crea tu primer proyecto</h6>
-}
