@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { ProjectService } from './project.service';
-import { SupabaseService } from '../../shared/services/supabase/supabase.service';
-import { AuthService } from '../../auth/services/auth.service';
-import { Project } from '../interfaces/project.interface';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { Project } from '../../interfaces/project.interface';
 
 describe('ProjectService', () => {
   let service: ProjectService;

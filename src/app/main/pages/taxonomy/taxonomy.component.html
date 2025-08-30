@@ -1,0 +1,48 @@
+<main>
+  <section class="flex flex-col justify-center items-center text-main-black my-4">
+    <h1 class="text-3xl md:text-4xl font-medium mt-2">Taxonomía de Riesgos</h1>
+    <p class="text-sm text-white-letter mt-2 max-w-sm">
+      Selecciona los riesgos de tu proyecto
+    </p>
+
+    <div class="max-w-xl w-full mt-[1lh] flex flex-col gap-5 justify-center items-start text-left">
+      <h1 class="text-lg font-medium">Product Engineering</h1>
+      @for (risk of productEngineeringRisks; track $index) {
+        <app-risks-list
+          class="w-full flex justify-center"
+          [category]="risk"
+          [index]="$index"
+          [openCategoryIndex]="0"
+          (riskChange)="onRiskChange($event)"
+          (saveRisks)="onSaveRisks()"
+        ></app-risks-list>
+      }
+
+      <h1 class="text-lg font-medium mt-[1lh]">Program Constraints</h1>
+      @for (risk of programConstraintRisks; track $index) {
+        <app-risks-list
+          class="w-full flex justify-center"
+          [category]="risk"
+          [index]="$index"
+          (riskChange)="onRiskChange($event)"
+          (saveRisks)="onSaveRisks()"
+        ></app-risks-list>
+      }
+
+      <h1 class="text-lg font-medium mt-[1lh]">Development Environment</h1>
+      @for (risk of developmentEnvironmentRisks; track $index) {
+        <app-risks-list
+          class="w-full flex justify-center"
+          [category]="risk"
+          [index]="$index"
+          (riskChange)="onRiskChange($event)"
+          (saveRisks)="onSaveRisks()"
+        ></app-risks-list>
+      }
+      <footer class="flex w-full justify-end">
+        <button class="btn-secondary w-30 h-8 mr-[1lh]" (click)="goBackToProject()">Volver</button>
+        <button class="btn-primary w-30 h-8 mr-7" (click)="onSaveRisks()">Guardar</button>
+      </footer>
+    </div>
+  </section>
+</main>

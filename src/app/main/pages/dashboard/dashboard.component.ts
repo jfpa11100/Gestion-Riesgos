@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Project } from '../../interfaces/project.interface';
-import { ProjectService } from '../../services/project.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CreateProjectModalComponent } from '../../components/create-project-modal/create-project-modal.component';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { ProjectService } from '../../services/projects/project.service';
 
 @Component({
     selector: 'app-dashboard',
