@@ -1,0 +1,18 @@
+<img
+  class="size-9 md:size-11 bg-white-letter rounded-full hover:cursor-pointer hover:scale-110 transition-transform duration-200"
+  src="user.png"
+  alt="user"
+  (click)="toggleProfileDropdown()"
+/>
+@if (isProfileDropdownOpen) {
+<div
+  class="absolute right-8 md:w-40 lg:right-30 lg:w-48 top-20 mt-2 xl:right-8 bg-white rounded-md shadow-lg py-1 z-10"
+>
+  <button
+    (click)="logout()"
+    class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+  >
+    Cerrar sesión
+  </button>
+</div>
+}

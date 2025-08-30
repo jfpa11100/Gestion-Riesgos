@@ -17,6 +17,7 @@ html {
 
 @layer components {
   .btn-primary {
+    cursor: pointer;
     background-color: var(--color-secondary-blue);
     color: var(--color-white-letter);
     border-radius: 7px;
@@ -46,5 +47,17 @@ html {
         transform: scale(1.05);
       }
     }
+  }
+
+  .div-input{
+    @apply border rounded bg-transparent border-gray-400 p-2 flex flex-wrap gap-2 min-h-2.5;
+  }
+
+  .input-style{
+    @apply bg-transparent text-gray-500 placeholder-gray-400 outline-none text-sm w-full h-full;
+  }
+
+  .error-message {
+    @apply text-red-600 text-sm mt-2 text-center;
   }
 }

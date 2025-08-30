@@ -18,14 +18,20 @@ export class AuthService {
       const { data } = await this.supabase.auth.getSession();
       this._session = data.session;
     }
+    console.log(this._session);
     return this._session;
   }
 
   async getUserId(): Promise<string> {
+    const value = JSON.parse(localStorage.getItem('sb-fqnxvpkbthybqnscctqq-auth-token')!);
+    return value.user.id;
+  }
+
+  async getUserEmail(): Promise<string> {
     if (!this._session) {
       await this.getSession();
     }
-    return this._session!.user.id;
+    return this._session!.user.email!;
   }
 
   async login(user: UserLogin): Promise<LoginResponse> {
@@ -39,7 +45,6 @@ export class AuthService {
         message: 'Credenciales incorrectas',
       };
     }
-    console.log('Login successful:', data);
     return {
       success: true,
     };
@@ -89,7 +94,24 @@ export class AuthService {
     }
   }
 
+  async userExists(email: string): Promise<boolean> {
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .single();
+    if (error) {
+      return false;
+    }
+    return !!data;
+  }
+
   async signOut() {
-    return await this.supabase.auth.signOut();
+    const { error } = await this.supabase.auth.signOut()
+    if (error) {
+      console.log("Sign out error:", error)
+      return
+    }
+    this._session = null;
   }
 }

@@ -1,16 +1,46 @@
-<main class="flex flex-col justify-center p-20">
-  <h1 class="text-3xl text-center md:text-left md:ml-20 md:text-5xl  font-medium ">Proyectos</h1>
+<main class="flex flex-col justify-center p-5 sm:p-10">
+  <header class="flex justify-between py-1.5 lg:mx-22 xl:mx-35 border-b-1 border-main-black">
+      <h1 class="font-medium text-2xl text-center md:text-4xl lg:text-left">Proyectos</h1>
+      <app-user-profile />
+  </header>
 
   @if (loading){
-    <div class="mx-auto">
-      Loading ...
+    <div class="mt-2 w-full ">
+      <ngx-skeleton-loader  count="6" appearance="square" animation="progress"
+        [theme]="{
+          width: 'calc(3/12 * 100%)',
+          height: 'calc(var(--spacing) * 40)',
+          background: 'lightgray',
+          'margin-inline': 'calc(var(--spacing) * 4)',
+          'margin-top': 'calc(var(--spacing) * 9)',
+          'border-radius': '1rem',
+        }" />
     </div>
   }@else{
-    <section class="flex flex-wrap">
+    <section class="mt-2 w-full flex flex-wrap justify-center">
+      <nav class="absolute w-full px-22">
+        <button class="btn-primary text-sm absolute right-5 md:right-10 lg:right-30
+        xl:right-45 flex py-1 px-7" (click)="onCreateProject()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+          Nuevo proyecto
+        </button>
+      </nav>
       @for (pj of projects; track $index) {
-      <div>
-        <h3>{{ pj.name }}</h3>
-        <p>{{ pj.created_at }}</p>
+      <div class="group flex flex-col justify-between mx-4 mt-9 w-3/12 h-40 px-6 md:px-9 py-3
+      border-1 rounded-[5px] cursor-pointer min-w-40 border-b-secondary-blue bg-gradient-to-r
+      from-gray-background to-white-letter transition-transform duration-200
+      hover:scale-102  hover:to-complementary-purple/40" (click)="goToProject(pj.id!)">
+        <header class="flex justify-between items-center">
+          <h1 class="text-xl">{{ pj.name }}</h1>
+           <nav class="transform transition-transform duration-200 group-hover:translate-x-2 ">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+             viewBox="0 0 24 24" fill="none" stroke="#965ad3" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+               <path d="m9 18 6-6-6-6"></path>
+             </svg>
+           </nav>
+        </header>
+        <p class="text-right text-xs">Creado: {{ pj.created_at | date }}</p>
       </div>
 
       }@empty{
@@ -20,27 +50,27 @@
         <div
           class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px] bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]"
         >
-          <h2 class="text-2xl md:text-4xl font-medium mt-2">
+          <h2 class="text-2xl md:text-3xl font-medium mt-2">
             Gestiona riesgos con
             <span
               class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent"
               >Gamificación: </span
             >
             <br>
-            ¡Crea Valor Real en Tus Sprints!
+            ¡Crea Valor Real en Tus <span class="text-secondary-blue">Sprints!</span>
           </h2>
           <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
             Descubre cómo la gamificación hace que identificar y mitigar riesgos sea divertido
             y efectivo. Personaliza tu estrategia en metodologías ágiles y ve resultados inmediatos.
           </p>
           <footer class="inline-flex justify-center mt-4 items-center gap-3">
-            <button
+            <button (click)="onCreateProject()"
               type="button"
-              class="btn-secondary py-0.5 px-1.5"
+              class="btn-secondary py-1.5 px-4"
             >
               Crea tu primer proyecto
             </button>
-            <img class="size-6" src="graph.svg" alt="">
+            <img class="size-6" src="graph.png" alt="">
           </footer>
         </div>
       </div>
@@ -48,4 +78,10 @@
     </section>
   }
 
+  @if (showCreateProjectModal) {
+    <app-create-project-modal
+      (close)="showCreateProjectModal = false"
+      (newProject)="newProject($event)"
+     />
+  }
 </main>
