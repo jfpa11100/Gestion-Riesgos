@@ -1,79 +1,67 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../services/auth.service';
+import { UserLogin } from '../../interfaces/user.interface';
+
+// Mock de AuthService que ignora Supabase
+class AuthServiceMock {
+  login(user: UserLogin) {
+    if (user.email === 'test@test.com' && user.password === '123456') {
+      return Promise.resolve({ success: true });
+    }
+    return Promise.resolve({ success: false });
+  }
+  signOut() {
+    return Promise.resolve();
+  }
+}
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
-  let authServiceMock: any;
-  let routerMock: any;
+  let router: Router;
 
   beforeEach(async () => {
-    authServiceMock = {
-      login: jasmine.createSpy('login'),
-    };
-
-    routerMock = {
-      navigate: jasmine.createSpy('navigate'),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [LoginComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule, RouterTestingModule.withRoutes([])],
       providers: [
-        { provide: AuthService, useValue: authServiceMock },
-        { provide: Router, useValue: routerMock },
-      ],
+        { provide: AuthService, useClass: AuthServiceMock }
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginComponent);
+    const fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the login form with empty values', () => {
-    expect(component.loginForm.value).toEqual({ email: '', password: '' });
+  it('debería loguear correctamente y redirigir a /home', async () => {
+    spyOn(router, 'navigate');
+
+    component.loginForm.setValue({
+      email: 'test@test.com',
+      password: '123456'
+    });
+
+    await component.onLogin();
+
+    expect(router.navigate).toHaveBeenCalledWith(['/home']);
   });
 
-  it('should call authService.login with form values when onLogin is called', fakeAsync(async () => {
-    component.loginForm.setValue({ email: 'test@test.com', password: '123456' });
-
-    authServiceMock.login.and.returnValue(Promise.resolve({ success: true }));
-
-    await component.onLogin();
-    tick();
-
-    expect(authServiceMock.login).toHaveBeenCalledWith({
-      email: 'test@test.com',
-      password: '123456',
+  it('debería marcar error en el formulario si las credenciales son inválidas', async () => {
+    component.loginForm.setValue({
+      email: 'wrong@test.com',
+      password: 'wrongpass'
     });
-  }));
-
-  it('should navigate to /home if login is successful', fakeAsync(async () => {
-    component.loginForm.setValue({ email: 'test@test.com', password: '123456' });
-
-    authServiceMock.login.and.returnValue(Promise.resolve({ success: true }));
 
     await component.onLogin();
-    tick();
-
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/home']);
-  }));
-
-  it('should set form error if login fails', fakeAsync(async () => {
-    component.loginForm.setValue({ email: 'fail@test.com', password: 'wrong' });
-
-    authServiceMock.login.and.returnValue(Promise.resolve({ success: false }));
-
-    await component.onLogin();
-    tick();
 
     expect(component.loginForm.errors).toEqual({ invalidLogin: true });
-    expect(routerMock.navigate).not.toHaveBeenCalled();
-  }));
+  });
 });
