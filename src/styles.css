@@ -4,14 +4,14 @@
 @theme {
   --color-main-black: #0D1B2A;
   --color-secondary-blue: #273469;
-  --color-white-letter: #D1D2DB;
-  --color-gray-background: #E0E1DD;
+  --color-white-letter: #7d7e83;
+  --color-gray-background: #dbdcdb ;
   --color-complementary-purple: #965AD3;
 }
 
 html {
   background-color: var(--color-gray-background);
-  font-family: serif;
+  font-family: "Gill Sans", sans-serif;
   color: var(--color-main-black);
 }
 
@@ -19,8 +19,8 @@ html {
   .btn-primary {
     cursor: pointer;
     background-color: var(--color-secondary-blue);
-    color: var(--color-white-letter);
-    border-radius: 7px;
+    color: var(--color-gray-background);
+    border-radius: 4px;
     font-weight: 500;
     box-shadow: var(--shadow-md);
     &:hover {
@@ -33,8 +33,7 @@ html {
   }
 
   .btn-secondary {
-    font-size: small;
-    background-color: var(--color-white-letter);
+    background-color: none;
     color: var(--color-complementary-purple);
     border: 2px solid var(--color-complementary-purple);
     border-radius: 7px;

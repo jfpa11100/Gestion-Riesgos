@@ -3,6 +3,7 @@ import { LoginComponent } from './auth/pages/login/login.component';
 import { SignupComponent } from './auth/pages/signup/signup.component';
 import { DashboardComponent } from './main/pages/dashboard/dashboard.component';
 import { ProjectComponent } from './main/pages/project/project.component';
+import { TaxonomyComponent } from './main/pages/taxonomy/taxonomy.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,10 @@ export const routes: Routes = [
   {
     path: 'project/:id',
     component: ProjectComponent
+  },
+  {
+    path: 'project/:id/taxonomy',
+    component: TaxonomyComponent
   },
   {
     path: '**',
