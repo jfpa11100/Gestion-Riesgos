@@ -18,7 +18,6 @@ export class AuthService {
       const { data } = await this.supabase.auth.getSession();
       this._session = data.session;
     }
-    console.log(this._session);
     return this._session;
   }
 
@@ -89,7 +88,6 @@ export class AuthService {
       .from('users')
       .insert({id:user.id, name: user.name, email: user.email })
     if (error) {
-      console.log(error)
       throw error;
     }
   }
