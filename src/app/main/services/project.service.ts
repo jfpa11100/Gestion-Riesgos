@@ -13,16 +13,18 @@ export class ProjectService {
 
   async getProjects(): Promise<Project[]> {
     const userId = await this.authService.getUserId();
+    const email = await this.authService.getUserEmail();
 
     const response = await this.supabase
       .from('projects')
       .select('*')
-      .eq('owner', userId)
+      .or(`owner.eq.${userId},members.cs.{${email}}`)
       .order('created_at', { ascending: false });
 
     if (response.error) {
       return [];
     }
+    console.log('Projects fetched:', response.data);
     return response.data as Project[];
   }
 
@@ -37,7 +39,5 @@ export class ProjectService {
       console.error('Error creating project:', error);
       throw "Sucedió un error al crear el proyecto, intenta nuevamente";
     }
-    console.log('Proyecto creado:', data);
-    // return data as Project;
   }
 }

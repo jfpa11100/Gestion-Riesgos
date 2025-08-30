@@ -20,10 +20,9 @@ export class CreateProjectModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() newProject = new EventEmitter<Project>();
   projectForm!: FormGroup;
-  teamMembers: User[] = [
-    // { email: 'pipefree11100@gmail.com' },
-    // { email: 'john.doe@example.com' },
-    // { email: 'jane.smith@example.com' }
+  teamMembers: string[] = [
+    // 'john.doe@example.com',
+    // 'jane.smith@example.com'
   ];
 
   constructor(private fb: FormBuilder) {
@@ -63,7 +62,7 @@ export class CreateProjectModalComponent {
       return;
     }
     // Validar si ya está en la lista
-    if (this.teamMembers.some((member) => member.email === email)) {
+    if (this.teamMembers.some((member) => member === email)) {
       this.projectForm.setErrors({ emailExists: true });
       return;
     }
@@ -73,8 +72,7 @@ export class CreateProjectModalComponent {
       return;
     }
 
-    const newMember: User = { email };
-    this.teamMembers.push(newMember);
+    this.teamMembers.push(email);
     this.projectForm.get('email')?.reset();
   }
 

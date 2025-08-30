@@ -28,9 +28,9 @@
 
       <label class="block mb-1 text-xm mt-[1lh]">Añade los miembros del equipo:</label>
       <div class="div-input">
-        @for (member of teamMembers ; track $index) {
+        @for (memberEmail of teamMembers ; track $index) {
           <span class="bg-blue-100 text-blue-900 px-3 py-1 rounded inline-flex items-center gap-2">
-            {{ member.email }}
+            {{ memberEmail }}
             <button type="button" (click)="removeMember($index)" aria-label="Eliminar email"
             class="ml-1 cursor-pointer hover:text-red-600">&times;</button>
           </span>
@@ -38,7 +38,6 @@
         <input
             type="text"
             formControlName="email"
-            placeholder=""
             (keydown.enter)="addMember()"
             (keydown.comma)="addMember()"
             (keydown.space)="addMember()"
@@ -48,10 +47,10 @@
       </div>
 
       <div class="flex mt-1.5 -space-x-4 rtl:space-x-reverse">
-        @for (member of teamMembers; track $index) {
+        @for (memberEmail of teamMembers; track $index) {
           <div class="inline-flex items-center justify-center w-10 h-10 border-2 border-complementary-purple
-          bg-gray-background rounded-full overflow-hidden" title="{{ member.email }}">
-            <span class="font-medium text-main-black">{{ member.email[0].toUpperCase() }}</span>
+          bg-gray-background rounded-full overflow-hidden" title="{{ memberEmail }}">
+            <span class="font-medium text-main-black">{{ memberEmail[0].toUpperCase() }}</span>
           </div>
         }
       </div>
