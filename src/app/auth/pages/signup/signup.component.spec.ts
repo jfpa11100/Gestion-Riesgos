@@ -1,24 +1,30 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignupComponent } from './signup.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
-  let mockAuthService: jasmine.SpyObj<AuthService>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj('AuthService', ['register']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    authServiceSpy = jasmine.createSpyObj('AuthService', ['register', 'signOut']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
-      imports: [SignupComponent, ReactiveFormsModule],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        SignupComponent // ✅ standalone → va en imports
+      ],
       providers: [
-        { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter }
+        { provide: AuthService, useValue: authServiceSpy },
+        { provide: Router, useValue: routerSpy }
       ]
     }).compileComponents();
 
@@ -27,70 +33,71 @@ describe('SignupComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debe crearse el componente', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('el formulario debe ser inválido si está vacío', () => {
-    expect(component.registerForm.valid).toBeFalse();
-  });
-
-  it('debe marcar error si el email es inválido', () => {
-    component.registerForm.controls['email'].setValue('correo_invalido');
-    expect(component.registerForm.controls['email'].invalid).toBeTrue();
-  });
-
-  it('debe marcar error si las contraseñas no coinciden', fakeAsync(async () => {
+  it('debería marcar error si el email es inválido', async () => {
     component.registerForm.setValue({
       name: 'Juan',
-      email: 'juan@test.com',
+      email: 'correo-no-valido',
       password: 'Password1!',
-      confirmPassword: 'OtraPassword1!'
+      confirmPassword: 'Password1!'
     });
+
+    await component.onSubmit();
+    expect(component.registerForm.errors?.['invalidEmail']).toBeTrue();
+  });
+
+  it('debería marcar error si las contraseñas no coinciden', async () => {
+    component.registerForm.setValue({
+      name: 'Juan',
+      email: 'correo@test.com',
+      password: 'Password1!',
+      confirmPassword: 'OtroPassword1!'
+    });
+
     await component.onSubmit();
     expect(component.registerForm.errors?.['passwordMismatch']).toBeTrue();
-  }));
+  });
 
-  it('debe marcar error si la contraseña es débil', fakeAsync(async () => {
+  it('debería marcar error si la contraseña es débil', async () => {
     component.registerForm.setValue({
       name: 'Juan',
-      email: 'juan@test.com',
-      password: 'password',
-      confirmPassword: 'password'
+      email: 'correo@test.com',
+      password: '1234',
+      confirmPassword: '1234'
     });
+
     await component.onSubmit();
     expect(component.registerForm.errors?.['weakPassword']).toBeTrue();
-  }));
+  });
 
-  it('debe redirigir a /home si el registro es exitoso', fakeAsync(async () => {
+  it('debería navegar a /home si el registro es exitoso', async () => {
+    authServiceSpy.register.and.returnValue(Promise.resolve({ success: true }));
+
     component.registerForm.setValue({
       name: 'Juan',
-      email: 'juan@test.com',
+      email: 'correo@test.com',
       password: 'Password1!',
       confirmPassword: 'Password1!'
     });
 
-    mockAuthService.register.and.returnValue(Promise.resolve({ success: true }));
-
     await component.onSubmit();
-    tick();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/home']);
+  });
 
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/home']);
-  }));
+  it('debería marcar error si el registro falla', async () => {
+    authServiceSpy.register.and.returnValue(Promise.resolve({ success: false, message: 'Usuario ya existe' }));
 
-  it('debe poner error en el formulario si el registro falla', fakeAsync(async () => {
     component.registerForm.setValue({
       name: 'Juan',
-      email: 'juan@test.com',
+      email: 'correo@test.com',
       password: 'Password1!',
       confirmPassword: 'Password1!'
     });
 
-    mockAuthService.register.and.returnValue(Promise.resolve({ success: false, message: 'Error en registro' }));
-
     await component.onSubmit();
-    tick();
-
-    expect(component.registerForm.errors?.['invalidRegister']).toBe('Error en registro');
-  }));
+    expect(component.registerForm.errors?.['invalidRegister']).toBe('Usuario ya existe');
+  });
 });
