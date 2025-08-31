@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, WritableSignal, signal } from '@angular/core';
 import { Project } from '../../interfaces/project.interface';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CreateProjectModalComponent } from '../../components/create-project-modal/create-project-modal.component';
@@ -27,11 +27,11 @@ export class DashboardComponent implements OnInit {
   userId!:string
   loading = true;
   showCreateProjectModal = false;
-  projects: Project[] = [];
+  projects: WritableSignal<Project[]> = signal<Project[]>([]);
 
   async ngOnInit() {
     this.userId = await this.userService.getUserId();
-    this.projects = await this.projectService.getProjects(this.userId);
+    this.projects.set(await this.projectService.getProjects(this.userId))
     this.loading = false;
   }
 
@@ -41,7 +41,8 @@ export class DashboardComponent implements OnInit {
 
   newProject(project: Project) {
     this.projectService.createProject(project).then(() => {
-      this.projects.push(project);
+      this.projects.update(projects => [...projects, project]);
+      this.showCreateProjectModal = false 
     }).catch((e) => {
 
     })

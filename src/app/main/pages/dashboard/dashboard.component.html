@@ -34,7 +34,7 @@
           Nuevo proyecto
         </button>
       </nav>
-      @for (pj of projects; track $index) {
+      @for (pj of projects(); track $index) {
       <div class="group flex flex-col justify-between mx-4 mt-9 w-3/12 h-35 px-3 lg:px-5 md:px-9 py-3
       border-1 rounded-[5px] cursor-pointer min-w-40 border-b-secondary-blue bg-gradient-to-r
       from-gray-background to-white-letter/30 transition-transform duration-200
