@@ -4,10 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProjectService } from '../../services/projects/project.service';
+import { RiskProjectDetailComponent } from "../../components/risk-project-detail/risk-project-detail.component";
 
 @Component({
   selector: 'app-project',
-  imports: [UserProfileComponent, NgxSkeletonLoaderModule],
+  imports: [UserProfileComponent, NgxSkeletonLoaderModule, RiskProjectDetailComponent],
   templateUrl: './project.component.html',
   styles: `
     ngx-skeleton-loader{
@@ -34,7 +35,6 @@ export class ProjectComponent implements OnInit {
       return;
     }
     this.project = await this.projectsService.getProjectInfo(projectId);
-    console.log('Project info:', this.project);
     this.loading = false;
   }
 

@@ -1,7 +1,16 @@
 <main class="flex flex-col justify-center p-5 sm:p-10">
   <header class="flex justify-between py-1.5 lg:mx-22 xl:mx-35 border-b-1 border-main-black">
-      <h1 class="font-medium text-2xl text-center md:text-4xl lg:text-left">Riesgos</h1>
-      <app-user-profile />
+    @if (loading) {
+      <ngx-skeleton-loader appearance="line" animation="progress" [theme]="{
+        width: '350px',
+        height: '40px',
+        background: 'lightgray',
+        'border-radius': '10px',
+      }" />
+    }@else {
+      <h1 class="font-medium text-2xl text-center md:text-4xl lg:text-left">{{ project()!.name }}</h1>
+    }
+    <app-user-profile />
   </header>
 
   @if (loading){
@@ -9,30 +18,19 @@
       <ngx-skeleton-loader  count="15" appearance="square" animation="progress"
         [theme]="{
           width: '100%',
-          height: '30px',
+          height: 'calc(var(--spacing) * 10)',
           background: 'lightgray',
           'border-radius': '5px',
         }" />
     </section>
   }@else{
-    <section class="mt-4 w-full flex justify-center">
-      @for (risk of project()!.project_risks; track $index) {
-      <div class="flex justify-between mx-4 mt-9 w-full h-20 px-5 md:px-9 py-3
-      border-1 rounded-[5px] cursor-pointer min-w-40 border-b-secondary-blue bg-gradient-to-r
-      from-gray-background to-white-letter transition-transform duration-200
-      hover:scale-102  hover:to-complementary-purple/40">
-        <header class="flex justify-between items-center">
-          <h1 class="text-xl">{{ risk.risk }}</h1>
-           <nav class="transform transition-transform duration-200 group-hover:translate-x-2 ">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-             viewBox="0 0 24 24" fill="none" stroke="#965ad3" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
-               <path d="m9 18 6-6-6-6"></path>
-             </svg>
-           </nav>
-        </header>
-      </div>
-
+    <section class="mt-4 w-full flex flex-col justify-center gap-y-2">
+      @for (risk of project()!.risks; track $index) {
+        <app-risk-project-detail
+        class="flex justify-center"
+          [projectId]="project()!.id!"
+          [risk]="risk"
+        />
       }@empty{
       <div
         class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue"
