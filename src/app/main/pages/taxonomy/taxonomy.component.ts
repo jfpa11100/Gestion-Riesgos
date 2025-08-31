@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
-import { RisksListComponent } from '../../components/risks-list/risks-list.component';
+import { RisksListComponent } from '../../components/risks-taxonomy-list/risks-list.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-taxonomy',
   imports: [RisksListComponent],
   templateUrl: './taxonomy.component.html',
-  styles: ``
+  styles: ``,
 })
-export class TaxonomyComponent implements OnInit{
+export class TaxonomyComponent implements OnInit {
   risksService = inject(RisksService);
   router = inject(Router);
   route = inject(ActivatedRoute);
@@ -21,9 +21,15 @@ export class TaxonomyComponent implements OnInit{
 
   async ngOnInit() {
     const risks = await this.risksService.getRisksByCategory();
-    this.productEngineeringRisks = risks.filter(r => r.topic == "Product Engineering");
-    this.programConstraintRisks = risks.filter(r => r.topic == "Program Constraints");
-    this.developmentEnvironmentRisks = risks.filter(r => r.topic == "Development Environment");
+    this.productEngineeringRisks = risks.filter(
+      (r) => r.topic == 'Product Engineering'
+    );
+    this.programConstraintRisks = risks.filter(
+      (r) => r.topic == 'Program Constraints'
+    );
+    this.developmentEnvironmentRisks = risks.filter(
+      (r) => r.topic == 'Development Environment'
+    );
   }
 
   onRiskChange(event: { risk: Risk; selected: boolean }) {
@@ -38,8 +44,17 @@ export class TaxonomyComponent implements OnInit{
   }
 
   onSaveRisks() {
-    // Handle saving the selected risks
-    console.log('Saving Selected Risks:', this.addedRisks);
+    this.risksService
+      .addRisksToProject(
+        this.route.snapshot.paramMap.get('id')!,
+        this.addedRisks.map((r) => r.id)
+      )
+      .then(() => {
+        this.goBackToProject()
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   goBackToProject() {

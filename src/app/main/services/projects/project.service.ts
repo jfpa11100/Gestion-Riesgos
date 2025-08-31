@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { Project } from '../../interfaces/project.interface';
+import { Risk } from '../../interfaces/risk.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,7 @@ export class ProjectService {
 
   currentProject = signal<Project | null>(null);
 
-  async getProjects(): Promise<Project[]> {
-    const userId = await this.authService.getUserId();
+  async getProjects(userId:string): Promise<Project[]> {
     const email = await this.authService.getUserEmail();
 
     const response = await this.supabase
@@ -36,7 +36,9 @@ export class ProjectService {
         `
           *,
           project_risks (
-            risk:risks (*)
+            impact,
+            probability,
+            risks (*)
           )
         `
       )
@@ -46,11 +48,13 @@ export class ProjectService {
     if (error) {
       throw 'Sucedió un error al obtener la información del proyecto, intenta nuevamente';
     }
-    this.currentProject.set({
-      ownerId: data.owner,
-      ...data as Project,
-    });
-
+    let risks:Risk[] = []
+    for (const r of data.project_risks) {
+      const risk:Risk = { probability: r.probability, impact:r.impact, ...r.risks }
+      risks.push(risk)
+    }
+    const project:Project = {risks:risks, ...data}
+    this.currentProject.set(project);
     return this.currentProject;
   }
 

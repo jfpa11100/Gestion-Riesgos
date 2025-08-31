@@ -1,11 +1,10 @@
-import { User } from "../../auth/interfaces/user.interface";
-import { ProjectRisk } from "./project-risk.interface";
+import { Risk } from "./risk.interface";
 
 export interface Project {
   id?: string;
-  ownerId?: string;
-  name: string;
   members?: string[];
-  project_risks?: ProjectRisk[];
+  name: string;
+  owner?: string;
+  risks:Risk[];
   created_at: Date;
 }

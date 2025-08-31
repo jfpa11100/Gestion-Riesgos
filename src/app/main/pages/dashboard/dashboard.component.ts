@@ -6,12 +6,13 @@ import { UserProfileComponent } from '../../components/user-profile/user-profile
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/projects/project.service';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
-    selector: 'app-dashboard',
-    imports: [NgxSkeletonLoaderModule, CreateProjectModalComponent, UserProfileComponent, DatePipe],
-    templateUrl: './dashboard.component.html',
-    styles: `
+  selector: 'app-dashboard',
+  imports: [NgxSkeletonLoaderModule, CreateProjectModalComponent, UserProfileComponent, DatePipe],
+  templateUrl: './dashboard.component.html',
+  styles: `
       ngx-skeleton-loader {
         display: flex;
         flex-wrap: wrap;
@@ -22,26 +23,32 @@ import { ProjectService } from '../../services/projects/project.service';
 export class DashboardComponent implements OnInit {
   router = inject(Router);
   projectService = inject(ProjectService);
+  userService = inject(AuthService);
+  userId!:string
   loading = true;
   showCreateProjectModal = false;
-
   projects: Project[] = [];
 
-  async ngOnInit(): Promise<void> {
-    this.projects = await this.projectService.getProjects();
+  async ngOnInit() {
+    this.userId = await this.userService.getUserId();
+    this.projects = await this.projectService.getProjects(this.userId);
     this.loading = false;
   }
 
-  onCreateProject(){
+  onCreateProject() {
     this.showCreateProjectModal = true;
   }
 
   newProject(project: Project) {
-    this.projectService.createProject(project).then(() =>{
+    this.projectService.createProject(project).then(() => {
       this.projects.push(project);
     }).catch((e) => {
 
     })
+  }
+
+  isOwner(project: Project): boolean {
+    return project.owner === this.userId;
   }
 
   goToProject(id: string) {

@@ -7,5 +7,7 @@ export interface CategoryRisk{
 export interface Risk {
   id: string;
   risk: string;
-  description: string;
+  category:string;
+  probability?: number;
+  impact?: number;
 }

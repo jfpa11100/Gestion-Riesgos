@@ -30,8 +30,8 @@
       (openCategoryIndex === index ? 'opacity-100 max-h-[300px] translate-y-0 pt-4' : '')">
 
       @for (risk of category.risks; track $index) {
-      <label class="flex text-sm gap-3 items-center cursor-pointer">
-        <input (change)="onRiskChange($event, risk)" type="checkbox" class="hidden peer">
+      <label class="flex text-sm gap-3 items-center {{ isOwner ? 'cursor-pointer' : 'opacity-70' }}">
+        <input [disabled]="!isOwner" (change)="onRiskChange($event, risk)" type="checkbox" class="hidden peer">
         <span class="w-5 h-5 border border-complementary-purple rounded relative flex items-center justify-center
         peer-checked:after:content-[''] peer-checked:after:w-2.5 peer-checked:after:h-2.5 peer-checked:after:bg-complementary-purple
          peer-checked:border-secondary-blue peer-checked:after:rounded peer-checked:after:absolute"></span>

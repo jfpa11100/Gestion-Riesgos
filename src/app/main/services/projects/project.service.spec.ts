@@ -1,95 +1,151 @@
 import { TestBed } from '@angular/core/testing';
 import { ProjectService } from './project.service';
-import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Project } from '../../interfaces/project.interface';
 
 describe('ProjectService', () => {
   let service: ProjectService;
   let supabaseMock: jasmine.SpyObj<SupabaseClient>;
-  let supabaseServiceSpy: jasmine.SpyObj<SupabaseService>;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let authServiceMock: jasmine.SpyObj<AuthService>;
 
   beforeEach(() => {
-    // mock de los métodos de SupabaseClient que usamos
+    // Creamos mocks
     supabaseMock = jasmine.createSpyObj('SupabaseClient', ['from']);
+    authServiceMock = jasmine.createSpyObj('AuthService', [
+      'getUserId',
+      'getUserEmail',
+    ]);
 
-    supabaseServiceSpy = jasmine.createSpyObj('SupabaseService', [], { supabase: supabaseMock });
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['getUserId']);
-    authServiceSpy.getUserId.and.returnValue(Promise.resolve('mock-user-id'));
+    // Mock para .from() → devuelve objeto con los métodos encadenados
+    const fromMock = jasmine.createSpyObj('from', [
+      'select',
+      'or',
+      'order',
+      'eq',
+      'single',
+      'insert',
+    ]);
+    supabaseMock.from.and.returnValue(fromMock);
 
     TestBed.configureTestingModule({
       providers: [
         ProjectService,
-        { provide: SupabaseService, useValue: supabaseServiceSpy },
-        { provide: AuthService, useValue: authServiceSpy }
-      ]
+        { provide: SupabaseService, useValue: { supabase: supabaseMock } },
+        { provide: AuthService, useValue: authServiceMock },
+      ],
     });
 
     service = TestBed.inject(ProjectService);
   });
 
-  it('debería obtener proyectos (getProjects)', async () => {
-    const mockProjects: Project[] = [
-      { name: 'Test Project', members: [], created_at: new Date(),  }
-    ];
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 
-    // simulamos la respuesta de supabase
-    (supabaseMock.from as any).and.returnValue({
-      select: () => ({
+  describe('getProjects', () => {
+    it('should return projects when query is successful', async () => {
+      const fakeProjects: Project[] = [
+        { id: 'p1', name: 'Proyecto 1', owner: 'u1', risks: [], created_at:new Date() },
+      ];
+
+      authServiceMock.getUserEmail.and.resolveTo('test@test.com');
+
+      (supabaseMock.from('projects').select as jasmine.Spy).and.returnValue({
+        or: () => ({
+          order: () => Promise.resolve({ data: fakeProjects, error: null }),
+        }),
+      });
+
+      const result = await service.getProjects('u1');
+      expect(result).toEqual(fakeProjects);
+      expect(authServiceMock.getUserEmail).toHaveBeenCalled();
+    });
+
+    it('should return empty array when query fails', async () => {
+      authServiceMock.getUserEmail.and.resolveTo('test@test.com');
+
+      (supabaseMock.from('projects').select as jasmine.Spy).and.returnValue({
+        or: () => ({
+          order: () => Promise.resolve({ data: null, error: 'Error' }),
+        }),
+      });
+
+      const result = await service.getProjects('u1');
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getProjectInfo', () => {
+    it('should return project with risks when query is successful', async () => {
+      const fakeResponse = {
+        data: {
+          id: 'p1',
+          name: 'Proyecto 1',
+          project_risks: [
+            {
+              probability: 0.5,
+              impact: 2,
+              risks: { id: 'r1', name: 'Riesgo 1' },
+            },
+          ],
+        },
+        error: null,
+      };
+
+      (supabaseMock.from('projects').select as jasmine.Spy).and.returnValue({
         eq: () => ({
-          order: () => Promise.resolve({ data: mockProjects, error: null })
-        })
-      })
+          single: () => Promise.resolve(fakeResponse),
+        }),
+      });
+
+      const result = await service.getProjectInfo('p1');
+      expect(result()).toBeTruthy(); // signal con el proyecto
+      expect(result()?.risks.length).toBe(1);
+      expect(service.currentProject()).toEqual(
+        jasmine.objectContaining({ id: 'p1' })
+      );
     });
 
-    const projects = await service.getProjects();
-
-    expect(projects).toEqual(mockProjects);
-    expect(authServiceSpy.getUserId).toHaveBeenCalled();
-  });
-
-  it('debería retornar [] si hay error en getProjects', async () => {
-    (supabaseMock.from as any).and.returnValue({
-      select: () => ({
+    it('should throw error when query fails', async () => {
+      (supabaseMock.from('projects').select as jasmine.Spy).and.returnValue({
         eq: () => ({
-          order: () => Promise.resolve({ data: null, error: 'Error' })
-        })
-      })
+          single: () =>
+            Promise.resolve({ data: null, error: 'Some error' }),
+        }),
+      });
+
+      await expectAsync(service.getProjectInfo('p1')).toBeRejectedWith(
+        'Sucedió un error al obtener la información del proyecto, intenta nuevamente'
+      );
     });
-
-    const projects = await service.getProjects();
-
-    expect(projects).toEqual([]);
   });
 
-  it('debería crear un proyecto (createProject)', async () => {
-    const newProject: Project = { name: 'Nuevo Proyecto', members: [], created_at: new Date() };
+  describe('createProject', () => {
+    it('should insert project successfully', async () => {
+      authServiceMock.getUserId.and.resolveTo('u1');
 
-    (supabaseMock.from as any).and.returnValue({
-      insert: () => ({
-        single: () => Promise.resolve({ data: { id: '123', ...newProject }, error: null })
-      })
+      (supabaseMock.from('projects').insert as jasmine.Spy).and.returnValue({
+        single: () => Promise.resolve({ data: { id: 'p1' }, error: null }),
+      });
+
+      await service.createProject({ id: 'p1', name: 'Nuevo', risks: [],created_at: new Date()});
+      expect(supabaseMock.from).toHaveBeenCalledWith('projects');
     });
 
-    await service.createProject(newProject);
+    it('should throw error when insert fails', async () => {
+      authServiceMock.getUserId.and.resolveTo('u1');
 
-    expect(authServiceSpy.getUserId).toHaveBeenCalled();
-    expect(supabaseMock.from).toHaveBeenCalledWith('projects');
-  });
+      (supabaseMock.from('projects').insert as jasmine.Spy).and.returnValue({
+        single: () => Promise.resolve({ data: null, error: 'Insert error' }),
+      });
 
-  it('debería lanzar error si createProject falla', async () => {
-    const newProject: Project = { name: 'Proyecto Fallido', members: [], created_at: new Date() };
-
-    (supabaseMock.from as any).and.returnValue({
-      insert: () => ({
-        single: () => Promise.resolve({ data: null, error: 'Error al insertar' })
-      })
+      await expectAsync(
+        service.createProject({ id: 'p1', name: 'Nuevo', risks: [], created_at: new Date() })
+      ).toBeRejectedWith(
+        'Sucedió un error al crear el proyecto, intenta nuevamente'
+      );
     });
-
-    await expectAsync(service.createProject(newProject)).toBeRejectedWith(
-      'Sucedió un error al crear el proyecto, intenta nuevamente'
-    );
   });
 });

@@ -2,6 +2,8 @@
     "cSpell.language": "en,es-ES",
     "cSpell.words": [
         "gamificación",
-        "Gamificación"
-    ]
+        "Gamificación",
+        "supabase"
+    ],
+    "cSpell.enabled": true
 }

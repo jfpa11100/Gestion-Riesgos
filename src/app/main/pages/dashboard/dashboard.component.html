@@ -9,7 +9,7 @@
       <ngx-skeleton-loader  count="6" appearance="square" animation="progress"
         [theme]="{
           width: 'calc(3/12 * 100%)',
-          height: 'calc(var(--spacing) * 40)',
+          height: 'calc(var(--spacing) * 35)',
           background: 'lightgray',
           'margin-inline': 'calc(var(--spacing) * 4)',
           'margin-top': 'calc(var(--spacing) * 9)',
@@ -26,9 +26,9 @@
         </button>
       </nav>
       @for (pj of projects; track $index) {
-      <div class="group flex flex-col justify-between mx-4 mt-9 w-3/12 h-40 px-6 md:px-9 py-3
+      <div class="group flex flex-col justify-between mx-4 mt-9 w-3/12 h-35 px-3 lg:px-5 md:px-9 py-3
       border-1 rounded-[5px] cursor-pointer min-w-40 border-b-secondary-blue bg-gradient-to-r
-      from-gray-background to-white-letter transition-transform duration-200
+      from-gray-background to-white-letter/30 transition-transform duration-200
       hover:scale-102  hover:to-complementary-purple/40" (click)="goToProject(pj.id!)">
         <header class="flex justify-between items-center">
           <h1 class="text-xl">{{ pj.name }}</h1>
@@ -40,7 +40,10 @@
              </svg>
            </nav>
         </header>
-        <p class="text-right text-xs">Creado: {{ pj.created_at | date }}</p>
+        <footer class="flex flex-col xl:flex-row justify-between ">
+          <p class="text-xs text-secondary-blue">{{ isOwner(pj) ? 'Creador' : 'Miembro' }}</p>
+          <p class="text-xs text-secondary-blue">Creado: {{ pj.created_at | date }}</p>
+        </footer>
       </div>
 
       }@empty{
