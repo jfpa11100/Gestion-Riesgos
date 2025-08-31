@@ -72,7 +72,7 @@ describe('CreateProjectModalComponent', () => {
     });
 
     it('debería marcar error si el email ya existe en teamMembers', async () => {
-      component.teamMembers = [{ email: 'existe@test.com' }];
+      component.teamMembers = ['existe@test.com'];
       authServiceSpy.getUserEmail.and.returnValue(Promise.resolve('otro@test.com'));
       component.projectForm.get('email')?.setValue('existe@test.com');
       await component.addMember();
@@ -95,17 +95,17 @@ describe('CreateProjectModalComponent', () => {
       await component.addMember();
 
       expect(component.teamMembers.length).toBe(1);
-      expect(component.teamMembers[0].email).toBe('nuevo@test.com');
+      expect(component.teamMembers[0]).toBe('nuevo@test.com');
       expect(component.projectForm.get('email')?.value).toBeNull();
     });
   });
 
   describe('removeMember', () => {
     it('debería eliminar un miembro del array', () => {
-      component.teamMembers = [{ email: 'test1@test.com' }, { email: 'test2@test.com' }];
+      component.teamMembers = ['test1@test.com' , 'test2@test.com' ];
       component.removeMember(0);
       expect(component.teamMembers.length).toBe(1);
-      expect(component.teamMembers[0].email).toBe('test2@test.com');
+      expect(component.teamMembers[0]).toBe('test2@test.com');
     });
   });
 });

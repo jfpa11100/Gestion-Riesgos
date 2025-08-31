@@ -39,6 +39,7 @@ export class CreateProjectModalComponent {
     }
     const newProject: Project = {
       name: this.projectForm.get('name')!.value,
+      risks: [],
       members: this.teamMembers,
       created_at: new Date(),
     };

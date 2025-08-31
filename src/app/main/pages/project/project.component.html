@@ -1,1 +1,71 @@
-<p>Project component works</p>
+<main class="flex flex-col justify-center p-5 sm:p-10">
+  <header class="flex justify-between py-1.5 lg:mx-22 xl:mx-35 border-b-1 border-main-black">
+    @if (loading) {
+      <ngx-skeleton-loader appearance="line" animation="progress" [theme]="{
+        width: '350px',
+        height: '40px',
+        background: 'lightgray',
+        'border-radius': '10px',
+      }" />
+    }@else {
+      <h1 class="font-medium text-2xl text-center md:text-4xl lg:text-left">{{ project()!.name }}</h1>
+    }
+    <app-user-profile />
+  </header>
+
+  @if (loading){
+    <section class="mt-4 w-full flex justify-center">
+      <ngx-skeleton-loader  count="15" appearance="square" animation="progress"
+        [theme]="{
+          width: '100%',
+          height: 'calc(var(--spacing) * 10)',
+          background: 'lightgray',
+          'border-radius': '5px',
+        }" />
+    </section>
+  }@else{
+    <section class="mt-4 w-full flex flex-col justify-center gap-y-2">
+      @for (risk of project()!.risks; track $index) {
+        <app-risk-project-detail
+        class="flex justify-center"
+          [projectId]="project()!.id!"
+          [risk]="risk"
+        />
+      }@empty{
+      <div
+        class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue"
+      >
+        <div
+          class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px] bg-gradient-to-l from-[#F3EAFF] to-white-letter"
+        >
+          <h2 class="text-2xl md:text-3xl font-medium mt-2">
+            Añade los
+            <span
+              class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent"
+              >Riesgos </span
+            >
+            del <span class="text-secondary-blue">Proyecto!</span>
+          </h2>
+          <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
+            Identifica los riesgos y con gamificación haz que mitigar riesgos sea divertido
+            y efectivo.
+          </p>
+          <footer class="inline-flex justify-center mt-4 items-center gap-3">
+            <button (click)="goToTaxonomy()"
+              type="button"
+              class="btn-secondary py-1.5 px-4"
+            >
+              Añade los riesgos
+            </button>
+            <img class="size-6" src="logo.png" alt="">
+          </footer>
+        </div>
+      </div>
+      }
+    </section>
+  }
+
+  @if (showAddMembersModal) {
+
+  }
+</main>
