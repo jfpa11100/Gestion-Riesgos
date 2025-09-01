@@ -5,6 +5,6 @@ export interface Project {
   members?: string[];
   name: string;
   owner?: string;
-  risks:Risk[];
-  created_at: Date;
+  risks?:Risk[];
+  created_at?: Date;
 }

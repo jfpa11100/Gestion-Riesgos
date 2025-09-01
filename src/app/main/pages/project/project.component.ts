@@ -12,11 +12,12 @@ import { RiskProjectDetailComponent } from "../../components/risk-project-detail
   templateUrl: './project.component.html',
   styles: `
     ngx-skeleton-loader{
-      width: 90%;
       display: flex;
       flex-direction: column;
       justify-content: center !important;
-      gap-y: 1px
+      row-gap: 0.5rem;
+      margin-top: 1rem;
+      width: 100%
     }
   `
 })
@@ -24,22 +25,23 @@ export class ProjectComponent implements OnInit {
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectsService = inject(ProjectService);
+  project!: WritableSignal<Project | null>;
   loading = true;
   showAddMembersModal = false;
-  project!: WritableSignal<Project | null>;
 
 
   async ngOnInit() {
     const projectId = this.route.snapshot.paramMap.get('id');
-    if (!projectId){
-      return;
-    }
+    if (!projectId) return;
     this.project = await this.projectsService.getProjectInfo(projectId);
     this.loading = false;
   }
 
-
   goToTaxonomy(){
     this.router.navigate(['project', this.project()!.id, 'taxonomy']);
+  }
+
+  goToPrioritization(){
+    this.router.navigate(['project', this.project()!.id, 'prioritization']);
   }
 }
