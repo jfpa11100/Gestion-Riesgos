@@ -63,11 +63,12 @@ export class ProjectService {
     const { data, error } = await this.supabase
       .from('projects')
       .insert({ ...project, owner: userId })
+      .select('*')
       .single();
-
     if (error) {
       console.error('Error creating project:', error);
       throw 'Sucedió un error al crear el proyecto, intenta nuevamente';
     }
+    return data as Project;
   }
 }

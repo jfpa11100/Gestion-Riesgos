@@ -40,9 +40,9 @@ export class DashboardComponent implements OnInit {
   }
 
   newProject(project: Project) {
-    this.projectService.createProject(project).then(() => {
-      this.projects.update(projects => [...projects, project]);
-      this.showCreateProjectModal = false 
+    this.projectService.createProject(project).then((pj:Project) => {
+      this.projects.update(projects => [...projects, pj]);
+      this.showCreateProjectModal = false
     }).catch((e) => {
 
     })
