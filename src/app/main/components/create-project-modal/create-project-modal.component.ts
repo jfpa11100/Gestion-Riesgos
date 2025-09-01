@@ -37,7 +37,7 @@ export class CreateProjectModalComponent {
     const projectName = this.projectForm.get('name')!.value
     if (this.projects != null){
       this.projects.forEach(p => {
-        if (p.name.toLocaleLowerCase() === projectName) {
+        if (p.name.toLocaleLowerCase() === projectName.toLocaleLowerCase()) {
           this.projectForm.setErrors({ projectNameExists: true });
           return;
         }
