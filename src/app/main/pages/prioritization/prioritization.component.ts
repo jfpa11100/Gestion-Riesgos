@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Pipe, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, WritableSignal } from '@angular/core';
 import { ProjectService } from '../../services/projects/project.service';
 import { Project } from '../../interfaces/project.interface';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';

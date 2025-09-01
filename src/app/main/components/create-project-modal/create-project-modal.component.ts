@@ -35,12 +35,14 @@ export class CreateProjectModalComponent {
       return;
     }
     const projectName = this.projectForm.get('name')!.value
-    this.projects.forEach(p => {
-      if (p.name.toLocaleLowerCase() === projectName) {
-        this.projectForm.setErrors({ projectNameExists: true });
-        return;
-      }
-    });
+    if (this.projects != null){
+      this.projects.forEach(p => {
+        if (p.name.toLocaleLowerCase() === projectName) {
+          this.projectForm.setErrors({ projectNameExists: true });
+          return;
+        }
+      });
+    }
     const newProject: Project = {
       name: projectName,
       members: this.teamMembers,
