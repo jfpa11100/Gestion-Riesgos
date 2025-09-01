@@ -40,5 +40,9 @@ export class PrioritizationComponent implements OnInit {
     });
   }
 
+  goBackToProject(){
+    this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!]);
+  }
+
 
 }

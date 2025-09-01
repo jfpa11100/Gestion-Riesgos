@@ -1,22 +1,46 @@
-<main class="flex flex-col justify-center p-5 sm:p-10">
-  <header class="flex justify-between py-1.5 lg:mx-22 xl:mx-35 border-b-1 border-main-black">
-      <h1 class="font-medium text-2xl text-center md:text-4xl lg:text-left">Matriz de Priorización</h1>
+<main class="flex flex-col justify-center items-center sm:p-10 h-full">
+  <header
+    class="flex w-8/10 justify-between items-center py-2 px-2 lg:mx-22 xl:mx-35 border-b border-gray-200 shadow-sm bg-gradient-to-r from-[#F3EAFF] via-[#E1EFFF] to-white rounded-xl">
+    <h1
+      class="font-bold text-2xl md:text-4xl bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent tracking-tight">
+      Priorización
+    </h1>
+    <div class="flex items-center gap-3">
+      <span class="hidden md:inline text-sm text-gray-600 font-medium">
+        Mi perfil
+      </span>
       <app-user-profile />
-  </header>
-  <section class="flex justify-center">
-
-    <!-- Grid -->
-    <div class="grid grid-cols-3 grid-rows-3 gap-2 text-center my-4 w-8/10 h-100 xl:h-120">
-      @for (i of [0,1,2]; track $index) {
-        @for (j of [0,1,2]; track $index) {
-          <article class="flex border rounded border-complementary-blue p-2 overflow-auto">
-            @for (risk of riskMatrix[i][j]; track $index) {
-              <p> {{ risk.category }} | {{ risk.risk }} </p>
-            }
-          </article>
-        }
-      }
     </div>
+  </header>
+
+  <section class="flex flex-col my-4 h-150 w-8/10 gap-y-2">
+
+    <div class="flex justify-center items-center h-10 ml-12 border-2 rounded border-secondary-blue">
+      <h1 class="text-sm">Impacto</h1>
+    </div>
+
+    <section class="flex gap-x-2">
+      <div class="flex justify-center items-center w-10 h-full border-2 rounded border-secondary-blue">
+        <h1 class="-rotate-90 text-sm">Probabilidad</h1>
+      </div>
+      <!-- Grid -->
+      <div class="grid grid-cols-3 grid-rows-3 gap-2 text-center xl:h-120">
+        @for (i of [0,1,2]; track $index) {
+          @for (j of [0,1,2]; track $index) {
+            <article class="flex flex-col border-2 rounded border-secondary-blue sm:p-2 gap-y-px overflow-y-auto">
+              @for (risk of riskMatrix[i][j]; track $index) {
+                <p class="text-xs lg:text-lg border rounded border-complementary-purple"> {{ risk.category }} | {{ risk.risk }} </p>
+              }
+            </article>
+          }
+        }
+
+      </div>
+    </section>
+
+    <footer class="flex w-full justify-end">
+        <button class="btn-secondary w-30 h-8 mb-4" (click)="goBackToProject()">Volver</button>
+    </footer>
 
   </section>
 </main>

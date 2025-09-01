@@ -20,40 +20,42 @@ export class RiskProjectDetailComponent implements OnInit {
   ngOnInit() {
     this.currentProbability =
       this.risk.probability === 2 ? 'Alta'
-      : this.risk.probability === 1 ? 'Media'
-      : this.risk.probability === 0 ? 'Baja'
-      : null;
+        : this.risk.probability === 1 ? 'Media'
+          : this.risk.probability === 0 ? 'Baja'
+            : null;
     this.currentImpact =
       this.risk.impact === 2 ? 'Alto'
-      : this.risk.impact === 1 ? 'Medio' 
-      : this.risk.impact === 0 ? 'Bajo'
-      : null;
+        : this.risk.impact === 1 ? 'Medio'
+          : this.risk.impact === 0 ? 'Bajo'
+            : null;
   }
 
-  changeProbability(probability: number) {
+  async changeProbability(probability: number) {
     const before = this.currentProbability;
     this.currentProbability =
       probability === 2 ? 'Alta' : probability === 1 ? 'Media' : 'Baja';
     this.toggleProbabilityMenu();
-    this.risksService
-      .updateRiskProbability(this.projectId, this.risk.id, probability)
-      .catch((error) => {
-        console.log('Error al actualizar la probabilidad', error);
-        this.currentImpact = before;
-      });
+    try {
+      await this.risksService.updateRiskProbability(this.projectId, this.risk.id, probability)
+    } catch (error) {
+      console.error('Error al actualizar la probabilidad', error);
+      this.currentImpact = before;
+    }
+
   }
 
-  changeImpact(impact: number) {
+  async changeImpact(impact: number) {
     const before = this.currentImpact;
     this.currentImpact =
       impact === 2 ? 'Alto' : impact === 1 ? 'Medio' : 'Bajo';
     this.toggleImpactMenu();
-    this.risksService
-      .updateRiskImpact(this.projectId, this.risk.id, impact)
-      .catch((error) => {
-        this.currentImpact = before;
-        console.error('Error al actualizar el impacto', error);
-      });
+    try {
+      await this.risksService
+        .updateRiskImpact(this.projectId, this.risk.id, impact)
+    } catch (error) {
+      this.currentImpact = before;
+      console.error('Error al actualizar el impacto', error);
+    }
   }
 
   toggleProbabilityMenu() {
