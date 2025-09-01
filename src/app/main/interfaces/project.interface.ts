@@ -6,5 +6,5 @@ export interface Project {
   name: string;
   owner?: string;
   risks?:Risk[];
-  created_at: Date;
+  created_at?: Date;
 }

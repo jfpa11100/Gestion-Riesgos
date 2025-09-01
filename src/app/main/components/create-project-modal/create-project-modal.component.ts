@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Project } from '../../interfaces/project.interface';
 import {
   FormBuilder,
@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { User } from '../../../auth/interfaces/user.interface';
 import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
@@ -17,13 +16,11 @@ import { AuthService } from '../../../auth/services/auth.service';
 })
 export class CreateProjectModalComponent {
   authService = inject(AuthService);
+  @Input() projects!: Project[];
   @Output() close = new EventEmitter<void>();
   @Output() newProject = new EventEmitter<Project>();
   projectForm!: FormGroup;
-  teamMembers: string[] = [
-    // 'john.doe@example.com',
-    // 'jane.smith@example.com'
-  ];
+  teamMembers: string[] = [];
 
   constructor(private fb: FormBuilder) {
     this.projectForm = this.fb.group({
@@ -37,8 +34,15 @@ export class CreateProjectModalComponent {
       this.projectForm.setErrors({ invalid: true });
       return;
     }
+    const projectName = this.projectForm.get('name')!.value
+    this.projects.forEach(p => {
+      if (p.name.toLocaleLowerCase() === projectName) {
+        this.projectForm.setErrors({ projectNameExists: true });
+        return;
+      }
+    });
     const newProject: Project = {
-      name: this.projectForm.get('name')!.value,
+      name: projectName,
       members: this.teamMembers,
       created_at: new Date(),
     };

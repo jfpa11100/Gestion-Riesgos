@@ -1,0 +1,22 @@
+<main class="flex flex-col justify-center p-5 sm:p-10">
+  <header class="flex justify-between py-1.5 lg:mx-22 xl:mx-35 border-b-1 border-main-black">
+      <h1 class="font-medium text-2xl text-center md:text-4xl lg:text-left">Matriz de Priorización</h1>
+      <app-user-profile />
+  </header>
+  <section class="flex justify-center">
+
+    <!-- Grid -->
+    <div class="grid grid-cols-3 grid-rows-3 gap-2 text-center my-4 w-8/10 h-100 xl:h-120">
+      @for (i of [0,1,2]; track $index) {
+        @for (j of [0,1,2]; track $index) {
+          <article class="flex border rounded border-complementary-blue p-2 overflow-auto">
+            @for (risk of riskMatrix[i][j]; track $index) {
+              <p> {{ risk.category }} | {{ risk.risk }} </p>
+            }
+          </article>
+        }
+      }
+    </div>
+
+  </section>
+</main>
