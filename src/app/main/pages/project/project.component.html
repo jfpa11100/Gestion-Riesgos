@@ -1,4 +1,4 @@
-<main class="flex flex-col justify-center p-5 sm:p-10">
+<main class="flex flex-col justify-center p-2 sm:p-10">
   <header class="flex justify-between py-1.5 lg:mx-22 xl:mx-35 border-b-1 border-main-black">
     @if (loading) {
       <ngx-skeleton-loader appearance="line" animation="progress" [theme]="{
@@ -14,17 +14,23 @@
   </header>
 
   @if (loading){
-    <section class="mt-4 w-full flex justify-center">
       <ngx-skeleton-loader  count="15" appearance="square" animation="progress"
         [theme]="{
-          width: '100%',
+          width: 'calc(8/10 * 100%)',
           height: 'calc(var(--spacing) * 10)',
           background: 'lightgray',
           'border-radius': '5px',
+          'margin': '0 auto'
         }" />
-    </section>
   }@else{
-    <section class="mt-4 w-full flex flex-col justify-center gap-y-2">
+    <section class="mt-2 w-full flex flex-col justify-center gap-y-2">
+      <div class="flex self-center justify-end w-full md:w-8/10">
+        <button class="btn-primary text-sm flex items-center py-0.5 px-5" (click)="goToPrioritization()" >
+          <img class="size-6" src="grid.png" alt="">
+          Matriz Priorización
+        </button>
+      </div>
+
       @for (risk of project()!.risks; track $index) {
         <app-risk-project-detail
         class="flex justify-center"

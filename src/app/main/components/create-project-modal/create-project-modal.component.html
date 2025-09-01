@@ -80,6 +80,11 @@
             El usuario no existe.
           </div>
         }
+        @if(projectForm.errors?.['projectNameExists']) {
+          <div class="error-message">
+            Ya perteneces a un proyecto con ese nombre.
+          </div>
+        }
 
       <div class="flex justify-end">
         <input type="button"

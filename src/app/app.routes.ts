@@ -4,6 +4,7 @@ import { SignupComponent } from './auth/pages/signup/signup.component';
 import { DashboardComponent } from './main/pages/dashboard/dashboard.component';
 import { ProjectComponent } from './main/pages/project/project.component';
 import { TaxonomyComponent } from './main/pages/taxonomy/taxonomy.component';
+import { PrioritizationComponent } from './main/pages/prioritization/prioritization.component';
 
 export const routes: Routes = [
   {
@@ -34,6 +35,14 @@ export const routes: Routes = [
   {
     path: 'project/:id/taxonomy',
     component: TaxonomyComponent
+  },
+  {
+    path: 'project/:id/taxonomy',
+    component: TaxonomyComponent
+  },
+  {
+    path: 'project/:id/prioritization',
+    component: PrioritizationComponent
   },
   {
     path: '**',
