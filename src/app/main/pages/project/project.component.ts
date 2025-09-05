@@ -5,10 +5,11 @@ import { UserProfileComponent } from '../../components/user-profile/user-profile
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProjectService } from '../../services/projects/project.service';
 import { RiskProjectDetailComponent } from "../../components/risk-project-detail/risk-project-detail.component";
+import { ToastComponent } from '../../../shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-project',
-  imports: [UserProfileComponent, NgxSkeletonLoaderModule, RiskProjectDetailComponent],
+  imports: [UserProfileComponent, NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent],
   templateUrl: './project.component.html',
   styles: `
     ngx-skeleton-loader{
@@ -28,6 +29,7 @@ export class ProjectComponent implements OnInit {
   project!: WritableSignal<Project | null>;
   loading = true;
   showAddMembersModal = false;
+  showMessage = false;
 
 
   async ngOnInit() {
@@ -37,11 +39,14 @@ export class ProjectComponent implements OnInit {
     this.loading = false;
   }
 
-  goToTaxonomy(){
+  goToTaxonomy() {
     this.router.navigate(['project', this.project()!.id, 'taxonomy']);
   }
 
-  goToPrioritization(){
-    this.router.navigate(['project', this.project()!.id, 'prioritization']);
+  goToPrioritization() {
+    if (this.project()?.risks?.map(risk => risk.impact === null || risk.probability === null)) {
+      this.showMessage = true;
+    }
+    // this.router.navigate(['project', this.project()!.id, 'prioritization']);
   }
 }
