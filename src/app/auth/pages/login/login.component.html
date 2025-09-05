@@ -1,11 +1,11 @@
-<div class="flex w-full">
-    <div class="w-full hidden md:inline-block">
-        <img class="h-fit" src="login-img.png" alt="image">
-    </div>
+<main class="flex h-screen items-center justify-center">
+    <section class="w-full hidden md:inline-block">
+        <img class="h-screen" src="login-img.png" alt="image">
+    </section>
 
-    <div class="w-full flex flex-col items-center justify-center">
+    <section class="size-full flex items-center justify-center">
 
-        <form [formGroup]="loginForm" class="md:w-96 w-80 flex flex-col items-center justify-center">
+        <form [formGroup]="loginForm" class="w-80 md:w-96 flex flex-col items-center justify-center">
             <h2 class="text-4xl font-medium">Inicia Sesión</h2>
             <p class="text-sm text-gray-500 mt-3">¡Bienvenido! Inicia sesión para continuar.</p>
 
@@ -39,5 +39,5 @@
 
             <p class="text-white-letter text-sm mt-4">¿No tienes una cuenta? <a class="text-complementary-purple hover:underline" href="/signup">Regístrate</a></p>
         </form>
-    </div>
-</div>
+    </section>
+</main>
