@@ -90,4 +90,13 @@
   @if (showAddMembersModal) {
 
   }
+
+  @if (showMessage) {
+    <app-toast
+      [title]="'Aún no has asignado todas las probabilidades y riesgos'"
+      [message]="'Deseas continuar?'"
+      [type]="'confirmation'"
+      [show]="true"
+    />
+  }
 </main>
