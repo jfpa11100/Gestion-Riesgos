@@ -36,7 +36,7 @@
       </nav>
       @for (pj of projects(); track $index) {
       <div class="group flex flex-col justify-between mx-4 mt-9 w-3/12 h-35 px-3 sm:px-4 md:px-6 lg:px-9 py-3
-      border-1 rounded-[5px] cursor-pointer min-w-40 border-b-secondary-blue bg-gradient-to-r
+      border-1 rounded-[5px] cursor-pointer min-w-40 border-white-letter/40 bg-gradient-to-r
       from-gray-background to-white-letter/30 transition-transform duration-200
       hover:scale-102  hover:to-complementary-purple/40" (click)="goToProject(pj.id!)">
         <header class="flex justify-between items-center">
@@ -56,12 +56,9 @@
       </div>
 
       }@empty{
-      <div
-        class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue"
-      >
-        <div
-          class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px] bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]"
-        >
+      <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
+        <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px] 
+        bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
           <h2 class="text-2xl md:text-3xl font-medium mt-2">
             Gestiona riesgos con
             <span

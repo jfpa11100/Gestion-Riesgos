@@ -46,7 +46,15 @@ export class ProjectComponent implements OnInit {
   goToPrioritization() {
     if (this.project()?.risks?.map(risk => risk.impact === null || risk.probability === null)) {
       this.showMessage = true;
+      return
     }
-    // this.router.navigate(['project', this.project()!.id, 'prioritization']);
+    this.router.navigate(['project', this.project()!.id, 'prioritization']);
   }
+
+  acceptedGoToPrioritization(accepted:boolean){
+    this.showMessage = false
+    if(!accepted) return;
+    this.router.navigate(['project', this.project()!.id, 'prioritization']);
+  }
+  
 }
