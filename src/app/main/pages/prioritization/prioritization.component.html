@@ -15,19 +15,45 @@
 
   <section class="flex flex-col my-4 h-150 w-8/10 gap-y-2">
 
-    <div class="flex justify-center items-center h-10 ml-12 border-2 rounded border-secondary-blue">
-      <h1 class="text-sm">Impacto</h1>
+    <span class="flex justify-center items-center h-10 ml-12 border-2 rounded border-secondary-blue">
+      <h1 class="text-md font-semibold">Impacto</h1>
+    </span>
+
+    <!-- TODO: Implement design -->
+    <div class="flex w-full gap-x-2">
+      <span class="flex justify-center items-center h-10 ml-12 border-2 rounded border-secondary-blue">
+        <h1 class="text-md font-semibold">Alto</h1>
+      </span>
+      <span class="flex justify-center items-center h-10 ml-12 border-2 rounded border-secondary-blue">
+        <h1 class="text-md font-semibold">Medio</h1>
+      </span>
+      <span class="flex justify-center items-center h-10 ml-12 border-2 rounded border-secondary-blue">
+        <h1 class="text-md font-semibold">Bajo</h1>
+      </span>
     </div>
 
-    <section class="flex gap-x-2">
-      <div class="flex justify-center items-center w-10 h-full border-2 rounded border-secondary-blue">
-        <h1 class="-rotate-90 text-sm">Probabilidad</h1>
+    <section class="flex gap-x-2 w-full h-full items-center">
+      <span class="flex justify-center items-center w-10 h-full border-2 rounded border-secondary-blue">
+        <h1 class="-rotate-90 text-md font-semibold">Probabilidad</h1>
+      </span>
+
+      <div class="flex flex-col gap-y-2 justify-center items-center w-10 h-full">
+        <span class="flex justify-center items-center h-full border-2 rounded border-secondary-blue md:mt-3">
+          <h1 class="-rotate-90 text-sm">Baja</h1>
+        </span>
+        <span class="flex justify-center items-center h-full w-8 border-2 rounded border-secondary-blue">
+          <h1 class="-rotate-90 text-sm">Media</h1>
+        </span>
+        <span class="flex justify-center items-center h-full border-2 rounded border-secondary-blue md:mb-3">
+          <h1 class="-rotate-90 text-sm">Alta</h1>
+        </span>
       </div>
+
       <!-- Grid -->
-      <div class="grid grid-cols-3 grid-rows-3 gap-2 text-center xl:h-120">
+      <div class="grid grid-cols-3 grid-rows-3 gap-2 text-center xl:h-120 w-full h-full">
         @for (i of [0,1,2]; track $index) {
           @for (j of [0,1,2]; track $index) {
-            <article class="flex flex-col border-2 rounded border-secondary-blue sm:p-2 gap-y-px overflow-y-auto">
+            <article class="flex w-full min-w-full h-full flex-col border-2 rounded border-secondary-blue sm:p-2 gap-y-px overflow-y-auto">
               @for (risk of riskMatrix[i][j]; track $index) {
                 <p class="text-xs lg:text-lg border rounded border-complementary-purple"> {{ risk.category }} | {{ risk.risk }} </p>
               }
