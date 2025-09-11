@@ -6,6 +6,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProjectService } from '../../services/projects/project.service';
 import { RiskProjectDetailComponent } from "../../components/risk-project-detail/risk-project-detail.component";
 import { ToastComponent } from '../../../shared/components/toast/toast.component';
+import { Risk } from '../../interfaces/risk.interface';
 
 @Component({
   selector: 'app-project',
@@ -44,17 +45,45 @@ export class ProjectComponent implements OnInit {
   }
 
   goToPrioritization() {
-    if (this.project()?.risks?.map(risk => risk.impact === null || risk.probability === null)) {
+    if (this.project()?.risks?.some(risk => risk.impact == null || risk.probability == null)) {
       this.showMessage = true;
       return
     }
     this.router.navigate(['project', this.project()!.id, 'prioritization']);
   }
 
-  acceptedGoToPrioritization(accepted:boolean){
+  updateRisk(updatedRisk: Risk) {
+    this.project.update(project =>
+      project
+        ? {
+          ...project,
+          risks: project.risks?.map(risk =>
+            risk.id === updatedRisk.id ? updatedRisk : risk
+          ) ?? []
+        }
+        : null
+    );
+  }
+
+  deleteRisk(risk: Risk) {
+    this.project.update(project => project
+      ? {
+        ...project,
+        risks: project.risks?.filter(r => r.id !== risk.id) ?? []
+      }
+      : null
+    );
+    console.log(this.project())
+  }
+
+  acceptedGoToPrioritization(accepted: boolean) {
     this.showMessage = false
-    if(!accepted) return;
+    if (!accepted) return;
     this.router.navigate(['project', this.project()!.id, 'prioritization']);
   }
-  
+
+  goBackToProjects(){
+    this.router.navigate(['/dashboard'])
+  }
+
 }

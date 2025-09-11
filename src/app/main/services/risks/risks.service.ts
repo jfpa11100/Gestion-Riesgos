@@ -1,13 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
-import { CategoryRisk } from '../../interfaces/risk.interface';
+import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
+import { ProjectService } from '../projects/project.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RisksService {
   supabase: SupabaseClient = inject(SupabaseService).supabase;
+  projectService = inject(ProjectService)
 
   async getRisksByCategory(): Promise<CategoryRisk[]> {
     const { data, error } = await this.supabase.from('categories').select(`
@@ -42,10 +44,17 @@ export class RisksService {
       throw 'Error al actualizar el riesgo, intenta de nuevo';
     }
   }
-  
+
   async updateRiskImpact(projectId: string, riskId: string, impact: number) {
     const { error } = await this.supabase.from('project_risks')
     .update({ impact }).eq('project_id', projectId).eq('risk_id', riskId);
+    if (error) {
+      throw 'Error al actualizar el riesgo, intenta de nuevo';
+    }
+  }
+
+  async deleteRisk(riskId: string){
+    const { error } = await this.supabase.from('project_risks').delete().eq('risk_id', riskId);
     if (error) {
       throw 'Error al actualizar el riesgo, intenta de nuevo';
     }
