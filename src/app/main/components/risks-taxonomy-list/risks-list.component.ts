@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { ProjectService } from '../../services/projects/project.service';
 import { AuthService } from '../../../auth/services/auth.service';
@@ -10,6 +10,7 @@ import { AuthService } from '../../../auth/services/auth.service';
   styles: ''
 })
 export class RisksListComponent implements OnInit, OnChanges {
+  @ViewChildren('risk') riskElements!: QueryList<ElementRef>;
   projectsService = inject(ProjectService)
   userService = inject(AuthService)
   @Input() searchQuery!: string;
@@ -19,7 +20,7 @@ export class RisksListComponent implements OnInit, OnChanges {
   @Output() riskChange = new EventEmitter<{ risk: Risk; selected: boolean }>();
   isOwner = false
 
-  async ngOnInit(){
+  async ngOnInit() {
     const projectOwnerId = this.projectsService.currentProject()?.owner
     const userId = await this.userService.getUserId()
     if (projectOwnerId === userId) this.isOwner = true
@@ -27,7 +28,20 @@ export class RisksListComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['searchQuery'] && !changes['searchQuery'].firstChange) {
-      console.log('myInputData changed: ', this.searchQuery);
+      if ((this.category.category.toLowerCase().includes(this.searchQuery) || 
+            this.category.risks.some(r => r.risk.toLowerCase().includes(this.searchQuery))) && this.searchQuery !== '') {
+        // Open the category of that risk
+        this.openCategoryIndex = this.index;
+        // Scroll to that risk
+        const riskElement = this.riskElements.toArray()[this.index]?.nativeElement;
+        if (riskElement) {
+          riskElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+          });
+        }
+      } else
+        this.openCategoryIndex = null
     }
   }
 
@@ -36,4 +50,9 @@ export class RisksListComponent implements OnInit, OnChanges {
     this.riskChange.emit({ risk, selected: checkbox.checked });
   }
 
+  check(){
+    if (!this.isOwner){
+      console.log('No puedes editar esta sección')
+    }
+  }
 }

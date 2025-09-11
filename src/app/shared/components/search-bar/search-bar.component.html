@@ -1,4 +1,4 @@
-<form class="max-w-md mx-auto">
+<div class="max-w-md mx-auto">
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div class="relative">
         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -8,12 +8,13 @@
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
             </svg>
         </div>
-        <input [(ngModel)]="searchQuery" type="search" id="default-search"
-            class="block w-full p-4 ps-10 text-sm text-main-black border border-gray-300 rounded-lg bg-gray-50
-            focus:ring-blue-300 focus:border-red-300"
-            placeholder="Busca los riesgos..." required />
+        <input [(ngModel)]="searchQuery" type="search" (keydown.enter)="search()"
+            class="block w-full p-4 ps-10 text-sm border border-gray-background rounded-lg bg-gray-50
+            placeholder:text-white-letter focus:outline-none focus:ring-complementary-purple focus:border-complementary-purple"
+            placeholder="Busca los riesgos..." />
         <button (click)="search()" type="submit"
             class="btn-primary absolute end-2.5 bottom-2.5 focus:ring-4 focus:outline-none 
-            focus:ring-blue-300 rounded text-sm px-4 py-2">Search</button>
+            focus:ring-blue-300 rounded text-sm px-4 py-2">Search
+        </button>
     </div>
-</form>
+</div>

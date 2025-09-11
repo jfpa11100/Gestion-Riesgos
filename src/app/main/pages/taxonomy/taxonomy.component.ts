@@ -12,7 +12,7 @@ import { SearchBarComponent } from '../../../shared/components/search-bar/search
   styles: ``,
 })
 export class TaxonomyComponent implements OnInit {
-  searchQuery!:string
+  searchQuery:string = '';
   risksService = inject(RisksService);
   router = inject(Router);
   route = inject(ActivatedRoute);
