@@ -3,14 +3,16 @@ import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { RisksListComponent } from '../../components/risks-taxonomy-list/risks-list.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-taxonomy',
-  imports: [RisksListComponent],
+  imports: [RisksListComponent, SearchBarComponent],
   templateUrl: './taxonomy.component.html',
   styles: ``,
 })
 export class TaxonomyComponent implements OnInit {
+  searchQuery!:string
   risksService = inject(RisksService);
   router = inject(Router);
   route = inject(ActivatedRoute);
