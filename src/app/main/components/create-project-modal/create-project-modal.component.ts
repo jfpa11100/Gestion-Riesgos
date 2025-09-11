@@ -34,14 +34,11 @@ export class CreateProjectModalComponent {
       this.projectForm.setErrors({ invalid: true });
       return;
     }
+    // Check if user belongs to a project already named
     const projectName = this.projectForm.get('name')!.value
-    if (this.projects != null){
-      this.projects.forEach(p => {
-        if (p.name.toLocaleLowerCase() === projectName.toLocaleLowerCase()) {
-          this.projectForm.setErrors({ projectNameExists: true });
-          return;
-        }
-      });
+    if (this.projects != null && this.projects.some(p => p.name.toLocaleLowerCase() === projectName.toLocaleLowerCase())) {
+      this.projectForm.setErrors({ projectNameExists: true });
+      return;
     }
     const newProject: Project = {
       name: projectName,

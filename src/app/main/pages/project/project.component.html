@@ -52,20 +52,18 @@
         class="flex justify-center"
           [projectId]="project()!.id!"
           [risk]="risk"
+          (updatedRisk)="updateRisk($event)"
+          (deleteRisk)="deleteRisk($event)"
         />
       }@empty{
-      <div
-        class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue"
-      >
-        <div
-          class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px] bg-gradient-to-l from-[#F3EAFF] to-white-letter"
-        >
+      <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
+        <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px]
+        bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
           <h2 class="text-2xl md:text-3xl font-medium mt-2">
-            Añade los
+            ¡Añade los
             <span
-              class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent"
-              >Riesgos </span
-            >
+              class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent">Riesgos
+            </span>
             del <span class="text-secondary-blue">Proyecto!</span>
           </h2>
           <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
@@ -89,5 +87,14 @@
 
   @if (showAddMembersModal) {
 
+  }
+
+  @if (showMessage) {
+    <app-toast
+      [title]="'Aún no has asignado todas las probabilidades y riesgos'"
+      [message]="'¿Deseas continuar?'"
+      [type]="'confirmation'"
+      (confirmed)="acceptedGoToPrioritization($event)"
+    />
   }
 </main>

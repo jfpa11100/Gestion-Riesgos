@@ -1,0 +1,17 @@
+@if (showComponent) {
+    @if(type === 'confirmation'){
+    <div class="w-9/10 sm:w-auto fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white divide-gray-background flex 
+    divide-x pl-3 text-sm rounded border border-white-letter/40 ">
+        <div class="py-2.5 pr-2 flex justify-center flex-col">
+            <h3 class="text-main-black font-medium">{{ title }}</h3>
+            <p class="text-white-letter max-w-64">{{ message }}</p>
+        </div>
+        <div class="flex flex-col items-center divide-y divide-gray-background">
+            <button type="button" (click)="confirm(true)"
+                class="text-complementary-purple font-medium h-full w-full hover:bg-complementary-purple/10 transition-all">Sí</button>
+            <button (click)="confirm(false)" type="button" 
+                class="text-white-letter font-medium h-full w-28 hover:bg-gray-background transition-all">No</button>
+        </div>
+    </div>
+    }
+}
