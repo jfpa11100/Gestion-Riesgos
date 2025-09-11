@@ -12,7 +12,7 @@ export class ToastComponent implements OnInit {
   @Input() title = '';
   @Input() message = '';
   @Input() type: 'success' | 'error' | 'info' | 'confirmation' = 'info';
-  @Input() timeout:number = 0;
+  @Input() timeout: number | undefined = 0;
   @Output() confirmed = new EventEmitter<boolean>();
 
   ngOnInit(){
@@ -23,10 +23,10 @@ export class ToastComponent implements OnInit {
       }, this.timeout);
     }
   }
-  
+
   confirm(confirmed: boolean){
     this.showComponent = false;
-    this.confirmed.emit(confirmed);
+    if (confirmed) this.confirmed.emit(confirmed);
   }
 
 }
