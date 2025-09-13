@@ -5,11 +5,18 @@
       Selecciona los riesgos de tu proyecto
     </p>
 
+    <!-- TODO: fix that search query gets updated -->
+    <app-search-bar 
+      class="mt-[1lh] w-full"
+      (onSearch)="onRiskSearch($event)"
+    />
+
     <div class="max-w-xl w-full mt-[1lh] flex flex-col gap-5 justify-center items-start text-left">
       <h1 class="text-lg font-medium">Product Engineering</h1>
       @for (risk of productEngineeringRisks; track $index) {
         <app-risks-list
           class="w-full flex justify-center"
+          [searchQuery]="searchQuery"
           [category]="risk"
           [index]="$index"
           [openCategoryIndex]="0"
@@ -22,6 +29,7 @@
       @for (risk of programConstraintRisks; track $index) {
         <app-risks-list
           class="w-full flex justify-center"
+          [searchQuery]="searchQuery"
           [category]="risk"
           [index]="$index"
           (riskChange)="onRiskChange($event)"
@@ -33,6 +41,7 @@
       @for (risk of developmentEnvironmentRisks; track $index) {
         <app-risks-list
           class="w-full flex justify-center"
+          [searchQuery]="searchQuery"
           [category]="risk"
           [index]="$index"
           (riskChange)="onRiskChange($event)"
@@ -46,3 +55,8 @@
     </div>
   </section>
 </main>
+@if(toastMessage.show){
+  <app-toast [title]="toastMessage.title" 
+    [message]="toastMessage.message" [type]="toastMessage.type" 
+    [timeout]="toastMessage.timeout!" (stopShowing)="toastMessage.show=false" />
+}

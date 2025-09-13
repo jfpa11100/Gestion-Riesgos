@@ -89,12 +89,13 @@
 
   }
 
-  @if (showMessage) {
+  @if (toast.show) {
     <app-toast
-      [title]="'Aún no has asignado todas las probabilidades y riesgos'"
-      [message]="'¿Deseas continuar?'"
-      [type]="'confirmation'"
+      [title]="toast.title"
+      [message]="toast.message"
+      [type]="toast.type"
       (confirmed)="acceptedGoToPrioritization($event)"
+      (stopShowing)="toast.show = false"
     />
   }
 </main>

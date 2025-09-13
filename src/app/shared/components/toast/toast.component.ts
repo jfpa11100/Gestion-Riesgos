@@ -8,25 +8,26 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styles: ``
 })
 export class ToastComponent implements OnInit {
-  showComponent = true;
   @Input() title = '';
   @Input() message = '';
   @Input() type: 'success' | 'error' | 'info' | 'confirmation' = 'info';
-  @Input() timeout: number | undefined = 0;
+  @Input() timeout!: number;
   @Output() confirmed = new EventEmitter<boolean>();
+  @Output() stopShowing = new EventEmitter<void>;
 
   ngOnInit(){
-    // Disappear component after timeout
+    // Disappear component after timeout if necessary
     if (this.timeout){
       setTimeout(() => {
-        this.showComponent = false;
+        this.stopShowing.emit();
       }, this.timeout);
     }
   }
 
   confirm(confirmed: boolean){
-    this.showComponent = false;
-    if (confirmed) this.confirmed.emit(confirmed);
+    if (confirmed) 
+      this.confirmed.emit(confirmed);
+    this.stopShowing.emit();
   }
 
 }
