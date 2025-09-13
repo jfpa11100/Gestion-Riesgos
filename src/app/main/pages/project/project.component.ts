@@ -33,7 +33,6 @@ export class ProjectComponent implements OnInit {
   showAddMembersModal = false;
   toast:ToastInterface = {show:false, title:'0', message:'', type:'info'};
 
-
   async ngOnInit() {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (!projectId) return;
@@ -79,7 +78,6 @@ export class ProjectComponent implements OnInit {
       }
       : null
     );
-    console.log(this.project())
   }
 
   acceptedGoToPrioritization(accepted: boolean) {
