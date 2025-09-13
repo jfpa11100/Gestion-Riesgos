@@ -1,16 +1,19 @@
-import { Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, WritableSignal } from '@angular/core';
 import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { ProjectService } from '../../services/projects/project.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { ToastInterface } from '../../../shared/interfaces/toast.interface';
+import { ToastComponent } from "../../../shared/components/toast/toast.component";
 
 @Component({
   selector: 'app-risks-list',
-  imports: [],
+  imports: [ToastComponent],
   templateUrl: './risks-list.component.html',
   styles: ''
 })
 export class RisksListComponent implements OnInit, OnChanges {
   @ViewChildren('risk') riskElements!: QueryList<ElementRef>;
+  toastMessage: ToastInterface = { show: false, title: '', message: '', type: 'info' }
   projectsService = inject(ProjectService)
   userService = inject(AuthService)
   @Input() searchQuery!: string;
@@ -27,12 +30,13 @@ export class RisksListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['searchQuery'] && !changes['searchQuery'].firstChange) {
-      if ((this.category.category.toLowerCase().includes(this.searchQuery) || 
-            this.category.risks.some(r => r.risk.toLowerCase().includes(this.searchQuery))) && this.searchQuery !== '') {
-        // Open the category of that risk
+    const queryChange = changes['searchQuery'];
+    if (queryChange && !queryChange.firstChange && queryChange.currentValue != queryChange.previousValue) {
+      if ((this.category.category.toLowerCase().includes(this.searchQuery) ||
+        this.category.risks.some(r => r.risk.toLowerCase().includes(this.searchQuery))) && this.searchQuery !== '') {
+        // Open the list of risks of the category
         this.openCategoryIndex = this.index;
-        // Scroll to that risk
+        // Scroll to the specific risk
         const riskElement = this.riskElements.toArray()[this.index]?.nativeElement;
         if (riskElement) {
           riskElement.scrollIntoView({
@@ -40,8 +44,9 @@ export class RisksListComponent implements OnInit, OnChanges {
             block: 'nearest',
           });
         }
-      } else
+      } else {
         this.openCategoryIndex = null
+      }
     }
   }
 
@@ -50,9 +55,14 @@ export class RisksListComponent implements OnInit, OnChanges {
     this.riskChange.emit({ risk, selected: checkbox.checked });
   }
 
-  check(){
-    if (!this.isOwner){
-      console.log('No puedes editar esta sección')
+  check() {
+    if (!this.isOwner) {
+      this.toastMessage = {
+        show: true,
+        title: 'No puedes asignar riesgos',
+        message: 'No eres el propietario del proyecto',
+        type: 'info', timeout: 5000
+      }
     }
   }
 }

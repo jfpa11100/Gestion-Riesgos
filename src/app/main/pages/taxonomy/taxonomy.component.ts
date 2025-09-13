@@ -1,17 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { RisksListComponent } from '../../components/risks-taxonomy-list/risks-list.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
+import { ToastInterface } from '../../../shared/interfaces/toast.interface';
+import { ToastComponent } from '../../../shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-taxonomy',
-  imports: [RisksListComponent, SearchBarComponent],
+  imports: [RisksListComponent, SearchBarComponent, ToastComponent],
   templateUrl: './taxonomy.component.html',
   styles: ``,
 })
 export class TaxonomyComponent implements OnInit {
+  toastMessage: ToastInterface = {show:false, title:'', message:'', type:'info'}
   searchQuery:string = '';
   risksService = inject(RisksService);
   router = inject(Router);
@@ -19,17 +22,18 @@ export class TaxonomyComponent implements OnInit {
   productEngineeringRisks: CategoryRisk[] = [];
   programConstraintRisks: CategoryRisk[] = [];
   developmentEnvironmentRisks: CategoryRisk[] = [];
+  categoryRisks: CategoryRisk[] = [];
   addedRisks: Risk[] = [];
 
   async ngOnInit() {
-    const risks = await this.risksService.getRisksByCategory();
-    this.productEngineeringRisks = risks.filter(
+    this.categoryRisks = await this.risksService.getRisksByCategory();
+    this.productEngineeringRisks = this.categoryRisks.filter(
       (r) => r.topic == 'Product Engineering'
     );
-    this.programConstraintRisks = risks.filter(
+    this.programConstraintRisks = this.categoryRisks.filter(
       (r) => r.topic == 'Program Constraints'
     );
-    this.developmentEnvironmentRisks = risks.filter(
+    this.developmentEnvironmentRisks = this.categoryRisks.filter(
       (r) => r.topic == 'Development Environment'
     );
   }
@@ -57,6 +61,26 @@ export class TaxonomyComponent implements OnInit {
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  onRiskSearch(query: string){
+    let foundResults = false
+    for (const category of this.categoryRisks) {
+      if(category.risks.some(risk => risk.risk.toLowerCase().includes(query.toLowerCase()))){
+        foundResults = true
+        break
+      }
+    }
+    if (!foundResults){
+      this.toastMessage = {
+        show: true,
+        title: 'No se encontraron resultados',
+        message: 'Intenta con otra búsqueda',
+        type: 'info', timeout: 2000
+      }
+      return;
+    }
+    this.searchQuery = query
   }
 
   goBackToProject() {

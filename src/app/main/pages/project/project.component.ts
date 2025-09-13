@@ -7,6 +7,7 @@ import { ProjectService } from '../../services/projects/project.service';
 import { RiskProjectDetailComponent } from "../../components/risk-project-detail/risk-project-detail.component";
 import { ToastComponent } from '../../../shared/components/toast/toast.component';
 import { Risk } from '../../interfaces/risk.interface';
+import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 
 @Component({
   selector: 'app-project',
@@ -30,7 +31,7 @@ export class ProjectComponent implements OnInit {
   project!: WritableSignal<Project | null>;
   loading = true;
   showAddMembersModal = false;
-  showMessage = false;
+  toast:ToastInterface = {show:false, title:'0', message:'', type:'info'};
 
 
   async ngOnInit() {
@@ -45,8 +46,13 @@ export class ProjectComponent implements OnInit {
   }
 
   goToPrioritization() {
-    if (this.project()?.risks?.some(risk => risk.impact == null || risk.probability == null)) {
-      this.showMessage = true;
+    if (!this.project()!.risks || this.project()!.risks?.some(risk => risk.impact === null || risk.probability === null)) {
+      this.toast = {
+        show: true,
+        title: 'Aún no has completado la valoración de los riesgos',
+        message: '¿Deseas continuar?',
+        type: 'confirmation'
+      }
       return
     }
     this.router.navigate(['project', this.project()!.id, 'prioritization']);
@@ -77,7 +83,6 @@ export class ProjectComponent implements OnInit {
   }
 
   acceptedGoToPrioritization(accepted: boolean) {
-    this.showMessage = false
     if (!accepted) return;
     this.router.navigate(['project', this.project()!.id, 'prioritization']);
   }

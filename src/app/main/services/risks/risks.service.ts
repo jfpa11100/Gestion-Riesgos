@@ -56,7 +56,7 @@ export class RisksService {
   async deleteRisk(riskId: string){
     const { error } = await this.supabase.from('project_risks').delete().eq('risk_id', riskId);
     if (error) {
-      throw 'Error al actualizar el riesgo, intenta de nuevo';
+      throw error;
     }
   }
 }

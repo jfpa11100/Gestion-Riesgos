@@ -1,43 +1,39 @@
 <section class="flex flex-col items-start w-9/10">
-  <div
-    (click)="(openCategoryIndex === index ? openCategoryIndex=null : openCategoryIndex=index)"
-    class="flex items-center justify-between w-full cursor-pointer border border-secondary-blue p-4 rounded"
-  >
+  <div (click)="(openCategoryIndex === index ? openCategoryIndex=null : openCategoryIndex=index)"
+    class="flex items-center justify-between w-full cursor-pointer border border-secondary-blue p-4 rounded">
     <h2 class="text-sm">{{ category.category }}</h2>
-    <svg
-      [class]="
+    <svg [class]="
         'transform ' + (openCategoryIndex === index ? 'rotate-180' : 'rotate-0')
-      "
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      class="transition-all duration-500 ease-in-out"
-    >
-      <path
-        d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2"
-        stroke="#1D293D"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      " width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
+      class="transition-all duration-500 ease-in-out">
+      <path d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2" stroke="#1D293D" strokeWidth="1.5" strokeLinecap="round"
+        strokeLinejoin="round" />
     </svg>
   </div>
-  <div
-    [class]="
+  <div [class]="
       'flex flex-col gap-y-1 px-4 transition-all duration-500 ease-in-out -translate-y-2 max-h-0 opacity-0 ' +
       (openCategoryIndex === index ? 'opacity-100 max-h-[300px] translate-y-0 pt-4' : '')">
 
-      @for (risk of category.risks; track $index) {
-      <label class="flex text-sm gap-3 items-center {{ isOwner ? 'cursor-pointer' : 'opacity-70' }}">
-        <input [disabled]="!isOwner" (change)="onRiskChange($event, risk)" type="checkbox" class="hidden peer">
-        <span (click)="check()" class="w-5 h-5 border border-complementary-purple rounded relative flex items-center justify-center
+    @for (risk of category.risks; track $index) {
+    <label class="flex text-sm gap-3 items-center {{ isOwner ? 'cursor-pointer' : 'opacity-70' }}">
+      <input [disabled]="!isOwner" (change)="onRiskChange($event, risk)" type="checkbox" class="hidden peer">
+      <span (click)="check()" class="w-5 h-5 border border-complementary-purple rounded relative flex items-center justify-center
         peer-checked:after:content-[''] peer-checked:after:w-2.5 peer-checked:after:h-2.5 
         peer-checked:after:bg-complementary-purple peer-checked:border-secondary-blue peer-checked:after:rounded 
         peer-checked:after:absolute"></span>
-        <span #risk class="text-main-black select-none">{{ risk.risk }}</span>
-      </label>
+      <span #risk
+        class="text-main-black select-none rounded
+        {{ risk.risk.toLowerCase().includes(searchQuery.toLocaleLowerCase() != '' ? 
+          searchQuery.toLocaleLowerCase() : '#' ) ? 'bg-white-letter/60 ' : '' }}"
+          > {{ risk.risk }}
+      </span>
+    </label>
     }
   </div>
 </section>
+
+@if(toastMessage.show){
+  <app-toast [title]="toastMessage.title" 
+    [message]="toastMessage.message" [type]="toastMessage.type" 
+    [timeout]="toastMessage.timeout!" (stopShowing)="toastMessage.show=false" />
+}
