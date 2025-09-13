@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-toast',
@@ -8,25 +8,25 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styles: ``
 })
 export class ToastComponent implements OnInit {
-  showComponent = true;
+  @Output() stopShowing = new EventEmitter<void>;
   @Input() title = '';
   @Input() message = '';
   @Input() type: 'success' | 'error' | 'info' | 'confirmation' = 'info';
-  @Input() timeout: number | undefined = 0;
+  @Input() timeout!: number;
   @Output() confirmed = new EventEmitter<boolean>();
 
   ngOnInit(){
     // Disappear component after timeout
     if (this.timeout){
       setTimeout(() => {
-        this.showComponent = false;
+        this.stopShowing.emit();
       }, this.timeout);
     }
   }
 
   confirm(confirmed: boolean){
-    this.showComponent = false;
     if (confirmed) this.confirmed.emit(confirmed);
+    this.stopShowing.emit();
   }
 
 }

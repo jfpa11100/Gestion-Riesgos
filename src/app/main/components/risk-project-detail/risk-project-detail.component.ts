@@ -20,8 +20,7 @@ export class RiskProjectDetailComponent implements OnInit {
   currentImpact: string | null = null;
   openProbabilityMenu = false;
   openImpactMenu = false;
-  openToastConfirmation = false;
-  toast!: ToastInterface;
+  toast: ToastInterface = {show: false, title: '', message: '', type: 'info'}
 
   ngOnInit() {
     this.currentProbability =
@@ -45,7 +44,7 @@ export class RiskProjectDetailComponent implements OnInit {
       this.risk.probability = probability
       this.updatedRisk.emit(this.risk)
     } catch (error) {
-      console.error('Error al actualizar la probabilidad', error);
+      this.toast = {show:true, title: 'No se pudo actualizar la probabilidad', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000}
       this.currentImpact = before;
     }
 
@@ -62,7 +61,7 @@ export class RiskProjectDetailComponent implements OnInit {
       this.updatedRisk.emit(this.risk)
     } catch (error) {
       this.currentImpact = before;
-      console.error('Error al actualizar el impacto', error);
+      this.toast = {show:true, title: 'No se pudo actualizar el impacto', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000}
     }
   }
 
@@ -74,16 +73,16 @@ export class RiskProjectDetailComponent implements OnInit {
   }
 
   onDeleteClick() {
-    this.toast = { title: 'Vas a eliminar el riesgo del proyecto', 'message': '¿Estás seguro?', type: 'confirmation' }
-    this.openToastConfirmation = true;
+    this.toast = { show:true, title: 'Vas a eliminar el riesgo del proyecto', 'message': '¿Estás seguro?', type: 'confirmation' }
   }
-
-  onDeleteRisk() {
-    this.risksService.deleteRisk(this.risk.id).then(() => {
+  
+  async onDeleteRisk() {
+    try {
+      await this.risksService.deleteRisk(this.risk.id)
+      this.toast = { show:true, title: 'Riesgo eliminado', 'message': '', type: 'info', timeout: 1000 }
       this.deleteRisk.emit(this.risk)
-    }).catch(e => {
-      this.toast = { title: 'No se pudo eliminar el riesgo', 'message': 'Intenta de nuevo', type: 'error', timeout: 6000 }
-      this.openToastConfirmation = true;
-    })
+    } catch (error) {
+      this.toast = { show:true, title: 'No se pudo eliminar el riesgo', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000 }
+    }
   }
 }

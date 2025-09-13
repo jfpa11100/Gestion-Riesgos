@@ -86,12 +86,13 @@ border border-secondary-blue rounded bg-gradient-to-r from-gray-background to-se
   </nav>
 </section>
 
-@if (openToastConfirmation) {
+@if (toast.show) {
   <app-toast
     [title]="toast.title"
     [message]="toast.message"
     [type]="toast.type"
-    [timeout]="toast.timeout"
+    [timeout]="toast.timeout!"
     (confirmed)="onDeleteRisk()"
+    (stopShowing)="toast.show = false"
   />
 }
