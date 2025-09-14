@@ -93,6 +93,7 @@
   <app-toast
     [title]="toast.title"
     [message]="toast.message"
+    [timeout]="toast.timeout!"
     (stopShowing)="toast.show = false"
   />
 }
