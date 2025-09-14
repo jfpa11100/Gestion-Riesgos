@@ -1,45 +1,23 @@
-<main class="flex flex-col justify-center p-2 sm:p-10">
-  <header class="flex justify-between items-center py-2 px-2 lg:mx-22 xl:mx-35 border-b
-  border-gray-200 shadow-sm bg-gradient-to-r from-[#F3EAFF] via-[#E1EFFF] to-white rounded-xl">
-
-    @if (loading) {
-      <ngx-skeleton-loader
-        appearance="line"
-        animation="progress"
-        [theme]="{
-          width: '350px',
-          height: '40px',
-          background: 'lightgray',
-          'border-radius': '10px'
-        }"
-      />
-    }
-    @else {
-      <h1
-        class="font-bold text-2xl md:text-4xl bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent tracking-tight">
-        {{ project()!.name }}
-      </h1>
-    }
-
-    <div class="flex items-center gap-3">
-      <span class="hidden md:inline text-sm text-gray-600 font-medium">
-        Mi perfil
-      </span>
-      <app-user-profile />
-    </div>
-  </header>
+<app-header
+  [title]="project()!.name"
+  (toggleSideBar)="isSideBarOpen = $event"
+/>
+<main class="flex">
+  <app-side-menu
+    [open]="isSideBarOpen"
+  />
 
   @if (loading){
-      <ngx-skeleton-loader  count="15" appearance="square" animation="progress"
-        [theme]="{
-          width: 'calc(8/10 * 100%)',
-          height: 'calc(var(--spacing) * 10)',
-          background: 'lightgray',
-          'border-radius': '5px',
-          'margin': '0 auto'
-        }" />
+    <ngx-skeleton-loader class="w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0 mt-[2lh]" count="15" appearance="square" animation="progress"
+      [theme]="{
+        width: 'calc(8/10 * 100%)',
+        height: 'calc(var(--spacing) * 10)',
+        background: 'lightgray',
+        'border-radius': '5px',
+        'margin': '0 auto'
+      }" />
   }@else{
-    <section class="mt-2 w-full flex flex-col justify-center gap-y-2">
+    <section class="mt-2 w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0">
       <div class="flex self-center justify-end w-full md:w-8/10">
         <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization()" >
           <img class="size-6 mr-2" src="grid.png" alt="">

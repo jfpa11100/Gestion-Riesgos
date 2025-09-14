@@ -8,23 +8,17 @@ import { RiskProjectDetailComponent } from "../../components/risk-project-detail
 import { ToastComponent } from '../../../shared/components/toast/toast.component';
 import { Risk } from '../../interfaces/risk.interface';
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
+import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
+import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 
 @Component({
   selector: 'app-project',
-  imports: [UserProfileComponent, NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent],
+  imports: [NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent, HeaderComponent, SideMenuComponent],
   templateUrl: './project.component.html',
-  styles: `
-    ngx-skeleton-loader{
-      display: flex;
-      flex-direction: column;
-      justify-content: center !important;
-      row-gap: 0.5rem;
-      margin-top: 1rem;
-      width: 100%
-    }
-  `
+  styles: ``
 })
 export class ProjectComponent implements OnInit {
+  isSideBarOpen = true;
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectsService = inject(ProjectService);

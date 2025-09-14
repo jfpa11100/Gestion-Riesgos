@@ -2,25 +2,21 @@ import { Component, inject, OnInit, WritableSignal, signal } from '@angular/core
 import { Project } from '../../interfaces/project.interface';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CreateProjectModalComponent } from '../../components/create-project-modal/create-project-modal.component';
-import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/projects/project.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
+import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgxSkeletonLoaderModule, CreateProjectModalComponent, UserProfileComponent, DatePipe],
+  imports: [NgxSkeletonLoaderModule, CreateProjectModalComponent, HeaderComponent, DatePipe],
   templateUrl: './dashboard.component.html',
-  styles: `
-      ngx-skeleton-loader {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-    `
+  styles: ``
 })
 export class DashboardComponent implements OnInit {
+  isSideBarOpen = true
   router = inject(Router);
   projectService = inject(ProjectService);
   userService = inject(AuthService);
