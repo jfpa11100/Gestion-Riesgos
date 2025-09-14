@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Project } from '../../interfaces/project.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
@@ -22,7 +22,7 @@ export class ProjectComponent implements OnInit {
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectsService = inject(ProjectService);
-  project!: WritableSignal<Project | null>;
+  project: WritableSignal<Project | null> = signal({name: ''});
   loading = true;
   showAddMembersModal = false;
   toast:ToastInterface = {show:false, title:'0', message:'', type:'info'};

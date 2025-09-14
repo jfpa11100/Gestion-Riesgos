@@ -1,5 +1,6 @@
 <app-header
-  [title]="project()!.name"
+  [loading]="loading"
+  [title]="project()?.name!"
   (toggleSideBar)="isSideBarOpen = $event"
 />
 <main class="flex">
