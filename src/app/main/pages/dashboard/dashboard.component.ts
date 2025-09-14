@@ -11,7 +11,7 @@ import { SideMenuComponent } from "../../../shared/components/side-menu/side-men
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgxSkeletonLoaderModule, CreateProjectModalComponent, HeaderComponent, DatePipe, SideMenuComponent],
+  imports: [NgxSkeletonLoaderModule, CreateProjectModalComponent, HeaderComponent, DatePipe],
   templateUrl: './dashboard.component.html',
   styles: ``
 })

@@ -1,17 +1,19 @@
 import { Component, inject, OnInit, WritableSignal } from '@angular/core';
 import { ProjectService } from '../../services/projects/project.service';
 import { Project } from '../../interfaces/project.interface';
-import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Risk } from '../../interfaces/risk.interface';
+import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
+import { SideMenuComponent } from '../../../shared/components/side-menu/side-menu.component';
 
 @Component({
   selector: 'app-prioritization',
-  imports: [UserProfileComponent],
+  imports: [HeaderComponent, SideMenuComponent],
   templateUrl: './prioritization.component.html',
   styles: ``
 })
 export class PrioritizationComponent implements OnInit {
+  isSideBarOpen = false;
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectService = inject(ProjectService)

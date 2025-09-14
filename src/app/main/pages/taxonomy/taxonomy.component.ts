@@ -6,14 +6,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 import { ToastComponent } from '../../../shared/components/toast/toast.component';
+import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
+import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
 
 @Component({
   selector: 'app-taxonomy',
-  imports: [RisksListComponent, SearchBarComponent, ToastComponent],
+  imports: [RisksListComponent, SearchBarComponent, ToastComponent, SideMenuComponent, HeaderComponent],
   templateUrl: './taxonomy.component.html',
   styles: ``,
 })
 export class TaxonomyComponent implements OnInit {
+  isSideBarOpen = true;
   toastMessage: ToastInterface = {show:false, title:'', message:'', type:'info'}
   searchQuery:string = '';
   risksService = inject(RisksService);

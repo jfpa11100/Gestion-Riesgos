@@ -10,6 +10,7 @@ import { UserProfileComponent } from '../../../../main/components/user-profile/u
 export class HeaderComponent {
   @Input() title!:string
   @Input() isSideBarOpen:boolean = true;
+  @Input() showSideBar:boolean = true;
   @Output() toggleSideBar = new EventEmitter<boolean>()
 
   toggle(){

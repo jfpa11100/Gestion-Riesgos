@@ -1,27 +1,23 @@
 <app-header
   [title]="'Proyectos'"
+  [showSideBar]="false"
   (toggleSideBar)="isSideBarOpen = $event"
 />
 <main class="flex">
-  <app-side-menu
-    [open]="isSideBarOpen"
-  />
 
   <section class="flex flex-col w-full">
     @if (loading){
-      <ngx-skeleton-loader class="mt-2 w-full flex flex-wrap justify-center" count="6" appearance="square" animation="progress"
+      <ngx-skeleton-loader class="w-full flex flex-wrap justify-center gap-[1lh] mt-[3lh]" count="6" appearance="square" animation="progress"
         [theme]="{
-          width: 'calc(3/12 * 100%)',
-          height: 'calc(var(--spacing) * 35)',
+          width: '25%',
+          height: '140px',
           background: 'lightgray',
-          'margin-inline': 'calc(var(--spacing) * 4)',
-          'margin-top': 'calc(var(--spacing) * 9)',
           'border-radius': '1rem',
         }" />
     }@else{
-      <section class="mt-2 w-full flex flex-wrap justify-center">
+      <section class="w-full flex flex-wrap justify-center gap-[1lh]">
         @if (projects().length != 0) {
-          <nav class="absolute sm:right-16 md:right-19 lg:right-24 xl:right-35 2xl:right-37">
+          <nav class="flex basis-full justify-end mt-[1lh] px-[1lh]">
             <button class="btn-primary text-sm
             xl:right-45 flex items-center py-0.5 px-5" (click)="onCreateProject()">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
@@ -30,7 +26,7 @@
           </nav>
         }
         @for (pj of projects(); track $index) {
-        <div class="group flex flex-col justify-between mx-4 mt-9 w-3/12 h-35 px-3 sm:px-4 md:px-6 lg:px-9 py-3
+        <div class="group flex flex-col justify-between w-3/12 h-35 px-3 sm:px-4 md:px-6 lg:px-9 py-3
         border-1 rounded-[5px] cursor-pointer min-w-40 border-white-letter/40 bg-gradient-to-r
         from-gray-background to-white-letter/30 transition-transform duration-200
         hover:scale-102  hover:to-complementary-purple/40" (click)="goToProject(pj.id!)">
