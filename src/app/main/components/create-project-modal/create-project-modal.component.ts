@@ -69,11 +69,6 @@ export class CreateProjectModalComponent {
       this.projectForm.setErrors({ emailExists: true });
       return;
     }
-    // Validar si el email existe en el servicio o en la lista
-    if (!(await this.authService.userExists(email))) {
-      this.projectForm.setErrors({ userNotFound: true });
-      return;
-    }
 
     this.teamMembers.push(email);
     this.projectForm.get('email')?.reset();
