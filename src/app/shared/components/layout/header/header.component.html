@@ -19,10 +19,21 @@ shadow-sm bg-gradient-to-r from-[#F3EAFF] via-[#E1EFFF] to-white">
         }
       </button>
     }
-    <h1
-      class="font-bold text-2xl md:text-4xl bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent tracking-tight">
-      {{ title }}
-    </h1>
+    @if (loading) {
+      <ngx-skeleton-loader class="h-10 w-80" appearance="line" animation="progress"
+        [theme]="{
+          height: '40px',
+          background: 'lightgray',
+          'border-radius': '5px',
+          'margin': '0',
+          'padding': '0'
+        }" />
+    }@else {
+      <h1
+        class="font-bold text-2xl md:text-4xl bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent tracking-tight">
+        {{ title }}
+      </h1>
+    }
   </nav>
   <div class="flex items-center gap-3">
     <span class="hidden md:inline text-sm text-gray-600 font-medium">

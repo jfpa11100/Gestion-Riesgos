@@ -4,17 +4,19 @@ import { SupabaseService } from '../../../shared/services/supabase/supabase.serv
 import { AuthService } from '../../../auth/services/auth.service';
 import { Project } from '../../interfaces/project.interface';
 import { Risk } from '../../interfaces/risk.interface';
+import { EmailService } from '../email/email.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
   supabase: SupabaseClient = inject(SupabaseService).supabase;
+  emailService = inject(EmailService);
   authService = inject(AuthService);
 
   currentProject = signal<Project | null>(null);
 
-  async getProjects(userId:string): Promise<Project[]> {
+  async getProjects(userId: string): Promise<Project[]> {
     const email = await this.authService.getUserEmail();
 
     const response = await this.supabase
@@ -48,17 +50,23 @@ export class ProjectService {
     if (error) {
       throw 'Sucedió un error al obtener la información del proyecto, intenta nuevamente';
     }
-    let risks:Risk[] = []
+    let risks: Risk[] = []
     for (const r of data.project_risks) {
-      const risk:Risk = { probability: r.probability, impact:r.impact, ...r.risks }
+      const risk: Risk = { probability: r.probability, impact: r.impact, ...r.risks }
       risks.push(risk)
     }
-    const project:Project = {risks:risks, ...data}
+    const project: Project = { risks: risks, ...data }
     this.currentProject.set(project);
     return this.currentProject;
   }
 
   async createProject(project: Project) {
+    for (const email of project.members!) {
+      // If user doesn't exists, invite him
+      if (!await this.authService.userExists(email)) {
+        this.emailService.sendProjectInvitation(project.name, this.authService.getUserName(), email).catch(e => { throw e })
+      }
+    }
     const userId = await this.authService.getUserId();
     const { data, error } = await this.supabase
       .from('projects')

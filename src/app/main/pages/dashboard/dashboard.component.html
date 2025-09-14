@@ -88,3 +88,11 @@
   </section>
 
 </main>
+
+@if (toast.show) {
+  <app-toast
+    [title]="toast.title"
+    [message]="toast.message"
+    (stopShowing)="toast.show = false"
+  />
+}

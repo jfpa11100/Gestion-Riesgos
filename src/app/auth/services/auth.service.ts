@@ -21,9 +21,14 @@ export class AuthService {
     return this._session;
   }
 
-  async getUserId(): Promise<string> {
+  getUserId(): string {
     const value = JSON.parse(localStorage.getItem('sb-fqnxvpkbthybqnscctqq-auth-token')!);
     return value.user.id;
+  }
+
+  getUserName(): string {
+    const value = JSON.parse(localStorage.getItem('sb-fqnxvpkbthybqnscctqq-auth-token')!);
+    return value.user.email;
   }
 
   async getUserEmail(): Promise<string> {
