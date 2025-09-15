@@ -24,6 +24,16 @@
         />
       </div>
 
+      <label for="name" class="block mb-1 text-xm mt-[1lh]">Descripción</label>
+      <div class="div-input">
+        <textarea
+          class="input-style max-h-60"
+          id="description"
+          formControlName="description"
+          placeholder="Da una pequeña descripción">
+      </textarea>
+      </div>
+
 
 
       <label class="block mb-1 text-xm mt-[1lh]">Añade los miembros del equipo:</label>
@@ -57,32 +67,8 @@
 
         @if(projectForm.errors?.['invalid']) {
           <div class="error-message">
-            Asegúrate que el nombre tenga al menos 3 caracteres.
-          </div>
-        }
-        @if(projectForm.errors?.['owner']) {
-          <div class="error-message">
-            Eres el dueño del proyecto.
-          </div>
-        }
-        @if(projectForm.errors?.['invalidEmail']) {
-          <div class="error-message">
-            El email ingresado no es válido.
-          </div>
-        }
-        @if(projectForm.errors?.['emailExists']) {
-          <div class="error-message">
-            El email ya está en la lista de miembros.
-          </div>
-        }
-        @if(projectForm.errors?.['userNotFound']) {
-          <div class="error-message">
-            El usuario no existe.
-          </div>
-        }
-        @if(projectForm.errors?.['projectNameExists']) {
-          <div class="error-message">
-            Ya perteneces a un proyecto con ese nombre.
+            Asegúrate que el nombre tenga 3-20 caracteres <br>
+            Y que la descripción tenga 10-500 caracteres
           </div>
         }
 
@@ -96,3 +82,13 @@
     </form>
   </div>
 </div>
+
+@if (toast.show) {
+  <app-toast
+    [title]="toast.title"
+    [message]="toast.message"
+    [type]="toast.type"
+    [timeout]="toast.timeout!"
+    (stopShowing)="toast.show = false"
+  />
+}

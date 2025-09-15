@@ -4,6 +4,7 @@ export interface Project {
   id?: string;
   members?: string[];
   name: string;
+  description: string;
   owner?: string;
   risks?:Risk[];
   created_at?: Date;

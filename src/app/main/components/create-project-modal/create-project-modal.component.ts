@@ -7,14 +7,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../../auth/services/auth.service';
+import { ToastInterface } from '../../../shared/interfaces/toast.interface';
+import { ToastComponent } from '../../../shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-create-project-modal',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ToastComponent],
   templateUrl: './create-project-modal.component.html',
   styles: '',
 })
 export class CreateProjectModalComponent {
+  toast: ToastInterface = { show: false, title: '', message: '', type: 'info' }
   authService = inject(AuthService);
   @Input() projects!: Project[];
   @Output() close = new EventEmitter<void>();
@@ -24,7 +27,8 @@ export class CreateProjectModalComponent {
 
   constructor(private fb: FormBuilder) {
     this.projectForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
       email: ['', []],
     });
   }
@@ -37,11 +41,12 @@ export class CreateProjectModalComponent {
     // Check if user belongs to a project already named
     const projectName = this.projectForm.get('name')!.value
     if (this.projects != null && this.projects.some(p => p.name.toLocaleLowerCase() === projectName.toLocaleLowerCase())) {
-      this.projectForm.setErrors({ projectNameExists: true });
+      this.toast = { show: true, title: 'Ya perteneces a un proyecto con ese nombre', message: 'Prueba otro', type: 'info', timeout: 2000 }
       return;
     }
     const newProject: Project = {
       name: projectName,
+      description: this.projectForm.get('description')!.value,
       members: this.teamMembers,
       created_at: new Date(),
     };
@@ -55,18 +60,18 @@ export class CreateProjectModalComponent {
     // validar si el email es email válido
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
-      this.projectForm.setErrors({ invalidEmail: true });
+      this.toast = { show: true, title: 'El email ingresado no es válido', message: '', type: 'info', timeout: 2000 }
       return;
     }
     // Validar si es el mismo usuario
     const currentEmail = await this.authService.getUserEmail();
     if (email === currentEmail) {
-      this.projectForm.setErrors({ owner: true });
+      this.toast = { show: true, title: 'Eres el dueño del proyecto', message: '', type: 'info', timeout: 2000 }
       return;
     }
     // Validar si ya está en la lista
     if (this.teamMembers.some((member) => member === email)) {
-      this.projectForm.setErrors({ emailExists: true });
+      this.toast = { show: true, title: 'Ya agregaste ese email', message: 'prueba otro', type: 'info', timeout: 2000 }
       return;
     }
 

@@ -22,7 +22,7 @@ export class ProjectComponent implements OnInit {
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectsService = inject(ProjectService);
-  project: WritableSignal<Project | null> = signal({name: ''});
+  project: WritableSignal<Project | null> = signal({name: '', description:''});
   loading = true;
   showAddMembersModal = false;
   toast:ToastInterface = {show:false, title:'0', message:'', type:'info'};
@@ -39,7 +39,8 @@ export class ProjectComponent implements OnInit {
   }
 
   goToPrioritization() {
-    if (!this.project()!.risks || this.project()!.risks?.some(risk => risk.impact === null || risk.probability === null)) {
+    // If there are no risks or there are incomplete risks
+    if (!this.project()!.risks!.length || this.project()!.risks?.some(risk => risk.impact === null || risk.probability === null)) {
       this.toast = {
         show: true,
         title: 'Aún no has completado la valoración de los riesgos',

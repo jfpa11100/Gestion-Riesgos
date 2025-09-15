@@ -8,61 +8,78 @@
     [open]="isSideBarOpen"
   />
 
-  @if (loading){
-    <ngx-skeleton-loader class="w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0 mt-[2lh]" count="15" appearance="square" animation="progress"
-      [theme]="{
-        width: 'calc(8/10 * 100%)',
-        height: 'calc(var(--spacing) * 10)',
-        background: 'lightgray',
-        'border-radius': '5px',
-        'margin': '0 auto'
-      }" />
-  }@else{
-    <section class="mt-2 w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0">
-      <div class="flex self-center justify-end w-full md:w-8/10">
-        <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization()" >
-          <img class="size-6 mr-2" src="grid.png" alt="">
-          Matriz Priorización
-        </button>
-      </div>
+  <section class="flex flex-col justify-center w-full">
 
-      @for (risk of project()!.risks; track $index) {
-        <app-risk-project-detail
-        class="flex justify-center"
-          [projectId]="project()!.id!"
-          [risk]="risk"
-          (updatedRisk)="updateRisk($event)"
-          (deleteRisk)="deleteRisk($event)"
-        />
-      }@empty{
-      <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
-        <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px]
-        bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
-          <h2 class="text-2xl md:text-3xl font-medium mt-2">
-            ¡Añade los
-            <span
-              class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent">Riesgos
-            </span>
-            del <span class="text-secondary-blue">Proyecto!</span>
-          </h2>
-          <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
-            Identifica los riesgos y con gamificación haz que mitigar riesgos sea divertido
-            y efectivo.
-          </p>
-          <footer class="inline-flex justify-center mt-4 items-center gap-3">
-            <button (click)="goToTaxonomy()"
-              type="button"
-              class="btn-secondary py-1.5 px-4"
-            >
-              Añade los riesgos
-            </button>
-            <img class="size-6" src="logo.png" alt="">
-          </footer>
+
+    @if (loading){
+      <ngx-skeleton-loader class="flex w-full justify-center sm:pr-0 mt-[1lh]" count="1" appearance="square" animation="progress"
+        [theme]="{
+          width: '70%',
+          height: '80px',
+          background: 'lightgray',
+          'border-radius': '5px',
+          'margin': '0 auto'
+        }" />
+
+      <ngx-skeleton-loader class="w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0 mt-[2lh]" count="15" appearance="square" animation="progress"
+        [theme]="{
+          width: 'calc(8/10 * 100%)',
+          height: 'calc(var(--spacing) * 10)',
+          background: 'lightgray',
+          'border-radius': '5px',
+          'margin': '0 auto'
+        }" />
+    }@else{
+      <section class="mt-[1lh] w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0">
+        <div class="flex flex-col self-center w-7/10 max-h-20 text-base">
+          <span class="block text-xl">Descripción:</span>
+          {{ project()?.description }}
         </div>
-      </div>
-      }
+        <div class="flex self-center justify-end w-full md:w-8/10">
+          <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization()" >
+            <img class="size-6 mr-2" src="grid.png" alt="">
+            Matriz Priorización
+          </button>
+        </div>
+
+        @for (risk of project()!.risks; track $index) {
+          <app-risk-project-detail
+          class="flex justify-center"
+            [projectId]="project()!.id!"
+            [risk]="risk"
+            (updatedRisk)="updateRisk($event)"
+            (deleteRisk)="deleteRisk($event)"
+          />
+        }@empty{
+        <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
+          <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px]
+          bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
+            <h2 class="text-2xl md:text-3xl font-medium mt-2">
+              ¡Añade los
+              <span
+                class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent">Riesgos
+              </span>
+              del <span class="text-secondary-blue">Proyecto!</span>
+            </h2>
+            <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
+              Identifica los riesgos y con gamificación haz que mitigar riesgos sea divertido
+              y efectivo.
+            </p>
+            <footer class="inline-flex justify-center mt-4 items-center gap-3">
+              <button (click)="goToTaxonomy()"
+                type="button"
+                class="btn-secondary py-1.5 px-4"
+              >
+                Añade los riesgos
+              </button>
+              <img class="size-6" src="logo.png" alt="">
+            </footer>
+          </div>
+        </div>
+        }
+      </section>
+    }
     </section>
-  }
 
   @if (showAddMembersModal) {
 
