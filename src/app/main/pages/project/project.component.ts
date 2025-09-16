@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Project } from '../../interfaces/project.interface';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserProfileComponent } from '../../components/user-profile/user-profile.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProjectService } from '../../services/projects/project.service';
 import { RiskProjectDetailComponent } from "../../components/risk-project-detail/risk-project-detail.component";
@@ -10,6 +9,7 @@ import { Risk } from '../../interfaces/risk.interface';
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
 import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
+import { Sprint } from '../../interfaces/sprint.interface';
 
 @Component({
   selector: 'app-project',
@@ -18,19 +18,21 @@ import { SideMenuComponent } from "../../../shared/components/side-menu/side-men
   styles: ``
 })
 export class ProjectComponent implements OnInit {
+  openSprintIndex = 1
+  loading = true;
   isSideBarOpen = true;
+  showAddMembersModal = false;
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectsService = inject(ProjectService);
-  project: WritableSignal<Project | null> = signal({name: '', description:''});
-  loading = true;
-  showAddMembersModal = false;
+  project: WritableSignal<Project | null> = signal({name: '', description:'', sprints:[]});
   toast:ToastInterface = {show:false, title:'0', message:'', type:'info'};
 
   async ngOnInit() {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (!projectId) return;
     this.project = await this.projectsService.getProjectInfo(projectId);
+    console.log(this.project())
     this.loading = false;
   }
 
@@ -73,6 +75,10 @@ export class ProjectComponent implements OnInit {
       }
       : null
     );
+  }
+
+  hasRisks(sprint:Sprint){
+    return this.project()!.risks?.some(r => r.sprint.sprint === sprint.sprint)
   }
 
   acceptedGoToPrioritization(accepted: boolean) {

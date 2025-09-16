@@ -24,11 +24,12 @@ export class RisksService {
     return data as CategoryRisk[];
   }
 
-  async addRisksToProject(projectId: string, riskIds: string[]): Promise<void> {
+  async addRisksToProject(projectId: string, sprintId:string, riskIds: string[],): Promise<void> {
     const { error } = await this.supabase.from('project_risks').insert(
       riskIds.map((riskId) => ({
         project_id: projectId,
         risk_id: riskId,
+        sprint:sprintId
       }))
     );
 

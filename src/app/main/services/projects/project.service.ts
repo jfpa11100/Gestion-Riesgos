@@ -40,22 +40,24 @@ export class ProjectService {
           project_risks (
             impact,
             probability,
+            sprint (*),
             risks (*)
-          )
+          ),
+          project_sprints (*)
         `
       )
       .eq('id', id)
       .single();
-
     if (error) {
       throw 'Sucedió un error al obtener la información del proyecto, intenta nuevamente';
     }
     let risks: Risk[] = []
     for (const r of data.project_risks) {
-      const risk: Risk = { probability: r.probability, impact: r.impact, ...r.risks }
+      console.log("r ",r)
+      const risk: Risk = { probability: r.probability, impact: r.impact, sprint:r.sprint, ...r.risks }
       risks.push(risk)
     }
-    const project: Project = { risks: risks, ...data }
+    const project: Project = { risks: risks, sprints: data.project_sprints, ...data }
     this.currentProject.set(project);
     return this.currentProject;
   }
@@ -67,14 +69,19 @@ export class ProjectService {
         this.emailService.sendProjectInvitation(project.name, this.authService.getUserName(), email).catch(e => { throw e })
       }
     }
-    const userId = await this.authService.getUserId();
+    const userId = this.authService.getUserId();
     const { data, error } = await this.supabase
       .from('projects')
       .insert({ ...project, owner: userId })
       .select('*')
       .single();
     if (error) {
-      console.error('Error creating project:', error);
+      throw 'Sucedió un error al crear el proyecto, intenta nuevamente';
+    }
+    const { error: sprintError } = await this.supabase
+      .from('project_sprints')
+      .insert({ sprint: 1, project_id: data.id })
+    if (sprintError) {
       throw 'Sucedió un error al crear el proyecto, intenta nuevamente';
     }
     return data as Project;

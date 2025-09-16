@@ -48,6 +48,7 @@ export class CreateProjectModalComponent {
       name: projectName,
       description: this.projectForm.get('description')!.value,
       members: this.teamMembers,
+      sprints:[],
       created_at: new Date(),
     };
     this.newProject.emit(newProject);

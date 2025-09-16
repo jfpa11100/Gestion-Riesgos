@@ -1,19 +1,14 @@
-<app-header
-  [loading]="loading"
-  [title]="project()?.name!"
-  (toggleSideBar)="isSideBarOpen = $event"
-/>
-<main class="flex">
-  <app-side-menu
-    [open]="isSideBarOpen"
-  />
+<app-header [loading]="loading" [title]="project()?.name!" (toggleSideBar)="isSideBarOpen = $event" />
 
-  <section class="flex flex-col justify-center w-full">
+<main class="flex h-full">
+  <app-side-menu [open]="isSideBarOpen" />
 
+  <section class="flex flex-col w-full">
 
     @if (loading){
-      <ngx-skeleton-loader class="flex w-full justify-center sm:pr-0 mt-[1lh]" count="1" appearance="square" animation="progress"
-        [theme]="{
+
+    <ngx-skeleton-loader class="flex w-full justify-center sm:pr-0 mt-[1lh]" count="1" appearance="square"
+      animation="progress" [theme]="{
           width: '70%',
           height: '80px',
           background: 'lightgray',
@@ -21,77 +16,92 @@
           'margin': '0 auto'
         }" />
 
-      <ngx-skeleton-loader class="w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0 mt-[2lh]" count="15" appearance="square" animation="progress"
-        [theme]="{
+    <ngx-skeleton-loader class="w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0 mt-[2lh]" count="3"
+      appearance="square" animation="progress" [theme]="{
           width: 'calc(8/10 * 100%)',
           height: 'calc(var(--spacing) * 10)',
           background: 'lightgray',
           'border-radius': '5px',
           'margin': '0 auto'
         }" />
+
     }@else{
-      <section class="mt-[1lh] w-full flex flex-col justify-center gap-y-2 pr-[1lh] sm:pr-0">
-        <div class="flex flex-col self-center w-7/10 max-h-20 text-base">
-          <span class="block text-xl">Descripción:</span>
-          {{ project()?.description }}
-        </div>
-        <div class="flex self-center justify-end w-full md:w-8/10">
-          <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization()" >
-            <img class="size-6 mr-2" src="grid.png" alt="">
-            Matriz Priorización
-          </button>
-        </div>
+    <section class="mt-[1lh] w-full flex flex-col justify-center items-center gap-y-0 pr-[1lh] sm:pr-0">
+      <div class="flex flex-col self-center w-7/10 max-h-20 text-base">
+        <span class="block text-xl">Descripción:</span>
+        {{ project()?.description }}
+      </div>
+      <div class="flex self-center justify-between w-full md:w-8/10 my-2">
+        <!-- TODO: Implement create sprint -->
+        <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization()">
+          <img class="size-6 mr-2" src="grid.png" alt="">
+          Crear Sprint
+        </button>
+        <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization()">
+          <img class="size-6 mr-2" src="grid.png" alt="">
+          Matriz Priorización
+        </button>
+      </div>
 
-        @for (risk of project()!.risks; track $index) {
-          <app-risk-project-detail
-          class="flex justify-center"
-            [projectId]="project()!.id!"
-            [risk]="risk"
-            (updatedRisk)="updateRisk($event)"
-            (deleteRisk)="deleteRisk($event)"
-          />
-        }@empty{
-        <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
-          <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px]
-          bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
-            <h2 class="text-2xl md:text-3xl font-medium mt-2">
-              ¡Añade los
-              <span
-                class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent">Riesgos
-              </span>
-              del <span class="text-secondary-blue">Proyecto!</span>
-            </h2>
-            <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
-              Identifica los riesgos y con gamificación haz que mitigar riesgos sea divertido
-              y efectivo.
-            </p>
-            <footer class="inline-flex justify-center mt-4 items-center gap-3">
-              <button (click)="goToTaxonomy()"
-                type="button"
-                class="btn-secondary py-1.5 px-4"
-              >
-                Añade los riesgos
-              </button>
-              <img class="size-6" src="logo.png" alt="">
-            </footer>
+      @for (sprint of project()!.sprints; track $index) {
+      <section class="flex flex-col w-8/10 mb-2">
+        <div (click)="(openSprintIndex === sprint.sprint ? openSprintIndex=0 : openSprintIndex=sprint.sprint)"
+          class="flex items-center justify-between w-full cursor-pointer border border-secondary-blue p-4 rounded">
+          <h2 class="text-sm">Sprint {{ sprint.sprint }} </h2>
+          <svg [class]="'transform ' + (openSprintIndex === sprint.sprint ? 'rotate-180' : 'rotate-0')
+                " width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="transition-all duration-500 ease-in-out">
+            <path d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2" stroke="#1D293D" strokeWidth="1.5"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        <div [class]=" 'w-full flex flex-col gap-y-2 transition-all duration-500 ease-in-out -translate-y-2 max-h-0 opacity-0' +
+          (openSprintIndex === sprint.sprint ? 'opacity-100 max-h-[300px] translate-y-0 pt-4' : '')">
+
+          @if (hasRisks(sprint)) {
+            @for (risk of project()!.risks; track $index) {
+              @if(risk.sprint.sprint === sprint.sprint){
+                <app-risk-project-detail class="flex justify-center" [projectId]="project()!.id!" [risk]="risk"
+                (updatedRisk)="updateRisk($event)" (deleteRisk)="deleteRisk($event)" />
+              }
+            }
+
+          } @else {
+          <div class="self-center w-8/10 sm:w-6/10 md:w-4/10 lg:w-4/10 p-px shadow-2xl rounded-2xl bg-gradient-to-r
+            from-complementary-purple to-secondary-blue mb-[1lh]">
+            <div class="flex flex-col items-center justify-center text-center p-[1lh]  rounded-[15px] bg-gradient-to-r
+                  from-[#F3EAFF] to-[#E1EFFF]">
+              <h2 class="text-2xl md:text-3xl font-medium">
+                ¡Añade los
+                <span
+                  class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent">Riesgos
+                </span>
+                del <span class="text-secondary-blue">Sprint!</span>
+              </h2>
+              <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
+                Identifica los riesgos y con gamificación haz que mitigar riesgos sea divertido
+                y efectivo.
+              </p>
+              <footer class="inline-flex justify-center mt-4 items-center gap-3">
+                <button (click)="goToTaxonomy()" type="button" class="btn-secondary py-1.5 px-4">
+                  Añade los riesgos
+                </button>
+                <img class="size-6" src="logo.png" alt="">
+              </footer>
+            </div>
           </div>
+          }
         </div>
-        }
       </section>
-    }
+      }
     </section>
-
-  @if (showAddMembersModal) {
-
-  }
-
-  @if (toast.show) {
-    <app-toast
-      [title]="toast.title"
-      [message]="toast.message"
-      [type]="toast.type"
-      (confirmed)="acceptedGoToPrioritization($event)"
-      (stopShowing)="toast.show = false"
-    />
-  }
+    }
+  </section>
 </main>
+@if (showAddMembersModal) {
+
+}
+@if (toast.show) {
+<app-toast [title]="toast.title" [message]="toast.message" [type]="toast.type"
+  (confirmed)="acceptedGoToPrioritization($event)" (stopShowing)="toast.show = false" />
+}
