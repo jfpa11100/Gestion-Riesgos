@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment.development';
 })
 export class SupabaseService {
   public supabase: SupabaseClient = createClient(
-    environment.DATABASE_URL,
-    environment.API_KEY
+    environment.DATABASE_URL || process.env['SUPABASE_URL']!,
+    environment.API_KEY || process.env['API_KEY']!,
   );
 }
