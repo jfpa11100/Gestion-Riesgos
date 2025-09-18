@@ -12,9 +12,9 @@ export interface SprintRisks{
 }
 export interface Risk {
   id: string;
+  sprintId: string;
   risk: string;
   category:string;
-  sprint:Sprint;
   probability?: number;
   impact?: number;
 }

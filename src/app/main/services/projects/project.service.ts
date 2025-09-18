@@ -38,28 +38,30 @@ export class ProjectService {
       .select(
         `
           *,
-          project_risks (
-            impact,
-            probability,
-            sprint (*),
-            risks (*)
-          ),
-          project_sprints (*)
+          project_sprints (*, project_risks (*, risks (*)))
         `
       )
       .eq('id', id)
       .single();
-    if (error) {
+    if (error || !data) {
       throw 'Sucedió un error al obtener la información del proyecto, intenta nuevamente';
     }
-    let risks: Risk[] = []
-    for (const r of data.project_risks) {
-      const risk: Risk = { probability: r.probability, impact: r.impact, sprint: r.sprint, ...r.risks }
-      risks.push(risk)
-    }
-    const project: Project = { risks: risks, sprints: data.project_sprints, ...data }
+    const project:Project = this.parseDataToProject(data)
     this.currentProject.set(project);
     return this.currentProject;
+  }
+
+  parseDataToProject(project_data:any):Project{
+    let sprints:Sprint[] = []
+    let risks: Risk[]
+    for (const sprint of project_data.project_sprints) {
+      risks = []
+      for (const risk of sprint.project_risks) {
+        risks.push({ id:risk.risk_id, sprintId:risk.sprint_id, risk: risk.risks.risk, category:risk.risks.category, ...risk })
+      }
+      sprints.push({ risks, ...sprint })
+    }
+    return { sprints, ...project_data }
   }
 
   async createProject(project: Project) {
@@ -70,9 +72,10 @@ export class ProjectService {
       }
     }
     const userId = this.authService.getUserId();
+    let {sprints, ...toCreateProject} = project
     const { data, error } = await this.supabase
       .from('projects')
-      .insert({ ...project, owner: userId })
+      .insert({ ...toCreateProject, owner: userId })
       .select('*')
       .single();
     if (error) {
@@ -87,9 +90,9 @@ export class ProjectService {
     return data as Project;
   }
 
-  async createSprint(project: Project) {
+  async createSprint(project: Project):Promise<Sprint> {
     const { data, error } = await this.supabase.from('project_sprints').insert({ project_id: project.id, sprint: project.sprints.length + 1 }).select('*').single()
-    if (error) throw error
+    if (error || !data) throw error
     return data as Sprint
   }
 

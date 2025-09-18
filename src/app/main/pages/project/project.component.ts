@@ -48,9 +48,14 @@ export class ProjectComponent implements OnInit {
   createSprint() {
     this.projectsService.createSprint(this.project()!)
       .then(sprint => {
-        let updatedProject = this.project()!;
-        updatedProject.sprints.push(sprint)
-        this.project.update(pj => updatedProject)
+        const updatedProject = {
+          ...this.project()!,
+          sprints: [ 
+            ...this.project()!.sprints,
+            { ...sprint }
+          ]
+        };
+        this.project.set(updatedProject);
       }).catch(() => {
         this.toast = {
           show: true,
@@ -62,9 +67,9 @@ export class ProjectComponent implements OnInit {
       })
   }
 
-  goToPrioritization() {
+  goToPrioritization(sprint: Sprint) {
     // If there are no risks or there are incomplete risks
-    if (!this.project()!.risks!.length || this.project()!.risks?.some(risk => risk.impact === null || risk.probability === null)) {
+    if (!sprint.risks.length || sprint.risks.some(risk => risk.impact === null || risk.probability === null)) {
       this.toast = {
         show: true,
         title: 'Aún no has completado la valoración de los riesgos',
@@ -77,30 +82,40 @@ export class ProjectComponent implements OnInit {
   }
 
   updateRisk(updatedRisk: Risk) {
-    this.project.update(project =>
-      project
-        ? {
-          ...project,
-          risks: project.risks?.map(risk =>
-            risk.id === updatedRisk.id ? updatedRisk : risk
-          ) ?? []
-        }
-        : null
-    );
+    this.project.update(project => {
+      if (!project) return project;
+      return {
+        ...project,
+        sprints: project.sprints.map(sprint =>
+          sprint.id === updatedRisk.sprintId
+            ? {
+              ...sprint,
+              risks: sprint.risks.map(risk =>
+                risk.id === updatedRisk.id ? { ...risk, ...updatedRisk } : risk
+              )
+            }
+            : sprint
+        )
+      };
+    });
   }
 
   deleteRisk(risk: Risk) {
-    this.project.update(project => project
-      ? {
-        ...project,
-        risks: project.risks?.filter(r => r.id !== risk.id) ?? []
-      }
-      : null
-    );
-  }
+    this.project.update(project => {
+      if (!project) return project;
 
-  hasRisks(sprint: Sprint) {
-    return this.project()!.risks?.some(r => r.sprint.sprint === sprint.sprint)
+      return {
+        ...project,
+        sprints: project.sprints.map(sprint =>
+          sprint.id === risk.sprintId
+            ? {
+              ...sprint,
+              risks: sprint.risks.filter(r => r.id !== risk.id)
+            }
+            : sprint
+        )
+      };
+    });
   }
 
   acceptedGoToPrioritization(accepted: boolean) {

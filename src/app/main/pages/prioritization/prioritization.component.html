@@ -9,6 +9,21 @@
   />
   <section class="flex flex-col justify-center m-[1lh] h-160 w-9/10 gap-y-2">
 
+    <div class="block self-end flex-col w-3/10 justify-end items-end text-sm">
+      <button type="button" class="peer group w-full text-left px-4 pr-2 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
+          <span>Sprint {{ currentSprint.sprint }}</span>
+          <svg class="w-5 h-5 inline float-right transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+          </svg>
+      </button>
+
+      <ul class="absolute z-10 hidden overflow-hidden peer-focus:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
+        @for (sprint of sortedSprints(); track $index) {
+          <li (mousedown)="setSprintRisks(sprint)" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+        }
+      </ul>
+    </div>
+
     <span class="ml-19 md:ml-20 border-2 rounded border-secondary-blue">
       <h1 class="text-center content-center text-md font-semibold h-7">Impacto</h1>
     </span>

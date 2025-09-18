@@ -75,7 +75,6 @@ export class TaxonomyComponent implements OnInit {
   onSaveRisks() {
     this.risksService
       .addRisksToProject(
-        this.route.snapshot.paramMap.get('id')!,
         this.selectedSprint.id,
         this.addedRisks.map((r) => r.id)
       )

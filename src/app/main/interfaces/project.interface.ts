@@ -7,7 +7,6 @@ export interface Project {
   name: string;
   description: string;
   owner?: string;
-  risks?:Risk[];
   sprints: Sprint[];
   created_at?: Date;
 }
