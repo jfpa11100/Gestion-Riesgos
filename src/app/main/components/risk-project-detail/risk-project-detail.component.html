@@ -1,15 +1,14 @@
-<section class="flex justify-between w-full h-20 gap-x-2 px-2 sm:h-10 md:w-8/10 md:pl-5 md:py-3 xl:pl-10
+<section class="flex justify-between w-full h-20 gap-x-2 px-2 sm:h-10 md:pl-5 md:py-3 xl:pl-10
 border border-secondary-blue rounded bg-gradient-to-r from-gray-background to-secondary-blue">
   <div class="flex items-center text-sm">
     <h1>{{ risk.category }} | {{ risk.risk }}</h1>
   </div>
   <nav class="flex items-center gap-x-2">
     <div title="Probabilidad" class="flex flex-col w-full text-sm relative">
-      <button
+      <button (click)="toggleProbabilityMenu()"
         class="group h-8 flex items-center justify-between w-full text-left px-2 cursor-pointer
           py-2 border-2 rounded bg-white border-complementary-purple shadow-sm
-          hover:bg-gray-50 focus:outline-none"
-        (click)="toggleProbabilityMenu()">
+          hover:bg-gray-50 focus:outline-none">
 
         <div class="flex h-min items-center gap-2">
           @if (!currentProbability) {

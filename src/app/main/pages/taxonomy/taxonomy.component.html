@@ -8,12 +8,50 @@
     [open]="isSideBarOpen"
   />
   <section class="flex flex-col w-full justify-center items-center text-main-black my-4">
+    @if(loading){
+      <ngx-skeleton-loader class="flex w-full justify-center mt-2" count="1" appearance="line" animation="progress"
+        [theme]="{ width: '40%', height: '50px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
+      />
+      <ngx-skeleton-loader class="flex w-full justify-center mt-4" count="1" appearance="line" animation="progress"
+        [theme]="{ width: '20%', height: '50px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
+      />
+      <ngx-skeleton-loader class="flex w-full justify-center mt-4" count="1" appearance="line" animation="progress"
+        [theme]="{ width: '50%', height: '50px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
+      />
+      <ngx-skeleton-loader class="block max-w-xl w-full mt-[1lh] flex-col gap-5 justify-center items-start text-left" count="1" appearance="line" animation="progress"
+        [theme]="{ width: '40%', height: '30px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
+      />
+      <ngx-skeleton-loader class="flex w-full justify-center mt-4 max-w-xl" count="1" appearance="line" animation="progress"
+        [theme]="{ width: '90%', height: '60px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
+      />
+      <ngx-skeleton-loader class="flex flex-col w-4/10 justify-baseline mt-4 max-w-xl" count="5" appearance="line" animation="progress"
+        [theme]="{ width: '30%', height: '15px', background: 'lightgray', 'border-radius': '5px'}"
+      />
+      <ngx-skeleton-loader class="flex flex-col gap-y-3 w-full justify-center mt-4 max-w-xl" count="4 " appearance="line" animation="progress"
+        [theme]="{ width: '90%', height: '60px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
+      />
+    }@else{
     <h1 class="text-3xl md:text-4xl font-medium mt-2">Taxonomía de Riesgos</h1>
     <p class="text-sm text-white-letter mt-2 max-w-sm">
-      Selecciona los riesgos de tu proyecto
+      Selecciona los riesgos del sprint
     </p>
 
-    <!-- TODO: fix that search query gets updated -->
+
+    <div class="flex flex-col w-44 text-sm">
+      <button type="button" class="peer group w-full text-left px-4 pr-2 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
+          <span>Sprint {{ selectedSprint.sprint }}</span>
+          <svg class="w-5 h-5 inline float-right transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+          </svg>
+      </button>
+
+      <ul class="hidden overflow-hidden peer-focus:block w-full bg-white border border-gray-300 rounded shadow-md mt-px py-1">
+        @for (sprint of project()!.sprints; track $index) {
+          <li (mousedown)="selectedSprint=sprint" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+        }
+      </ul>
+    </div>
+
     <app-search-bar
       class="mt-[1lh] w-full"
       (onSearch)="onRiskSearch($event)"
@@ -61,6 +99,7 @@
         <button class="btn-primary w-30 h-8 mr-7" (click)="onSaveRisks()">Guardar</button>
       </footer>
     </div>
+    }
   </section>
 </main>
 @if(toastMessage.show){

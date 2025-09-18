@@ -13,7 +13,6 @@ import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 export class RiskProjectDetailComponent implements OnInit {
   risksService = inject(RisksService);
   @Input() risk!: Risk;
-  @Input() projectId!: string;
   @Output() updatedRisk = new EventEmitter<Risk>()
   @Output() deleteRisk = new EventEmitter<Risk>()
   currentProbability: string | null = null;
@@ -40,7 +39,7 @@ export class RiskProjectDetailComponent implements OnInit {
     this.currentProbability = probability === 2 ? 'Alta' : probability === 1 ? 'Media' : 'Baja';
     this.toggleProbabilityMenu();
     try {
-      await this.risksService.updateRiskProbability(this.projectId, this.risk.id, probability)
+      await this.risksService.updateRiskProbability(this.risk.sprintId, this.risk.id, probability)
       this.risk.probability = probability
       this.updatedRisk.emit(this.risk)
     } catch (error) {
@@ -56,7 +55,7 @@ export class RiskProjectDetailComponent implements OnInit {
       impact === 2 ? 'Alto' : impact === 1 ? 'Medio' : 'Bajo';
     this.toggleImpactMenu();
     try {
-      await this.risksService.updateRiskImpact(this.projectId, this.risk.id, impact)
+      await this.risksService.updateRiskImpact(this.risk.sprintId, this.risk.id, impact)
       this.risk.impact = impact;
       this.updatedRisk.emit(this.risk)
     } catch (error) {
@@ -75,7 +74,7 @@ export class RiskProjectDetailComponent implements OnInit {
   onDeleteClick() {
     this.toast = { show:true, title: 'Vas a eliminar el riesgo del proyecto', 'message': '¿Estás seguro?', type: 'confirmation' }
   }
-  
+
   async onDeleteRisk() {
     try {
       await this.risksService.deleteRisk(this.risk.id)

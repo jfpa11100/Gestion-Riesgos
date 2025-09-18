@@ -8,7 +8,6 @@ const envFile = `export const environment = {
     DATABASE_URL: "${process.env.DATABASE_URL}",
     API_KEY: "${process.env.API_KEY}",
     DATABASE_PASSWORD: "${process.env.DATABASE_PASSWORD}",
-    EMAIL_API_KEY: "${process.env.EMAIL_API_KEY}"
   };
 `;
 const targetPath = path.join(__dirname, './src/environments/environment.ts');

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
 import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { RisksListComponent } from '../../components/risks-taxonomy-list/risks-list.component';
@@ -8,18 +8,25 @@ import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 import { ToastComponent } from '../../../shared/components/toast/toast.component';
 import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
+import { Sprint } from '../../interfaces/sprint.interface';
+import { ProjectComponent } from '../project/project.component';
+import { ProjectService } from '../../services/projects/project.service';
+import { Project } from '../../interfaces/project.interface';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-taxonomy',
-  imports: [RisksListComponent, SearchBarComponent, ToastComponent, SideMenuComponent, HeaderComponent],
+  imports: [RisksListComponent, SearchBarComponent, ToastComponent, SideMenuComponent, HeaderComponent, NgxSkeletonLoaderComponent],
   templateUrl: './taxonomy.component.html',
   styles: ``,
 })
 export class TaxonomyComponent implements OnInit {
   isSideBarOpen = true;
+  loading = true;
   toastMessage: ToastInterface = {show:false, title:'', message:'', type:'info'}
   searchQuery:string = '';
   risksService = inject(RisksService);
+  projectService = inject(ProjectService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   productEngineeringRisks: CategoryRisk[] = [];
@@ -27,6 +34,9 @@ export class TaxonomyComponent implements OnInit {
   developmentEnvironmentRisks: CategoryRisk[] = [];
   categoryRisks: CategoryRisk[] = [];
   addedRisks: Risk[] = [];
+  project!: WritableSignal<Project | null>
+
+  selectedSprint!:Sprint;
 
   async ngOnInit() {
     this.categoryRisks = await this.risksService.getRisksByCategory();
@@ -39,6 +49,16 @@ export class TaxonomyComponent implements OnInit {
     this.developmentEnvironmentRisks = this.categoryRisks.filter(
       (r) => r.topic == 'Development Environment'
     );
+
+    if(this.projectService.currentProject()){
+      this.project = this.projectService.currentProject
+    }else{
+      const projectId = this.route.snapshot.paramMap.get('id');
+      if (!projectId) return;
+      this.project = await this.projectService.getProjectInfo(projectId);
+    }
+    this.selectedSprint = this.project()!.sprints[0]
+    this.loading = false;
   }
 
   onRiskChange(event: { risk: Risk; selected: boolean }) {
@@ -55,7 +75,7 @@ export class TaxonomyComponent implements OnInit {
   onSaveRisks() {
     this.risksService
       .addRisksToProject(
-        this.route.snapshot.paramMap.get('id')!,
+        this.selectedSprint.id,
         this.addedRisks.map((r) => r.id)
       )
       .then(() => {

@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnInit, WritableSignal } from '@angular/core';
 import { ProjectService } from '../../services/projects/project.service';
 import { Project } from '../../interfaces/project.interface';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Risk } from '../../interfaces/risk.interface';
 import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
 import { SideMenuComponent } from '../../../shared/components/side-menu/side-menu.component';
+import { Sprint } from '../../interfaces/sprint.interface';
 
 @Component({
   selector: 'app-prioritization',
@@ -19,19 +20,33 @@ export class PrioritizationComponent implements OnInit {
   projectService = inject(ProjectService)
   project!: WritableSignal<Project | null>
   riskMatrix: Risk[][][] = [];
+  currentSprint!: Sprint
+  sortedSprints = computed(() =>
+    [...this.project()!.sprints].sort((a, b) => a.sprint - b.sprint)
+  );
 
   async ngOnInit() {
+    const projectId = this.route.snapshot.paramMap.get('id');
     this.project = this.projectService.currentProject
     if (!this.project()) {
-      const projectId = this.route.snapshot.paramMap.get('id');
-      if (!projectId) return;
+      if (!projectId) {
+        this.router.navigate(['/dashboard'])
+        return
+      };
       this.project = await this.projectService.getProjectInfo(projectId)
       if (!this.project()) {
         this.router.navigate(['/dashboard'])
         return
       }
     }
-    const risks = this.project()!.risks ?? [];
+    // TODO: Not burn the sprint to see
+    this.currentSprint = this.sortedSprints()[0]
+    this.setSprintRisks(this.currentSprint)
+  }
+
+  setSprintRisks(sprint: Sprint) {
+    this.currentSprint = sprint;
+    const risks = sprint.risks ?? [];
     this.riskMatrix = Array.from({ length: 3 }, () =>
       Array.from({ length: 3 }, () => [])
     );
@@ -42,9 +57,7 @@ export class PrioritizationComponent implements OnInit {
     });
   }
 
-  goBackToProject(){
+  goBackToProject() {
     this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!]);
   }
-
-
 }

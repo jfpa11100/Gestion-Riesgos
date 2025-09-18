@@ -24,30 +24,30 @@ export class RisksService {
     return data as CategoryRisk[];
   }
 
-  async addRisksToProject(projectId: string, riskIds: string[]): Promise<void> {
+  async addRisksToProject(sprintId:string, riskIds: string[],): Promise<void> {
     const { error } = await this.supabase.from('project_risks').insert(
       riskIds.map((riskId) => ({
-        project_id: projectId,
         risk_id: riskId,
+        sprint_id:sprintId
       }))
     );
-
+    console.log(error)
     if (error) {
       throw 'Error al agregar riesgos al proyecto, intenta de nuevo';
     }
   }
 
-  async updateRiskProbability(projectId: string, riskId: string, probability: number) {
+  async updateRiskProbability(sprintId: string, riskId: string, probability: number) {
     const { error } = await this.supabase.from('project_risks')
-    .update({ probability }).eq('project_id', projectId).eq('risk_id', riskId);
+    .update({ probability }).eq('sprint_id', sprintId).eq('risk_id', riskId);
     if (error) {
       throw 'Error al actualizar el riesgo, intenta de nuevo';
     }
   }
 
-  async updateRiskImpact(projectId: string, riskId: string, impact: number) {
+  async updateRiskImpact(sprintId: string, riskId: string, impact: number) {
     const { error } = await this.supabase.from('project_risks')
-    .update({ impact }).eq('project_id', projectId).eq('risk_id', riskId);
+    .update({ impact }).eq('sprint_id', sprintId).eq('risk_id', riskId);
     if (error) {
       throw 'Error al actualizar el riesgo, intenta de nuevo';
     }

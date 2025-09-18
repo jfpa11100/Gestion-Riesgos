@@ -66,7 +66,7 @@ describe('RisksService', () => {
         Promise.resolve({ error: null })
       );
 
-      await service.addRisksToProject('project123', ['risk1', 'risk2']);
+      await service.addRisksToProject('project123', "sprint1", ['risk1', 'risk2']);
       expect(supabaseMock.from).toHaveBeenCalledWith('project_risks');
     });
 
@@ -76,7 +76,7 @@ describe('RisksService', () => {
       );
 
       await expectAsync(
-        service.addRisksToProject('project123', ['risk1'])
+        service.addRisksToProject('project123', "sprint1", ['risk1'])
       ).toBeRejectedWith('Error al agregar riesgos al proyecto, intenta de nuevo');
     });
   });
