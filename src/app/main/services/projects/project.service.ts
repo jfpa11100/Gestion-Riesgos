@@ -5,6 +5,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { Project } from '../../interfaces/project.interface';
 import { Risk } from '../../interfaces/risk.interface';
 import { EmailService } from '../email/email.service';
+import { Sprint } from '../../interfaces/sprint.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -53,8 +54,7 @@ export class ProjectService {
     }
     let risks: Risk[] = []
     for (const r of data.project_risks) {
-      console.log("r ",r)
-      const risk: Risk = { probability: r.probability, impact: r.impact, sprint:r.sprint, ...r.risks }
+      const risk: Risk = { probability: r.probability, impact: r.impact, sprint: r.sprint, ...r.risks }
       risks.push(risk)
     }
     const project: Project = { risks: risks, sprints: data.project_sprints, ...data }
@@ -85,5 +85,21 @@ export class ProjectService {
       throw 'Sucedió un error al crear el proyecto, intenta nuevamente';
     }
     return data as Project;
+  }
+
+  async createSprint(project: Project) {
+    const { data, error } = await this.supabase.from('project_sprints').insert({ project_id: project.id, sprint: project.sprints.length + 1 }).select('*').single()
+    if (error) throw error
+    return data as Sprint
+  }
+
+  async saveSprintDate(sprint:Sprint, date:Date):Promise<Date>{
+    const {data, error } = await this.supabase
+      .from("project_sprints")
+      .update({ mitigation_date: date })
+      .eq("id", sprint.id).select('*').single()
+
+    if (error || !data) throw error;
+    return date;
   }
 }
