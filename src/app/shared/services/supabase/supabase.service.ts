@@ -12,7 +12,6 @@ export class SupabaseService {
   public supabase: SupabaseClient = SupabaseService.createClient();
 
   static createClient(){
-    console.log('Creating Supabase client with URL:', environment.DATABASE_URL);
     return createClient(
       environment.DATABASE_URL,
       environment.API_KEY,
