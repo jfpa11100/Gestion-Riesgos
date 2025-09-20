@@ -3,6 +3,7 @@ import { Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { ToastComponent } from "../../../shared/components/toast/toast.component";
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
+import { Sprint } from '../../interfaces/sprint.interface';
 
 @Component({
   selector: 'app-risk-project-detail',
@@ -12,31 +13,42 @@ import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 })
 export class RiskProjectDetailComponent implements OnInit {
   risksService = inject(RisksService);
+  @Input() sprint!: Sprint;
   @Input() risk!: Risk;
   @Output() updatedRisk = new EventEmitter<Risk>()
   @Output() deleteRisk = new EventEmitter<Risk>()
   currentProbability: string | null = null;
   currentImpact: string | null = null;
   openProbabilityMenu = false;
-  openImpactMenu = false;
   toast: ToastInterface = {show: false, title: '', message: '', type: 'info'}
+  openImpactMenu = false;
 
   ngOnInit() {
-    this.currentProbability =
-      this.risk.probability === 2 ? 'Alta'
-        : this.risk.probability === 1 ? 'Media'
-          : this.risk.probability === 0 ? 'Baja'
-            : null;
-    this.currentImpact =
-      this.risk.impact === 2 ? 'Alto'
-        : this.risk.impact === 1 ? 'Medio'
-          : this.risk.impact === 0 ? 'Bajo'
-            : null;
+    if(this.sprint.prioritizationTechnique === 'qualitative'){
+      this.currentProbability =
+        this.risk.probability === 2 ? 'Alta'
+          : this.risk.probability === 1 ? 'Media'
+            : this.risk.probability === 0 ? 'Baja'
+              : null;
+      this.currentImpact =
+        this.risk.impact === 2 ? 'Alto'
+          : this.risk.impact === 1 ? 'Medio'
+            : this.risk.impact === 0 ? 'Bajo'
+              : null;
+    }
+    else {
+      this.currentProbability = this.risk.probability?.toString() || null
+      this.currentImpact = this.risk.impact?.toString() || null
+    }
   }
 
   async changeProbability(probability: number) {
     const before = this.currentProbability;
-    this.currentProbability = probability === 2 ? 'Alta' : probability === 1 ? 'Media' : 'Baja';
+    if(this.sprint.prioritizationTechnique === 'qualitative'){
+      this.currentProbability = probability === 2 ? 'Alta' : probability === 1 ? 'Media' : 'Baja';
+    } else{
+      this.currentProbability = probability.toString()
+    }
     this.toggleProbabilityMenu();
     try {
       await this.risksService.updateRiskProbability(this.risk.sprintId, this.risk.id, probability)
@@ -51,8 +63,11 @@ export class RiskProjectDetailComponent implements OnInit {
 
   async changeImpact(impact: number) {
     const before = this.currentImpact;
-    this.currentImpact =
-      impact === 2 ? 'Alto' : impact === 1 ? 'Medio' : 'Bajo';
+    if (this.sprint.prioritizationTechnique === 'qualitative'){
+      this.currentImpact = impact === 2 ? 'Alto' : impact === 1 ? 'Medio' : 'Bajo';
+    }else{
+      this.currentImpact = impact.toString()
+    }
     this.toggleImpactMenu();
     try {
       await this.risksService.updateRiskImpact(this.risk.sprintId, this.risk.id, impact)

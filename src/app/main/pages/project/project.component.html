@@ -1,6 +1,6 @@
 <app-header [loading]="loading" [title]="project()?.name!" (toggleSideBar)="isSideBarOpen = $event" />
 
-<main class="flex h-full">
+<main class="flex h-full pb-15">
   <app-side-menu [open]="isSideBarOpen" />
 
   <section class="flex flex-col w-full">
@@ -53,7 +53,7 @@
             @if (sprint.mitigation_date) {
               <span class="text-xs text-secondary-blue">{{ sprint.mitigation_date | date:'medium' }}</span>
             }@else {
-              <button (click)="openDatepicker = {show: true, sprint:sprint}" class="z-50 p-1 flex items-center w-fit gap-x-1 rounded hover:cursor-pointer hover:bg-white-letter hover:text-white hover:border-complementary-purple">
+              <button (click)="$event.stopPropagation()" (click)="openDatepicker = {show: true, sprint:sprint}" class="z-10 p-1 flex items-center w-fit gap-x-1 rounded hover:cursor-pointer hover:bg-white-letter hover:text-white hover:border-complementary-purple">
                 <svg class="size-3" fill="none" viewBox="0 0 16 16" role="presentation">
                   <path fill="currentcolor" fill-rule="evenodd" d="M11.586.854a2 2 0 0 1 2.828 0l.732.732a2 2 0 0 1 0 2.828L10.01 9.551a2 2 0 0 1-.864.51l-3.189.91a.75.75 0 0 1-.927-.927l.91-3.189a2 2 0 0 1 .51-.864zm1.768 1.06a.5.5 0 0 0-.708 0l-.585.586L13.5 3.94l.586-.586a.5.5 0 0 0 0-.708zM12.439 5 11 3.56 7.51 7.052a.5.5 0 0 0-.128.216l-.54 1.891 1.89-.54a.5.5 0 0 0 .217-.127zM3 2.501a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V10H15v3.001a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2h3v1.5z" clip-rule="evenodd"></path>
                 </svg>
@@ -61,19 +61,42 @@
               </button>
             }
           </div>
-          <svg [class]="'transform ' + (openSprintIndex === sprint.sprint ? 'rotate-180' : 'rotate-0')
-                " width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
-            class="transition-all duration-500 ease-in-out">
-            <path d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2" stroke="#1D293D" strokeWidth="1.5"
-              strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <section class="flex relative z-10 items-center gap-x-[1lh]">
+            @if (!sprint.prioritizationTechnique || sprint.risks.length === 0 ) {
+              <div (click)="$event.stopPropagation()" class="flex flex-col w-fit text-xs items-center justify-center">
+                <button class="z-10 flex justify-end items-center gap-x-2 peer/tech group w-43 min-w-fit text-left px-4 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
+                    <span>Técnica: {{sprint.prioritizationTechnique === 'quantitative' ? 'Cuantitativa' : sprint.prioritizationTechnique === 'qualitative' ? 'Cualitativa' : 'Selecciona una técnica'}} </span>
+                    <svg class="size-3 transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+                    </svg>
+                </button>
+                <ul (click)="$event.stopPropagation()" class="hidden z-10 absolute top-9 right-10 overflow-hidden peer-focus/tech:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
+                  <li (mousedown)="changePrioritizationTechnique(sprint, 'quantitative', $event)"
+                    class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Cuantitativa</li>
+                  <li (mousedown)="changePrioritizationTechnique(sprint, 'qualitative', $event)"
+                    class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Cualitativa</li>
+                </ul>
+              </div>
+            } @else {
+              <div (click)="$event.stopPropagation()" class="cursor-text w-43 text-xs text-center px-4 py-2 border rounded
+              bg-white/40 text-main-black border-complementary-purple shadow-sm focus:outline-none">
+                  <span>Técnica: {{sprint.prioritizationTechnique === 'quantitative' ? 'Cuantitativa' : 'Cualitativa'}} </span>
+              </div>
+            }
+            <svg [class]="'transform ' + (openSprintIndex === sprint.sprint ? 'rotate-180' : 'rotate-0')
+                  " width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"
+              class="transition-all duration-500 ease-in-out">
+              <path d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2" stroke="#1D293D" strokeWidth="1.5"
+                strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </section>
         </div>
         <div [class]=" 'w-full flex flex-col gap-y-2 transition-all duration-500 ease-in-out -translate-y-2 max-h-0 opacity-0' +
           (openSprintIndex === sprint.sprint ? 'opacity-100 max-h-fit translate-y-0 pt-4' : '')">
 
             @if (openSprintIndex === sprint.sprint) {
               @for (risk of sprint.risks; track $index) {
-                <app-risk-project-detail class="flex justify-center" [risk]="risk"
+                <app-risk-project-detail class="flex justify-center" [sprint]="sprint" [risk]="risk"
                 (updatedRisk)="updateRisk($event)" (deleteRisk)="deleteRisk($event)" />
               }@empty {
             <div class="self-center w-8/10 sm:w-6/10 md:w-4/10 lg:w-4/10 p-px shadow-2xl rounded-2xl bg-gradient-to-r
@@ -118,6 +141,6 @@
   />
 }
 @if (toast.show) {
-<app-toast [title]="toast.title" [message]="toast.message" [type]="toast.type"
+<app-toast [title]="toast.title" [message]="toast.message" [type]="toast.type" [timeout]="toast.timeout!"
   (confirmed)="acceptedGoToPrioritization($event)" (stopShowing)="toast.show = false" />
 }

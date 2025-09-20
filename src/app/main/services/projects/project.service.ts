@@ -59,7 +59,7 @@ export class ProjectService {
       for (const risk of sprint.project_risks) {
         risks.push({ id:risk.risk_id, sprintId:risk.sprint_id, risk: risk.risks.risk, category:risk.risks.category, ...risk })
       }
-      sprints.push({ risks, ...sprint })
+      sprints.push({ risks, prioritizationTechnique:sprint.prioritization_technique, ...sprint })
     }
     return { sprints, ...project_data }
   }
@@ -104,5 +104,10 @@ export class ProjectService {
 
     if (error || !data) throw error;
     return date;
+  }
+
+  async changePrioritizationTechnique(sprint:Sprint, technique: 'quantitative' | 'qualitative'){
+    const { error } = await this.supabase.from("project_sprints").update({prioritization_technique:technique}).eq("id", sprint.id)
+    if (error) throw error;
   }
 }

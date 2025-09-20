@@ -50,7 +50,7 @@ export class ProjectComponent implements OnInit {
       .then(sprint => {
         const updatedProject = {
           ...this.project()!,
-          sprints: [ 
+          sprints: [
             ...this.project()!.sprints,
             { ...sprint }
           ]
@@ -143,6 +143,23 @@ export class ProjectComponent implements OnInit {
       message: 'Intenta de nuevo más tarde',
       type: 'error',
       timeout: 2000,
+    })
+  }
+
+  changePrioritizationTechnique(sprint: Sprint, technique: 'quantitative' | 'qualitative', event: Event) {
+    event.stopPropagation()
+    this.projectsService.changePrioritizationTechnique(sprint, technique).then(() => {
+      this.project.update(pj => ({
+        ...pj!,
+        sprints: pj!.sprints.map(sp =>
+          sp.id === sprint.id
+            ? { ...sp, prioritizationTechnique: technique }
+            : sp
+        )
+      }));
+      this.toast = { show: true, title: 'Técnica actualizada', message: '', type: 'success', timeout: 1500 }
+    }).catch(() => {
+      this.toast = { show: true, title: 'Ocurrió un error', message: 'Intenta de nuevo', type: 'error', timeout: 1500 }
     })
   }
 }
