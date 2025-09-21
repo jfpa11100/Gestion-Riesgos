@@ -41,8 +41,9 @@ export class ProjectComponent implements OnInit {
     this.loading = false;
   }
 
-  goToTaxonomy() {
-    this.router.navigate(['project', this.project()!.id, 'taxonomy']);
+  goToTaxonomy(sprint:Sprint) {
+    this.router.navigate(['project', this.project()!.id, 'taxonomy'],
+      { queryParams: { sprint: sprint.sprint } });
   }
 
   createSprint() {
@@ -67,9 +68,13 @@ export class ProjectComponent implements OnInit {
       })
   }
 
-  goToPrioritization(sprint: Sprint) {
+  areAllRisksEvaluated(sprint: Sprint): boolean {
+    return sprint.risks.length > 0 && !sprint.risks.some(risk => risk.impact === null || risk.probability === null);
+  }
+
+  goToPrioritizationMatrix(sprint: Sprint) {
     // If there are no risks or there are incomplete risks
-    if (!sprint.risks.length || sprint.risks.some(risk => risk.impact === null || risk.probability === null)) {
+    if (!this.areAllRisksEvaluated(sprint)) {
       this.toast = {
         show: true,
         title: 'Aún no has completado la valoración de los riesgos',
@@ -78,7 +83,20 @@ export class ProjectComponent implements OnInit {
       }
       return
     }
-    this.router.navigate(['project', this.project()!.id, 'prioritization']);
+    this.router.navigate(['project', this.project()!.id, 'matrix']);
+  }
+
+  goToPrioritizationList(sprint: Sprint) {
+    // if (!this.areAllRisksEvaluated(sprint)) {
+    //   this.toast = {
+    //     show: true,
+    //     title: 'Aún no has completado la valoración de los riesgos',
+    //     message: '¿Deseas continuar?',
+    //     type: 'confirmation'
+    //   }
+    //   return
+    // }
+    this.router.navigate(['project', this.project()!.id, 'list']);
   }
 
   updateRisk(updatedRisk: Risk) {
@@ -120,7 +138,7 @@ export class ProjectComponent implements OnInit {
 
   acceptedGoToPrioritization(accepted: boolean) {
     if (!accepted) return;
-    this.router.navigate(['project', this.project()!.id, 'prioritization']);
+    this.router.navigate(['project', this.project()!.id, 'matrix']);
   }
 
   goBackToProjects() {

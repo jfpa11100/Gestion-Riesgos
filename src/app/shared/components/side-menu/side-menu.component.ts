@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 
@@ -13,6 +13,7 @@ export class SideMenuComponent implements OnInit {
   route = inject(ActivatedRoute)
   authService = inject(AuthService);
   @Input() open!:boolean
+  projectId = this.route.snapshot.paramMap.get('id')
 
   ngOnInit(): void {
       // To know where is the user
