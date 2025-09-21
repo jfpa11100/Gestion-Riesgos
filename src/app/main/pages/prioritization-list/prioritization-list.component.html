@@ -1,0 +1,105 @@
+<app-header [title]="'Listado de Priorización'"
+(toggleSideBar)="isSideBarOpen = $event"
+[isSideBarOpen]="isSideBarOpen"/>
+<main class="flex min-h-dvh">
+  <app-side-menu [open]="isSideBarOpen"/>
+  <section class="w-full flex flex-col p-[1lh] gap-y-[1lh] min-h-8/10">
+
+    <div class="block self-end flex-col w-3/10 justify-end items-end text-sm">
+      @if (loading) {
+
+      }@else {
+        <button type="button" class="peer group w-full text-left px-4 pr-2 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
+            <span>Sprint {{ currentSprint().sprint }}</span>
+            <svg class="w-5 h-5 inline float-right transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+            </svg>
+        </button>
+
+        <ul class="absolute z-10 hidden overflow-hidden peer-focus:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
+          @for (sprint of sortedSprints(); track $index) {
+            <li (mousedown)="setCurrentSprint(sprint)" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="relative overflow-x-auto min-h-5/10 overflow-y-hidden">
+        <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+          <div>
+            @if (categoriesList.length > 0){
+              <button class="peer/category focus:border-complementary-purple inline-flex items-center justify-center
+              text-white-letter bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded
+                text-sm w-30 min-w-fit py-2 px-2" type="button">
+                  {{ selectedCategory || 'Categoría' }}
+                  <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                  </svg>
+              </button>
+              <!-- Dropdown menu -->
+              <ul class="hidden absolute top-10 peer-focus/category:block w-30 min-w-fit bg-white text-sm text-gray-700 divide-y
+              divide-gray-background rounded shadow-sm">
+              @for (category of categoriesList; track $index) {
+                <li class="w-full p-2 text-sm font-medium text-white-letter rounded hover:bg-gray-100 cursor-pointer"
+                  (mousedown)="selectedCategory = category">
+                  {{ category || 'Todas' }}
+                </li>
+              }
+              </ul>
+            }
+          </div>
+          <app-search-bar class="block text-sm w-6/10 md:w-4/10 lg:w-3/10" (onSearch)="searchTerm = $event" />
+
+        </div>
+        <table class="w-full text-sm text-left rtl:text-right text-white-letter shadow-md sm:rounded">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Categoría
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Riesgo
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Impacto
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Probabilidad
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Prioridad
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-background">
+              @for (risk of sortedRisks(); track $index) {
+                @if (risk.risk.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    risk.category.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  @if (!selectedCategory || risk.category === selectedCategory){
+                    <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
+                        <th scope="row" class="px-6 py-4 font-medium text-main-black whitespace-nowrap">
+                            {{ risk.category }}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{ risk.risk }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ risk.impact || 'N/A' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ risk.probability || 'N/A' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {{ risk.probability && risk.impact ? risk.probability*risk.impact : 'N/A'}}
+                        </td>
+                    </tr>
+                  }
+                }
+              }
+            </tbody>
+        </table>
+    </div>
+
+
+  </section>
+</main>

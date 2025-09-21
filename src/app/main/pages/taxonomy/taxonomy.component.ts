@@ -9,7 +9,6 @@ import { ToastComponent } from '../../../shared/components/toast/toast.component
 import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
 import { Sprint } from '../../interfaces/sprint.interface';
-import { ProjectComponent } from '../project/project.component';
 import { ProjectService } from '../../services/projects/project.service';
 import { Project } from '../../interfaces/project.interface';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
@@ -35,7 +34,7 @@ export class TaxonomyComponent implements OnInit {
   categoryRisks: CategoryRisk[] = [];
   addedRisks: Risk[] = [];
   project!: WritableSignal<Project | null>
-
+  sortedSprints!:Sprint[]
   selectedSprint!:Sprint;
 
   async ngOnInit() {
@@ -57,7 +56,12 @@ export class TaxonomyComponent implements OnInit {
       if (!projectId) return;
       this.project = await this.projectService.getProjectInfo(projectId);
     }
-    this.selectedSprint = this.project()!.sprints[0]
+    this.sortedSprints = this.project()!.sprints.sort((a, b) => a.sprint - b.sprint);
+    this.route.queryParams.subscribe(params => {
+      params['sprint']
+        ? this.selectedSprint = this.sortedSprints[params['sprint'] - 1]
+        : this.selectedSprint = this.sortedSprints[0]
+    })
     this.loading = false;
   }
 
@@ -73,8 +77,7 @@ export class TaxonomyComponent implements OnInit {
   }
 
   onSaveRisks() {
-    this.risksService
-      .addRisksToProject(
+    this.risksService.addRisksToSprint(
         this.selectedSprint.id,
         this.addedRisks.map((r) => r.id)
       )
