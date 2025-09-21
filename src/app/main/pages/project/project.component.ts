@@ -83,7 +83,7 @@ export class ProjectComponent implements OnInit {
       }
       return
     }
-    this.router.navigate(['project', this.project()!.id, 'matrix']);
+    this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: sprint.sprint } });
   }
 
   goToPrioritizationList(sprint: Sprint) {
@@ -96,7 +96,7 @@ export class ProjectComponent implements OnInit {
     //   }
     //   return
     // }
-    this.router.navigate(['project', this.project()!.id, 'list']);
+    this.router.navigate(['project', this.project()!.id, 'list'], { queryParams: { sprint: sprint.sprint } });
   }
 
   updateRisk(updatedRisk: Risk) {
@@ -138,7 +138,7 @@ export class ProjectComponent implements OnInit {
 
   acceptedGoToPrioritization(accepted: boolean) {
     if (!accepted) return;
-    this.router.navigate(['project', this.project()!.id, 'matrix']);
+    this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: this.sortedSprints()[this.openSprintIndex - 1].sprint } });
   }
 
   goBackToProjects() {

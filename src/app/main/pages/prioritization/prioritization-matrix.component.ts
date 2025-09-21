@@ -39,8 +39,12 @@ export class PrioritizationMatrixComponent implements OnInit {
         return
       }
     }
-    // TODO: Not burn the sprint to see
-    this.currentSprint = this.sortedSprints()[0]
+    // If sprint in query params, set sprint to that
+    this.route.queryParams.subscribe(params => {
+      params['sprint']
+        ? this.currentSprint = this.sortedSprints()[params['sprint'] - 1]
+        : this.currentSprint = this.sortedSprints()[0];
+    })
     this.setSprintRisks(this.currentSprint)
   }
 
