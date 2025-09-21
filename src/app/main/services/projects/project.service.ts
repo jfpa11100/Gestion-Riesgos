@@ -93,7 +93,7 @@ export class ProjectService {
   async createSprint(project: Project):Promise<Sprint> {
     const { data, error } = await this.supabase.from('project_sprints').insert({ project_id: project.id, sprint: project.sprints.length + 1 }).select('*').single()
     if (error || !data) throw error
-    return data as Sprint
+    return { ...data, risks:[], prioritizationTechnique:data.prioritization_technique }
   }
 
   async saveSprintDate(sprint:Sprint, date:Date):Promise<Date>{

@@ -38,10 +38,18 @@
         </button>
 
         <!-- TODO: Fix logic for going to prioritization matrix -->
-        <button class="btn-primary text-sm flex items-center py-1 px-4" (click)="goToPrioritization(project()!.sprints[openSprintIndex])">
-          <img class="size-6 mr-2" src="grid.png" alt="">
-          Matriz Priorización
-        </button>
+         <div class="flex gap-x-[1lh] items-center">
+           <button class="btn-primary text-sm flex items-center py-1 px-3 gap-x-2" (click)="goToPrioritizationList(sortedSprints()[openSprintIndex-1])">
+             <svg class="size-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-3 8a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Zm2 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Z" clip-rule="evenodd"/>
+            </svg>
+             Listado Priorización
+           </button>
+           <button class="btn-primary text-sm flex items-center py-1 px-4 border border-complementary-purple hover:border-complementary-blue" (click)="goToPrioritizationMatrix(sortedSprints()[openSprintIndex-1])">
+             <img class="size-6 mr-2" src="grid.png" alt="">
+             Matriz Priorización
+           </button>
+         </div>
       </div>
 
       @for (sprint of sortedSprints(); track $index) {
@@ -61,16 +69,17 @@
               </button>
             }
           </div>
-          <section class="flex relative z-10 items-center gap-x-[1lh]">
+          <section class="flex relative items-center gap-x-[1lh]">
             @if (!sprint.prioritizationTechnique || sprint.risks.length === 0 ) {
               <div (click)="$event.stopPropagation()" class="flex flex-col w-fit text-xs items-center justify-center">
-                <button class="z-10 flex justify-end items-center gap-x-2 peer/tech group w-43 min-w-fit text-left px-4 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
+                <button class="flex justify-end items-center gap-x-2 peer/tech group w-43 min-w-fit text-left px-4 py-2 border rounded
+                 bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
                     <span>Técnica: {{sprint.prioritizationTechnique === 'quantitative' ? 'Cuantitativa' : sprint.prioritizationTechnique === 'qualitative' ? 'Cualitativa' : 'Selecciona una técnica'}} </span>
                     <svg class="size-3 transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
                     </svg>
                 </button>
-                <ul (click)="$event.stopPropagation()" class="hidden z-10 absolute top-9 right-10 overflow-hidden peer-focus/tech:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
+                <ul (click)="$event.stopPropagation()" class="hidden z-[10] peer-focus/tech:absolute top-9 right-10 overflow-hidden peer-focus/tech:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
                   <li (mousedown)="changePrioritizationTechnique(sprint, 'quantitative', $event)"
                     class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Cuantitativa</li>
                   <li (mousedown)="changePrioritizationTechnique(sprint, 'qualitative', $event)"
@@ -92,7 +101,7 @@
           </section>
         </div>
         <div [class]=" 'w-full flex flex-col gap-y-2 transition-all duration-500 ease-in-out -translate-y-2 max-h-0 opacity-0' +
-          (openSprintIndex === sprint.sprint ? 'opacity-100 max-h-fit translate-y-0 pt-4' : '')">
+          (openSprintIndex === sprint.sprint ? ' opacity-100 max-h-fit translate-y-0 pt-4 ' : '')">
 
             @if (openSprintIndex === sprint.sprint) {
               @for (risk of sprint.risks; track $index) {
@@ -115,7 +124,7 @@
                   y efectivo.
                 </p>
                 <footer class="inline-flex justify-center mt-4 items-center gap-3">
-                  <button (click)="goToTaxonomy()" type="button" class="btn-secondary py-1.5 px-4">
+                  <button (click)="goToTaxonomy(sprint)" type="button" class="btn-secondary py-1.5 px-4">
                     Añade los riesgos
                   </button>
                   <img class="size-6" src="logo.png" alt="">

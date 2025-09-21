@@ -10,10 +10,10 @@ import { Sprint } from '../../interfaces/sprint.interface';
 @Component({
   selector: 'app-prioritization',
   imports: [HeaderComponent, SideMenuComponent],
-  templateUrl: './prioritization.component.html',
+  templateUrl: './prioritization-matrix.component.html',
   styles: ``
 })
-export class PrioritizationComponent implements OnInit {
+export class PrioritizationMatrixComponent implements OnInit {
   isSideBarOpen = false;
   router = inject(Router)
   route = inject(ActivatedRoute)
@@ -45,16 +45,20 @@ export class PrioritizationComponent implements OnInit {
   }
 
   setSprintRisks(sprint: Sprint) {
-    this.currentSprint = sprint;
-    const risks = sprint.risks ?? [];
-    this.riskMatrix = Array.from({ length: 3 }, () =>
-      Array.from({ length: 3 }, () => [])
-    );
-    risks.forEach(risk => {
-      if (risk.impact != null && risk.probability != null) {
-        this.riskMatrix[risk.impact][risk.probability].push(risk);
-      }
-    });
+    if (sprint.prioritizationTechnique === 'qualitative'){
+      this.currentSprint = sprint;
+      const risks = sprint.risks ?? [];
+      this.riskMatrix = Array.from({ length: 3 }, () =>
+        Array.from({ length: 3 }, () => [])
+      );
+      risks.forEach(risk => {
+        if (risk.impact != null && risk.probability != null) {
+          this.riskMatrix[risk.impact][risk.probability].push(risk);
+        }
+      });
+    } else if(sprint.prioritizationTechnique === 'quantitative'){
+      this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!, 'list'], {queryParams:{sprint:sprint.sprint}})
+    }
   }
 
   goBackToProject() {
