@@ -8,13 +8,13 @@
         <div class="flex flex-col items-center divide-y divide-gray-background">
             <button type="button" (click)="confirm(true)"
                 class="text-complementary-purple font-medium h-full w-full hover:bg-complementary-purple/10 transition-all">Sí</button>
-            <button (click)="confirm(false)" type="button" 
+            <button (click)="confirm(false)" type="button"
                 class="text-white-letter font-medium h-full w-28 hover:bg-gray-background transition-all">No</button>
         </div>
     </div>
 }
 @else if(type === 'success' || type === 'info' || type === 'error'){
-    <div class="fixed bottom-20 left-1/2 transform -translate-x-1/2 translate-y-[-4px]
+    <div class="fixed bottom-20 left-1/2 transform -translate-x-1/2 translate-y-[-4px] pl-2
     border border-gray-200 flex items-center justify-start text-complementary-purple min-w-80 w-fit
     bg-white h-15 z-50">
         <div class="h-full w-1.5 bg-complementary-purple py-2"></div>

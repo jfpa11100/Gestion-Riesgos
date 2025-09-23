@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
 
   newProject(project: Project) {
     this.projectService.createProject(project).then((pj: Project) => {
+      this.toast = { show: true, title: 'Se han invitado los miembros', message: 'Han sido invitados por correo electrónico', type: 'success', timeout: 2000 }
       this.projects.update(projects => [...projects, pj]);
       this.showCreateProjectModal = false
     }).catch((e) => {
