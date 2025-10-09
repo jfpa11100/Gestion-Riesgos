@@ -30,7 +30,7 @@
           'margin': '0 auto'
         }" />
     }@else{
-    <nav class="flex my-[1lh] {{ isSideBarOpen ? 'mx-[1lh]' : 'sm:px-10 md:px-20 lg:px-25 xl:px-35 2xl:px-45' }}" aria-label="Breadcrumb">
+    <nav class="flex my-[1lh] mx-[1lh] {{ isSideBarOpen ? '' : 'sm:mx-10 md:mx-20 lg:mx-25 xl:mx-35 2xl:mx-45' }}" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li class="inline-flex items-center">
           <a routerLink="/dashboard" class="inline-flex items-center text-sm cursor-pointer hover:text-complementary-purple">
@@ -59,8 +59,8 @@
         <span class="block text-xl">Descripción:</span>
         {{ project()?.description }}
       </div>
-      <div class="flex self-center justify-between w-full md:w-8/10 my-2">
-        <button class="btn-secondary text-sm flex items-center py-1 pl-4 pr-3 gap-x-1" (click)="createSprint()">
+      <div class="flex px-[1lh] gap-y-2 md:px-0 flex-col md:flex-row self-center justify-between w-full md:w-8/10 my-2">
+        <button class="btn-secondary text-sm flex items-center py-1 pl-4 pr-3 gap-x-1 w-fit" (click)="createSprint()">
           Crear Sprint
           <svg class="size-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
             viewBox="0 0 24 26">
@@ -90,17 +90,17 @@
       </div>
 
       @for (sprint of sortedSprints(); track $index) {
-      <section class="flex flex-col w-8/10 mb-2">
+      <section class="flex flex-col w-full px-[1lh] md:w-8/10 mb-2">
         <div (click)="(openSprintIndex === sprint.sprint ? openSprintIndex=0 : openSprintIndex=sprint.sprint)"
-          class="flex items-center justify-between w-full cursor-pointer border border-secondary-blue p-4 rounded">
-          <div class="flex items-center gap-x-3">
-            <h2 class="text-sm text-main-black/90">Sprint {{ sprint.sprint }} </h2>
+          class="flex items-center justify-between w-full cursor-pointer border border-secondary-blue gap-x-2 px-2 py-3 md:p-4 rounded">
+          <div class="flex items-center gap-x-2 sm:gap-x-[1lh] justify-evenly">
+            <h2 class="text-xs md:text-sm text-center text-main-black font-semibold">Sprint {{ sprint.sprint }} </h2>
             @if (sprint.mitigation_date) {
-            <span class="text-xs text-secondary-blue">{{ sprint.mitigation_date | date:'medium' }}</span>
+            <span class="text-xs text-center text-secondary-blue">{{ sprint.mitigation_date | date:'medium' }}</span>
             }@else {
             <button (click)="$event.stopPropagation()" (click)="openDatepicker = {show: true, sprint:sprint}"
               class="z-10 p-1 flex items-center w-fit gap-x-1 rounded hover:cursor-pointer hover:bg-white-letter hover:text-white hover:border-complementary-purple">
-              <svg class="size-3" fill="none" viewBox="0 0 16 16" role="presentation">
+              <svg class="size-4" fill="none" viewBox="0 0 16 16" role="presentation">
                 <path fill="currentcolor" fill-rule="evenodd"
                   d="M11.586.854a2 2 0 0 1 2.828 0l.732.732a2 2 0 0 1 0 2.828L10.01 9.551a2 2 0 0 1-.864.51l-3.189.91a.75.75 0 0 1-.927-.927l.91-3.189a2 2 0 0 1 .51-.864zm1.768 1.06a.5.5 0 0 0-.708 0l-.585.586L13.5 3.94l.586-.586a.5.5 0 0 0 0-.708zM12.439 5 11 3.56 7.51 7.052a.5.5 0 0 0-.128.216l-.54 1.891 1.89-.54a.5.5 0 0 0 .217-.127zM3 2.501a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V10H15v3.001a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2h3v1.5z"
                   clip-rule="evenodd"></path>
@@ -109,11 +109,10 @@
             </button>
             }
           </div>
-          <section class="flex relative items-center gap-x-[1lh]">
+          <section class="flex relative items-center gap-x-2 md:gap-x-[1lh]">
             @if (!sprint.prioritizationTechnique || sprint.risks.length === 0 ) {
             <div (click)="$event.stopPropagation()" class="flex flex-col w-fit text-xs items-center justify-center">
-              <button
-                class="flex justify-end items-center gap-x-2 peer/tech group w-43 min-w-fit text-left px-4 py-2 border rounded
+              <button class="flex justify-center items-center gap-x-1 peer/tech group w-35 md:w-43 min-w-fit text-left px-2 md:px-4 py-2 border rounded
                  bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
                 <span>Técnica: {{sprint.prioritizationTechnique === 'quantitative' ? 'Cuantitativa' :
                   sprint.prioritizationTechnique === 'qualitative' ? 'Cualitativa' : 'Selecciona una técnica'}} </span>
@@ -131,7 +130,7 @@
               </ul>
             </div>
             } @else {
-            <div (click)="$event.stopPropagation()" class="cursor-text w-43 text-xs text-center px-4 py-2 border rounded
+            <div (click)="$event.stopPropagation()" class="cursor-text w-36 md:w-43 text-xs text-center px-2 py-2 border rounded
               bg-white/40 text-main-black border-complementary-purple shadow-sm focus:outline-none">
               <span>Técnica: {{sprint.prioritizationTechnique === 'quantitative' ? 'Cuantitativa' : 'Cualitativa'}}
               </span>
@@ -153,10 +152,10 @@
           <app-risk-project-detail class="flex justify-center" [sprint]="sprint" [risk]="risk"
             (updatedRisk)="updateRisk($event)" (deleteRisk)="deleteRisk($event)" />
           }@empty {
-          <div class="self-center w-8/10 sm:w-6/10 md:w-4/10 lg:w-4/10 p-px shadow-2xl rounded-2xl bg-gradient-to-r
+          <div class="self-center w-9/10 sm:w-6/10 md:w-4/10 lg:w-4/10 p-px shadow-2xl rounded-2xl bg-gradient-to-r
               from-complementary-purple to-secondary-blue mb-[1lh]">
-            <div class="flex flex-col items-center justify-center text-center p-[1lh]  rounded-[15px] bg-gradient-to-r
-                    from-[#F3EAFF] to-[#E1EFFF]">
+            <div class="flex flex-col items-center justify-center text-center p-[1lh]  rounded-[15px] 
+              bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
               <h2 class="text-2xl md:text-3xl font-medium">
                 ¡Añade los
                 <span
