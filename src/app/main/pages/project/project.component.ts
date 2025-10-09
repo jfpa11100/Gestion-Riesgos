@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Project } from '../../interfaces/project.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ProjectService } from '../../services/projects/project.service';
 import { RiskProjectDetailComponent } from "../../components/risk-project-detail/risk-project-detail.component";
@@ -15,7 +15,7 @@ import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-project',
-  imports: [NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent, HeaderComponent, SideMenuComponent, DatepickerComponent, DatePipe],
+  imports: [NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent, HeaderComponent, SideMenuComponent, DatepickerComponent, DatePipe, RouterLink],
   templateUrl: './project.component.html',
   styles: ``
 })

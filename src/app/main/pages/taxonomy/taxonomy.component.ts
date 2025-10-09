@@ -1,8 +1,8 @@
-import { Component, inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, WritableSignal } from '@angular/core';
 import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { RisksListComponent } from '../../components/risks-taxonomy-list/risks-list.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 import { ToastComponent } from '../../../shared/components/toast/toast.component';
@@ -15,7 +15,7 @@ import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-taxonomy',
-  imports: [RisksListComponent, SearchBarComponent, ToastComponent, SideMenuComponent, HeaderComponent, NgxSkeletonLoaderComponent],
+  imports: [RisksListComponent, SearchBarComponent, ToastComponent, SideMenuComponent, HeaderComponent, NgxSkeletonLoaderComponent, RouterLink],
   templateUrl: './taxonomy.component.html',
   styles: ``,
 })

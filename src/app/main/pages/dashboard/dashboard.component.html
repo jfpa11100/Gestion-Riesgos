@@ -1,100 +1,99 @@
-<app-header
-  [title]="'Proyectos'"
-  [showSideBar]="false"
-  (toggleSideBar)="isSideBarOpen = $event"
-/>
+<app-header [title]="'Proyectos'" [showSideBar]="false" (toggleSideBar)="isSideBarOpen = $event" />
 <main class="flex">
-
   <section class="flex flex-col w-full">
     @if (loading){
-      <ngx-skeleton-loader class="w-full flex flex-wrap justify-center gap-[1lh] mt-[3lh]" count="6" appearance="square" animation="progress"
-        [theme]="{
+    <ngx-skeleton-loader class="w-full flex flex-wrap justify-center gap-[1lh] mt-[3lh]" count="6" appearance="square"
+      animation="progress" [theme]="{
           width: '25%',
           height: '140px',
           background: 'lightgray',
           'border-radius': '1rem',
         }" />
     }@else{
-      <section class="w-full flex flex-wrap justify-center gap-[1lh]">
-        @if (projects().length != 0) {
-          <nav class="flex basis-full justify-end mt-[1lh] px-[1lh]">
-            <button class="btn-primary text-sm
-            xl:right-45 flex items-center py-0.5 px-5" (click)="onCreateProject()">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
-              <span class="ml-2 text-xs">Nuevo proyecto</span>
-            </button>
-          </nav>
-        }
-        @for (pj of projects(); track $index) {
-        <div class="group flex flex-col justify-between w-3/12 h-35 px-3 sm:px-4 md:px-6 lg:px-9 py-3
+    <section class="w-full flex flex-wrap justify-center gap-[1lh]">
+      @if (projects().length != 0) {
+      <div class="flex basis-full justify-between mt-[1lh] px-[1lh] sm:px-10 md:px-20 lg:px-25 xl:px-35 2xl:px-45">
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+              <a class="inline-flex items-center text-sm text-white-letter hover:text-complementary-purple">
+                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                </svg>
+                Dashboard
+             </a>
+            </li>
+          </ol>
+        </nav>
+        <button class="btn-primary text-sm xl:right-45 flex items-center py-0.5 px-5" (click)="onCreateProject()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-plus">
+            <path d="M5 12h14"></path>
+            <path d="M12 5v14"></path>
+          </svg>
+          <span class="ml-2 text-xs">Nuevo proyecto</span>
+        </button>
+      </div>
+      }
+      @for (pj of projects(); track $index) {
+      <div class="group flex flex-col justify-between w-3/12 h-35 px-3 sm:px-4 md:px-6 lg:px-9 py-3
         border-1 rounded-[5px] cursor-pointer min-w-40 border-white-letter/40 bg-gradient-to-r
         from-gray-background to-white-letter/30 transition-transform duration-200
         hover:scale-102  hover:to-complementary-purple/40" (click)="goToProject(pj.id!)">
-          <header class="flex justify-between items-center">
-            <h1 class="text-xl">{{ pj.name }}</h1>
-             <nav class="transform transition-transform duration-200 group-hover:translate-x-2 ">
-               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-               viewBox="0 0 24 24" fill="none" stroke="#965ad3" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
-                 <path d="m9 18 6-6-6-6"></path>
-               </svg>
-             </nav>
-          </header>
-          <footer class="flex flex-col xl:flex-row justify-between ">
-            <p class="text-xs text-secondary-blue">{{ isOwner(pj) ? 'Creador' : 'Miembro' }}</p>
-            <p class="text-xs text-secondary-blue">Creado: {{ pj.created_at | date }}</p>
+        <header class="flex justify-between items-center">
+          <h1 class="text-xl">{{ pj.name }}</h1>
+          <nav class="transform transition-transform duration-200 group-hover:translate-x-2 ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="#965ad3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="lucide lucide-chevron-right">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </nav>
+        </header>
+        <footer class="flex flex-col xl:flex-row justify-between ">
+          <p class="text-xs text-secondary-blue">{{ isOwner(pj) ? 'Creador' : 'Miembro' }}</p>
+          <p class="text-xs text-secondary-blue">Creado: {{ pj.created_at | date }}</p>
+        </footer>
+      </div>
+
+      }@empty{
+      <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
+        <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px]
+          bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
+          <h2 class="text-2xl md:text-3xl font-medium mt-2">
+            Gestiona riesgos con
+            <span
+              class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent">Gamificación:
+            </span>
+            <br>
+            ¡Crea Valor Real en Tus <span class="text-secondary-blue">Sprints!</span>
+          </h2>
+          <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
+            Descubre cómo la gamificación hace que identificar y mitigar riesgos sea divertido
+            y efectivo. Personaliza tu estrategia en metodologías ágiles y ve resultados inmediatos.
+          </p>
+          <footer class="inline-flex justify-center mt-4 items-center gap-3">
+            <button (click)="onCreateProject()" type="button" class="btn-secondary py-1.5 px-4">
+              Crea tu primer proyecto
+            </button>
+            <img class="size-6" src="graph.png" alt="">
           </footer>
         </div>
-
-        }@empty{
-        <div class="mx-auto mt-4 p-px rounded-2xl bg-gradient-to-r from-complementary-purple to-secondary-blue">
-          <div class="flex flex-col items-center justify-center text-center py-10 px-3 md:py-16 rounded-[15px]
-          bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
-            <h2 class="text-2xl md:text-3xl font-medium mt-2">
-              Gestiona riesgos con
-              <span
-                class="bg-gradient-to-r from-complementary-purple to-secondary-blue bg-clip-text text-transparent"
-                >Gamificación: </span
-              >
-              <br>
-              ¡Crea Valor Real en Tus <span class="text-secondary-blue">Sprints!</span>
-            </h2>
-            <p class="text-slate-500 mt-2 max-w-lg max-md:text-sm">
-              Descubre cómo la gamificación hace que identificar y mitigar riesgos sea divertido
-              y efectivo. Personaliza tu estrategia en metodologías ágiles y ve resultados inmediatos.
-            </p>
-            <footer class="inline-flex justify-center mt-4 items-center gap-3">
-              <button (click)="onCreateProject()"
-                type="button"
-                class="btn-secondary py-1.5 px-4"
-              >
-                Crea tu primer proyecto
-              </button>
-              <img class="size-6" src="graph.png" alt="">
-            </footer>
-          </div>
-        </div>
-        }
-      </section>
+      </div>
+      }
+    </section>
     }
 
     @if (showCreateProjectModal) {
-      <app-create-project-modal
-        (close)="showCreateProjectModal = false"
-        (newProject)="newProject($event)"
-        [projects]="projects()"
-       />
+    <app-create-project-modal (close)="showCreateProjectModal = false" (newProject)="newProject($event)"
+      [projects]="projects()" />
     }
   </section>
 
 </main>
 
 @if (toast.show) {
-  <app-toast
-    [title]="toast.title"
-    [message]="toast.message"
-    [type]="toast.type"
-    [timeout]="toast.timeout!"
-    (stopShowing)="toast.show = false"
-  />
+<app-toast [title]="toast.title" [message]="toast.message" [type]="toast.type" [timeout]="toast.timeout!"
+  (stopShowing)="toast.show = false" />
 }
