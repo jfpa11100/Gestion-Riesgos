@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, WritableSignal } from '@angular/core';
 import { ProjectService } from '../../services/projects/project.service';
 import { Project } from '../../interfaces/project.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Risk } from '../../interfaces/risk.interface';
 import { HeaderComponent } from '../../../shared/components/layout/header/header.component';
 import { SideMenuComponent } from '../../../shared/components/side-menu/side-menu.component';
@@ -9,7 +9,7 @@ import { Sprint } from '../../interfaces/sprint.interface';
 
 @Component({
   selector: 'app-prioritization',
-  imports: [HeaderComponent, SideMenuComponent],
+  imports: [HeaderComponent, SideMenuComponent, RouterLink],
   templateUrl: './prioritization-matrix.component.html',
   styles: ``
 })
@@ -63,6 +63,7 @@ export class PrioritizationMatrixComponent implements OnInit {
     } else if(sprint.prioritizationTechnique === 'quantitative'){
       this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!, 'list'], {queryParams:{sprint:sprint.sprint}})
     }
+    this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!])
   }
 
   goBackToProject() {

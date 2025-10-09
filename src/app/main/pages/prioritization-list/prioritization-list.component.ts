@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal, Signal, WritableSignal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProjectService } from '../../services/projects/project.service';
 import { Project } from '../../interfaces/project.interface';
 import { Sprint } from '../../interfaces/sprint.interface';
@@ -9,7 +9,7 @@ import { SearchBarComponent } from "../../../shared/components/search-bar/search
 
 @Component({
   selector: 'app-prioritization-list',
-  imports: [HeaderComponent, SideMenuComponent, SearchBarComponent],
+  imports: [HeaderComponent, SideMenuComponent, SearchBarComponent, RouterLink],
   templateUrl: './prioritization-list.component.html',
   styles: ``
 })
