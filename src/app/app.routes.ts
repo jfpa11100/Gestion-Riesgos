@@ -38,10 +38,6 @@ export const routes: Routes = [
     component: TaxonomyComponent
   },
   {
-    path: 'project/:id/taxonomy',
-    component: TaxonomyComponent
-  },
-  {
     path: 'project/:id/matrix',
     component: PrioritizationMatrixComponent
   },
