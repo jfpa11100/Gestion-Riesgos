@@ -14,7 +14,6 @@ import { Sprint } from '../../interfaces/sprint.interface';
   styles: ``
 })
 export class PrioritizationMatrixComponent implements OnInit {
-  isSideBarOpen = false;
   router = inject(Router)
   route = inject(ActivatedRoute)
   projectService = inject(ProjectService)
@@ -60,8 +59,10 @@ export class PrioritizationMatrixComponent implements OnInit {
           this.riskMatrix[risk.impact][risk.probability].push(risk);
         }
       });
+      return;
     } else if(sprint.prioritizationTechnique === 'quantitative'){
       this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!, 'list'], {queryParams:{sprint:sprint.sprint}})
+      return;
     }
     this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!])
   }

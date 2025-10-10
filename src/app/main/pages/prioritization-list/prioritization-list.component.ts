@@ -6,16 +6,16 @@ import { Sprint } from '../../interfaces/sprint.interface';
 import { HeaderComponent } from "../../../shared/components/layout/header/header.component";
 import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 import { SearchBarComponent } from "../../../shared/components/search-bar/search-bar.component";
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-prioritization-list',
-  imports: [HeaderComponent, SideMenuComponent, SearchBarComponent, RouterLink],
+  imports: [HeaderComponent, SideMenuComponent, SearchBarComponent, RouterLink, NgxSkeletonLoaderComponent],
   templateUrl: './prioritization-list.component.html',
   styles: ``
 })
 export class PrioritizationListComponent implements OnInit {
   loading = true;
-  isSideBarOpen = true
   route = inject(ActivatedRoute)
   router = inject(Router)
   projectService = inject(ProjectService)

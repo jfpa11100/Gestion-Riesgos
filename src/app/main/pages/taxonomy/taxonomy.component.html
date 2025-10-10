@@ -1,13 +1,7 @@
-<app-header
-  [title]="'Taxonomía'"
-  [isSideBarOpen]="isSideBarOpen"
-  (toggleSideBar)="isSideBarOpen = $event"
-/>
+<app-header [title]="'Taxonomía'" [enableSideBar]="true" />
 <main class="flex">
-  <app-side-menu
-    [open]="isSideBarOpen"
-  />
-  <section class="flex flex-col w-full justify-center items-center text-main-black my-[1lh]">
+  <app-side-menu/>
+  <section class="flex flex-col w-full px-2 justify-center items-center text-main-black my-[1lh]">
     @if(loading){
       <ngx-skeleton-loader class="flex w-full justify-center mt-2" count="1" appearance="line" animation="progress"
         [theme]="{ width: '40%', height: '50px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
@@ -31,7 +25,7 @@
         [theme]="{ width: '90%', height: '60px', background: 'lightgray', 'border-radius': '5px', 'margin': '0 auto'}"
       />
     }@else{
-    <nav class="block {{ isSideBarOpen ? 'mx-[1lh]' : 'sm:px-10 md:px-20 lg:px-25 xl:px-35 2xl:px-45' }}" aria-label="Breadcrumb">
+    <nav class="block sm:px-10 md:px-20 lg:px-25 xl:px-35 2xl:px-45" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li class="inline-flex items-center">
           <a routerLink="/dashboard" class="inline-flex items-center text-sm cursor-pointer hover:text-complementary-purple">
@@ -128,9 +122,9 @@
           (saveRisks)="onSaveRisks()"
         ></app-risks-list>
       }
-      <footer class="flex w-full justify-end">
+      <footer class="flex w-full px-4 justify-end">
         <button class="btn-secondary w-30 h-8 mr-[1lh]" (click)="goBackToProject()">Volver</button>
-        <button class="btn-primary w-30 h-8 mr-7" (click)="onSaveRisks()">Guardar</button>
+        <button class="btn-primary w-30 h-8" (click)="onSaveRisks()">Guardar</button>
       </footer>
     </div>
     }

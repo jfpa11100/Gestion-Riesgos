@@ -1,10 +1,8 @@
-<app-header [title]="'Listado de Priorización'"
-(toggleSideBar)="isSideBarOpen = $event"
-[isSideBarOpen]="isSideBarOpen"/>
+<app-header [title]="'Listado Priorización'" [enableSideBar]="true"/>
 <main class="flex min-h-dvh">
-  <app-side-menu [open]="isSideBarOpen"/>
+  <app-side-menu />
   <section class="w-full flex flex-col p-[1lh] gap-y-[1lh] min-h-8/10">
-    <section class="flex justify-between items-center">
+    <section class="flex flex-col md:flex-row gap-y-2 justify-between items-center">
       <nav aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
           <li class="inline-flex items-center">
@@ -19,12 +17,20 @@
           </li>
           <li>
             <div class="flex items-center">
-              <svg class="rtl:rotate-180 w-3 h-3 text-white-letter mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                fill="none" viewBox="0 0 6 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="m1 9 4-4-4-4" />
+              <svg class="rtl:rotate-180 w-3 h-3 text-white-letter mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
               </svg>
-              <a routerLink="/project/{{project()!.id}}" class="ms-1 text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name }}</a>
+              @if(loading){
+                <ngx-skeleton-loader class="flex items-center" count="1" appearance="square" animation="progress"
+                [theme]="{
+                  width: '60px',
+                  height: '12px',
+                  background: 'lightgray',
+                  'border-radius': '5px' }"
+                />
+              }@else{
+                <a routerLink="/project/{{project()!.id}}" class="ms-1 text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name }}</a>
+              }
             </div>
           </li>
           <li>
@@ -41,7 +47,7 @@
       </nav>
       <div class="block self-end flex-col w-3/10 justify-end items-end text-sm">
         @if (loading) {
-  
+
         }@else {
           <button type="button" class="peer group w-full text-left px-4 pr-2 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
               <span>Sprint {{ currentSprint().sprint }}</span>
@@ -49,7 +55,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
               </svg>
           </button>
-  
+
           <ul class="absolute z-10 hidden overflow-hidden peer-focus:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
             @for (sprint of sortedSprints(); track $index) {
               <li (mousedown)="setCurrentSprint(sprint)" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
@@ -60,9 +66,9 @@
     </section>
 
 
-    <div class="relative overflow-x-auto min-h-5/10 overflow-y-hidden">
-        <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-          <div>
+    <div class="relative min-h-5/10 overflow-y-hidden space-y-2">
+        <div class="flex w-full flex-col sm:flex-row space-y-2 items-center sm:justify-between">
+          <div class="w-full">
             @if (categoriesList.length > 0){
               <button class="peer/category focus:border-complementary-purple inline-flex items-center justify-center
               text-white-letter bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded
@@ -84,10 +90,10 @@
               </ul>
             }
           </div>
-          <app-search-bar class="block text-sm w-6/10 md:w-4/10 lg:w-3/10" (onSearch)="searchTerm = $event" />
-
+          <app-search-bar class="block text-sm w-full md:w-4/10 lg:w-3/10" (onSearch)="searchTerm = $event" />
         </div>
-        <table class="w-full text-sm text-left rtl:text-right text-white-letter shadow-md sm:rounded">
+        <table class="w-full text-sm text-left rtl:text-right text-white-letter shadow-md
+          sm:rounded scroll-smooth">
             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
                     <th scope="col" class="px-6 py-3">
@@ -136,9 +142,11 @@
         </table>
     </div>
 
-    <footer class="flex w-full justify-end">
-      <button class="btn-secondary w-30 h-8 mb-4" routerLink="/project/{{project()!.id}}">Volver</button>
-    </footer>
+    @if (!loading) {
+      <footer class="flex w-full justify-end">
+        <button class="btn-secondary w-30 h-8 mb-4" routerLink="/project/{{project()!.id}}">Volver</button>
+      </footer>
+    }
 
   </section>
 </main>

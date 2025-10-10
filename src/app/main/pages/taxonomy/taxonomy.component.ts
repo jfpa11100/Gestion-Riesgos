@@ -20,7 +20,6 @@ import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
   styles: ``,
 })
 export class TaxonomyComponent implements OnInit {
-  isSideBarOpen = true;
   loading = true;
   toastMessage: ToastInterface = {show:false, title:'', message:'', type:'info'}
   searchQuery:string = '';

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, inject, OnInit, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
+import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -9,10 +10,11 @@ import { AuthService } from '../../../auth/services/auth.service';
   styles: ''
 })
 export class SideMenuComponent implements OnInit {
+  localStorageService = inject(LocalStorageService)
   router = inject(Router);
   route = inject(ActivatedRoute)
   authService = inject(AuthService);
-  @Input() open!:boolean
+  open: WritableSignal<boolean> = this.localStorageService.isSideMenuOpen;
   projectId = this.route.snapshot.paramMap.get('id')
 
   ngOnInit(): void {

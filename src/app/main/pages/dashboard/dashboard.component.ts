@@ -18,7 +18,6 @@ import { ToastComponent } from "../../../shared/components/toast/toast.component
 })
 export class DashboardComponent implements OnInit {
   toast: ToastInterface = { show: false, title: '', message: '', type: 'info' }
-  isSideBarOpen = true
   router = inject(Router);
   projectService = inject(ProjectService);
   userService = inject(AuthService);

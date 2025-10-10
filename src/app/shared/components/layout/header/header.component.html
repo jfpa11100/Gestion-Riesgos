@@ -1,10 +1,10 @@
-<header class="flex justify-between items-center py-2 px-[1lh] border-b border-gray-500 w-dvw
+<header class="flex justify-between items-center py-2 px-2 md:px-[1lh] border-b border-gray-500 w-dvw
 shadow-sm bg-gradient-to-r from-[#F3EAFF] via-[#E1EFFF] to-white">
-  <nav class="flex gap-x-[1lh] items-center">
-    @if (showSideBar){
-      <button type="button" (click)="toggle()" class="cursor-pointer w-fit h-fit p-1
+  <nav class="flex gap-x-2 md:gap-x-[1lh] items-center">
+    @if (enableSideBar){
+      <button type="button" (click)="this.isSideMenuOpen.set(!this.isSideMenuOpen())" class="cursor-pointer w-fit h-fit p-1
         hover:rounded-full hover:bg-gray-background">
-        @if(isSideBarOpen){
+        @if(isSideMenuOpen()){
           <svg class="w-6 h-6 text-secondary-blue hover:text-complementary-purple" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="24" height="28" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

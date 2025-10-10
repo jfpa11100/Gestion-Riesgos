@@ -1,7 +1,7 @@
-<app-header [loading]="loading" [title]="project()?.name!" (toggleSideBar)="isSideBarOpen = $event" />
+<app-header [loading]="loading" [title]="project()?.name!" [enableSideBar]="true" />
 
 <main class="flex h-full pb-15">
-  <app-side-menu [open]="isSideBarOpen" />
+  <app-side-menu />
 
   <section class="flex flex-col w-full">
 
@@ -30,7 +30,7 @@
           'margin': '0 auto'
         }" />
     }@else{
-    <nav class="flex my-[1lh] mx-[1lh] {{ isSideBarOpen ? '' : 'sm:mx-10 md:mx-20 lg:mx-25 xl:mx-35 2xl:mx-45' }}" aria-label="Breadcrumb">
+    <nav class="flex m-[1lh] sm:mx-10 md:mx-20 lg:mx-25 xl:mx-35 2xl:mx-45" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
         <li class="inline-flex items-center">
           <a routerLink="/dashboard" class="inline-flex items-center text-sm cursor-pointer hover:text-complementary-purple">
@@ -55,7 +55,7 @@
       </ol>
     </nav>
     <section class="w-full flex flex-col justify-center items-center gap-y-0">
-      <div class="flex flex-col self-center w-7/10 p-1 min-h-25 max-h-40 text-base scroll-smooth overflow-y-auto">
+      <div class="flex flex-col self-center w-full md:w-7/10 px-[1lh] min-h-25 max-h-40 text-base scroll-smooth overflow-y-auto">
         <span class="block text-xl">Descripción:</span>
         {{ project()?.description }}
       </div>
@@ -154,7 +154,7 @@
           }@empty {
           <div class="self-center w-9/10 sm:w-6/10 md:w-4/10 lg:w-4/10 p-px shadow-2xl rounded-2xl bg-gradient-to-r
               from-complementary-purple to-secondary-blue mb-[1lh]">
-            <div class="flex flex-col items-center justify-center text-center p-[1lh]  rounded-[15px] 
+            <div class="flex flex-col items-center justify-center text-center p-[1lh]  rounded-[15px]
               bg-gradient-to-r from-[#F3EAFF] to-[#E1EFFF]">
               <h2 class="text-2xl md:text-3xl font-medium">
                 ¡Añade los

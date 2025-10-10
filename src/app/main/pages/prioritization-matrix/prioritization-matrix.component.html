@@ -1,16 +1,9 @@
-<app-header
-  [title]="'Priorización'"
-  [isSideBarOpen]="isSideBarOpen"
-  (toggleSideBar)="isSideBarOpen = $event"
-/>
+<app-header [title]="'Matriz Priorización'" [enableSideBar]="true" />
 <main class="flex justify-center">
-  <app-side-menu
-    [open]="isSideBarOpen"
-  />
-  <section class="flex flex-col justify-center m-[1lh] h-160 w-9/10 gap-y-2">
-
-    <div class="flex justify-between items-center pl-[1lh]">
-      <nav aria-label="Breadcrumb">
+  <app-side-menu />
+  <section class="flex flex-col m-[1lh] h-160 w-full gap-y-[1lh]">
+    <div class="flex flex-col md:flex-row gap-y-2 md:justify-between items-center">
+      <nav class="w-full" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
           <li class="inline-flex items-center">
             <a routerLink="/dashboard" class="inline-flex items-center text-sm cursor-pointer hover:text-complementary-purple">
@@ -44,14 +37,14 @@
           </li>
         </ol>
       </nav>
-      <div class="flex-col w-3/10 justify-end items-end text-sm">
+      <div class="w-3/10 self-end text-sm">
         <button type="button" class="peer group w-full text-left px-4 pr-2 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
             <span>Sprint {{ currentSprint.sprint }}</span>
             <svg class="w-5 h-5 inline float-right transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
             </svg>
         </button>
-  
+
         <ul class="absolute z-10 hidden overflow-hidden peer-focus:block w-fit bg-white border border-gray-300 rounded shadow-md mt-px py-1">
           @for (sprint of sortedSprints(); track $index) {
             <li (mousedown)="setSprintRisks(sprint)" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>

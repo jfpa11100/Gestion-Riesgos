@@ -23,7 +23,6 @@ export class ProjectComponent implements OnInit {
   openDatepicker: { show: boolean, sprint: Sprint | null } = { show: false, sprint: null }
   openSprintIndex = 1
   loading = true;
-  isSideBarOpen = true;
   showAddMembersModal = false;
   router = inject(Router)
   route = inject(ActivatedRoute)
