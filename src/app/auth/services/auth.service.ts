@@ -101,8 +101,7 @@ export class AuthService {
     const { data, error } = await this.supabase
       .from('users')
       .select('id')
-      .eq('email', email)
-      .single();
+      .eq('email', email);
     if (error) {
       return false;
     }
