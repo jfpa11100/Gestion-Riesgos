@@ -102,7 +102,7 @@ export class AuthService {
       .from('users')
       .select('id')
       .eq('email', email);
-    if (error) {
+    if (error || data.length === 0) {
       return false;
     }
     return !!data;
