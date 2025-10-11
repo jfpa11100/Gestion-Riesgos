@@ -57,9 +57,25 @@ export class TaxonomyComponent implements OnInit {
     }
     this.sortedSprints = this.project()!.sprints.sort((a, b) => a.sprint - b.sprint);
     this.route.queryParams.subscribe(params => {
-      params['sprint']
-        ? this.selectedSprint = this.sortedSprints[params['sprint'] - 1]
-        : this.selectedSprint = this.sortedSprints[0]
+      let sprintToSelect = this.sortedSprints.find(sprint => sprint.id === params['sprint']);
+      if (!sprintToSelect){
+        for (const sp of this.sortedSprints) {
+          if (sp.available === true){
+            sprintToSelect = sp;
+            break
+          }
+        }
+      }
+      if (!sprintToSelect) {
+        this.toastMessage = {
+          show: true,
+          title: 'No hay sprints disponibles',
+          message: 'Pide que se agregue o se desbloquee algún sprint',
+          type: 'error', timeout: 3000
+        }
+        return
+      }
+      this.selectedSprint = sprintToSelect;
     })
     this.loading = false;
   }

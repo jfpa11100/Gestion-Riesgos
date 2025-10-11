@@ -28,6 +28,7 @@ export class PrioritizationListComponent implements OnInit {
     sprint: 0,
     mitigation_date: new Date,
     risks: [],
+    available: true,
     created_at: new Date
   })
   categoriesList: string[] = []
@@ -53,9 +54,8 @@ export class PrioritizationListComponent implements OnInit {
       [...this.project()!.sprints].sort((a, b) => a.sprint - b.sprint)
     );
     this.route.queryParams.subscribe(params => {
-      params['sprint']
-        ? this.setCurrentSprint(this.sortedSprints()[params['sprint'] - 1])
-        : this.setCurrentSprint(this.sortedSprints()[0]);
+      let selectedSprint = this.sortedSprints().find(sp => sp.id === params['sprint'])
+      this.setCurrentSprint(selectedSprint || this.sortedSprints()[0]);
     })
     this.loading = false;
   }

@@ -12,10 +12,12 @@ import { SideMenuComponent } from "../../../shared/components/side-menu/side-men
 import { Sprint } from '../../interfaces/sprint.interface';
 import { DatepickerComponent } from "../../components/datepicker/datepicker.component";
 import { DatePipe } from '@angular/common';
+import { ToggleStatusComponent } from "../../../shared/components/toggle-status/toggle-status.component";
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-project',
-  imports: [NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent, HeaderComponent, SideMenuComponent, DatepickerComponent, DatePipe, RouterLink],
+  imports: [NgxSkeletonLoaderModule, RiskProjectDetailComponent, ToastComponent, HeaderComponent, SideMenuComponent, DatepickerComponent, DatePipe, RouterLink, ToggleStatusComponent],
   templateUrl: './project.component.html',
   styles: ``
 })
@@ -26,23 +28,36 @@ export class ProjectComponent implements OnInit {
   showAddMembersModal = false;
   router = inject(Router)
   route = inject(ActivatedRoute)
+  authService = inject(AuthService)
   projectsService = inject(ProjectService);
-  project: WritableSignal<Project | null> = signal({ name: '', description: '', sprints: [] });
+  project: WritableSignal<Project | null> = signal({ name: '', description: '', sprints: [], owner: '' });
   sortedSprints = computed(() =>
     [...this.project()!.sprints].sort((a, b) => a.sprint - b.sprint)
   );
   toast: ToastInterface = { show: false, title: '0', message: '', type: 'info' };
+  userIsOwner!: boolean;
 
   async ngOnInit() {
     const projectId = this.route.snapshot.paramMap.get('id');
     if (!projectId) return;
     this.project = await this.projectsService.getProjectInfo(projectId);
+    this.userIsOwner = this.authService.getUserId() === this.project()!.owner
     this.loading = false;
   }
 
-  goToTaxonomy(sprint:Sprint) {
+  goToTaxonomy(sprint: Sprint) {
+    if (!sprint.available) {
+      this.toast = {
+        show: true,
+        title: 'El sprint ha sido bloqueado',
+        message: 'Añade riesgos cuando esté permitido',
+        type: 'error',
+        timeout: 2000,
+      }
+      return
+    }
     this.router.navigate(['project', this.project()!.id, 'taxonomy'],
-      { queryParams: { sprint: sprint.sprint } });
+      { queryParams: { sprint: sprint.id } });
   }
 
   createSprint() {
@@ -82,7 +97,7 @@ export class ProjectComponent implements OnInit {
       }
       return
     }
-    this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: sprint.sprint } });
+    this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: sprint.id } });
   }
 
   goToPrioritizationList(sprint: Sprint) {
@@ -95,7 +110,7 @@ export class ProjectComponent implements OnInit {
     //   }
     //   return
     // }
-    this.router.navigate(['project', this.project()!.id, 'list'], { queryParams: { sprint: sprint.sprint } });
+    this.router.navigate(['project', this.project()!.id, 'list'], { queryParams: { sprint: sprint.id } });
   }
 
   updateRisk(updatedRisk: Risk) {
@@ -135,9 +150,22 @@ export class ProjectComponent implements OnInit {
     });
   }
 
+  updateSprint(updatedSprint: Sprint) {
+    this.project.update(project => {
+      if (!project) return project;
+
+      return {
+        ...project,
+        sprints: project.sprints.map(sprint =>
+          sprint.id === updatedSprint.id ? updatedSprint : sprint
+        )
+      };
+    });
+  }
+
   acceptedGoToPrioritization(accepted: boolean) {
     if (!accepted) return;
-    this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: this.sortedSprints()[this.openSprintIndex - 1].sprint } });
+    this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: this.sortedSprints()[this.openSprintIndex - 1].id } });
   }
 
   goBackToProjects() {

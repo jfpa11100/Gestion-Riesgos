@@ -6,5 +6,6 @@ export interface Sprint {
   sprint:number;
   mitigation_date:Date;
   risks: Risk[];
+  available: boolean;
   created_at:Date
 }

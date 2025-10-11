@@ -46,6 +46,7 @@ export class CreateProjectModalComponent {
     }
     const newProject: Project = {
       name: projectName,
+      owner: this.authService.getUserId(),
       description: this.projectForm.get('description')!.value,
       members: this.teamMembers,
       sprints:[],

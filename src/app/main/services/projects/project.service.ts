@@ -130,4 +130,13 @@ export class ProjectService {
 
     if (updateError) throw updateError;
   }
+
+  async toggleSprintAvailability(sprintId:string, value:boolean){
+    const { error: updateError } = await this.supabase
+      .from('project_sprints')
+      .update({ available: value })
+      .eq('id', sprintId);
+
+    if (updateError) throw updateError;
+  }
 }

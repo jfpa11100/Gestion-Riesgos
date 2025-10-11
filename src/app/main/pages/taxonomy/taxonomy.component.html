@@ -75,7 +75,9 @@
 
       <ul class="hidden overflow-hidden peer-focus:block w-full bg-white border border-gray-300 rounded shadow-md mt-px py-1">
         @for (sprint of sortedSprints; track $index) {
-          <li (mousedown)="selectedSprint=sprint" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+          @if (sprint.available) {
+            <li (mousedown)="selectedSprint=sprint" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+          }
         }
       </ul>
     </div>

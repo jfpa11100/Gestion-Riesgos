@@ -6,7 +6,7 @@ export interface Project {
   members?: string[];
   name: string;
   description: string;
-  owner?: string;
+  owner: string;
   sprints: Sprint[];
   created_at?: Date;
 }

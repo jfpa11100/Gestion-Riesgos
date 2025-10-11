@@ -55,7 +55,7 @@ export class RiskProjectDetailComponent implements OnInit {
       this.risk.probability = probability
       this.updatedRisk.emit(this.risk)
     } catch (error) {
-      this.toast = {show:true, title: 'No se pudo actualizar la probabilidad', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000}
+      this.toast = {show:true, title: 'No se pudo actualizar la probabilidad', 'message': 'Intenta de nuevo', type: 'error', timeout: 2000}
       this.currentImpact = before;
     }
 
@@ -75,18 +75,30 @@ export class RiskProjectDetailComponent implements OnInit {
       this.updatedRisk.emit(this.risk)
     } catch (error) {
       this.currentImpact = before;
-      this.toast = {show:true, title: 'No se pudo actualizar el impacto', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000}
+      this.toast = {show:true, title: 'No se pudo actualizar el impacto', 'message': 'Intenta de nuevo', type: 'error', timeout: 2000}
     }
   }
 
   toggleProbabilityMenu() {
+    if (!this.sprint.available){
+      this.toast = {show:true, title: 'El sprint está bloqueado', 'message': 'No se pueden cambiar valores', type: 'error', timeout: 2000}
+      return
+    }
     this.openProbabilityMenu = !this.openProbabilityMenu;
   }
   toggleImpactMenu() {
+    if (!this.sprint.available){
+      this.toast = {show:true, title: 'El sprint está bloqueado', 'message': 'No se pueden cambiar valores', type: 'error', timeout: 3000}
+      return
+    }
     this.openImpactMenu = !this.openImpactMenu;
   }
 
   onDeleteClick() {
+    if (!this.sprint.available){
+      this.toast = {show:true, title: 'El sprint está bloqueado', 'message': 'No se pueden eliminar riesgos', type: 'error', timeout: 2000}
+      return
+    }
     this.toast = { show:true, title: 'Vas a eliminar el riesgo del proyecto', 'message': '¿Estás seguro?', type: 'confirmation' }
   }
 
@@ -96,7 +108,7 @@ export class RiskProjectDetailComponent implements OnInit {
       this.toast = { show:true, title: 'Riesgo eliminado', 'message': '', type: 'info', timeout: 1000 }
       this.deleteRisk.emit(this.risk)
     } catch (error) {
-      this.toast = { show:true, title: 'No se pudo eliminar el riesgo', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000 }
+      this.toast = { show:true, title: 'No se pudo eliminar el riesgo', 'message': 'Intenta de nuevo', type: 'error', timeout: 2000 }
     }
   }
 }

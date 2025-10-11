@@ -40,9 +40,8 @@ export class PrioritizationMatrixComponent implements OnInit {
     }
     // If sprint in query params, set sprint to that
     this.route.queryParams.subscribe(params => {
-      params['sprint']
-        ? this.currentSprint = this.sortedSprints()[params['sprint'] - 1]
-        : this.currentSprint = this.sortedSprints()[0];
+      let selectedSprint = this.sortedSprints().find(sp => sp.id === params['sprint'])
+      this.currentSprint = selectedSprint ?? this.sortedSprints()[0];
     })
     this.setSprintRisks(this.currentSprint)
   }
@@ -61,7 +60,7 @@ export class PrioritizationMatrixComponent implements OnInit {
       });
       return;
     } else if(sprint.prioritizationTechnique === 'quantitative'){
-      this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!, 'list'], {queryParams:{sprint:sprint.sprint}})
+      this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!, 'list'], {queryParams:{sprint:sprint.id}})
       return;
     }
     this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!])
