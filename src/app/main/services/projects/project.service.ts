@@ -110,4 +110,24 @@ export class ProjectService {
     const { error } = await this.supabase.from("project_sprints").update({prioritization_technique:technique}).eq("id", sprint.id)
     if (error) throw error;
   }
+
+  async inviteNewMembers(projectId: string, newMembers: string[]) {
+    const { data: project, error: fetchError } = await this.supabase
+      .from('projects')
+      .select('members')
+      .eq('id', projectId)
+      .single();
+    if (fetchError) throw fetchError;
+
+    // Combinar los miembros actuales con los nuevos (evitando duplicados)
+    const currentMembers: string[] = project.members || [];
+    const updatedMembers = Array.from(new Set([...currentMembers, ...newMembers]));
+
+    const { error: updateError } = await this.supabase
+      .from('projects')
+      .update({ members: updatedMembers })
+      .eq('id', projectId);
+
+    if (updateError) throw updateError;
+  }
 }
