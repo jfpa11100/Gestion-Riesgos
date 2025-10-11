@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, WritableSignal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-side-menu',
-  imports: [RouterLink],
+  standalone: true, 
+  imports: [RouterModule], 
   templateUrl: './side-menu.component.html',
   styles: ''
 })
