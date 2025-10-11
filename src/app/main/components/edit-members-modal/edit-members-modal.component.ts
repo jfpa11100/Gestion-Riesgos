@@ -20,23 +20,22 @@ export class EditMembersModalComponent implements OnInit {
   projectService = inject(ProjectService);
   @Output() close = new EventEmitter<void>();
   project!: WritableSignal<Project | null>;
-  projectMembers: { email: string, exists: boolean }[] = [];
+  projectMembers: { email: string, exists: boolean, isOwner:boolean }[] = [];
   newMembers: string[] = [];
   email = new FormControl('');
 
   async ngOnInit() {
     this.project = this.projectService.currentProject;
     if (this.project() == null) return;
-
+    // get owner email
+    const ownerEmail = await this.authService.getUserEmailById(this.project()!.owner);
+    this.projectMembers.push({ email: ownerEmail, exists: true, isOwner:true })
+    this.loading = false;
+    // If user exists, show "Activo", else "Inactivo"
     for (let memberEmail of this.project()!.members!) {
       let userExists = await this.authService.userExists(memberEmail);
-      this.projectMembers.push({ email: memberEmail, exists: userExists })
+      this.projectMembers.push({ email: memberEmail, exists: userExists, isOwner:false})
     }
-    const myEmail = await this.authService.getUserEmail();
-    if (!this.projectMembers.some((user) => user.email === myEmail)) {
-      this.projectMembers.push({ email: myEmail, exists: true })
-    }
-    this.loading = false;
   }
 
   onInviteNewMembers() {

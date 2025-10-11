@@ -57,7 +57,7 @@
                 </div>
                 <div class="w-xs">
                   <p>{{ user.email }}</p>
-                  <p class="text-sm text-black/60">Miembro</p>
+                  <p class="text-sm text-black/60">{{ user.isOwner ? 'Propietario' : 'Miembro'}}</p>
                 </div>
               </div>
               <div class="flex items-center gap-2">
