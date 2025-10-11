@@ -1,6 +1,6 @@
-<div class="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50" (click)="close.emit()">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-lg max-h-9/10" (click)="$event.stopPropagation()">
-    <div class="p-[1lh] border-b border-primary/20">
+<div class="fixed top-13 inset-0 bg-opacity-50 backdrop-blur-sm flex lg:items-center lg:justify-center z-50" (click)="close.emit()">
+  <div class="bg-white rounded-lg shadow-lg w-6/10 md:w-full md:max-w-lg lg:max-w-xl max-h-fit min-h-fit relative" (click)="$event.stopPropagation()">
+    <div class="p-[1lh] border-b rounded-xs border-complementary-purple">
       <div class="flex justify-between items-start">
         <div>
           <h2 class="text-xl font-">Miembros del Proyecto</h2>
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="flex flex-col px-[1lh] pb-[1lh] space-y-2 w-full">
-      <label class="block mb-1 text-xm mt-[1lh]">Añade miembros al equipo:</label>
+      <h1 class="block mb-1 text-xm mt-[1lh]">Añade miembros al equipo:</h1>
       <div class="div-input">
         @for (memberEmail of newMembers ; track $index) {
           <span class="bg-blue-100 text-blue-900 px-3 py-1 rounded inline-flex items-center gap-2">
@@ -32,7 +32,7 @@
         @if (loading) {
           <ngx-skeleton-loader class="flex items-center w-50 mb-3" count="1" appearance="line" animation="progress" />
           @for (i of [1,2]; track $index) {
-            <div class="flex items-center justify-between rounded-lg">
+            <div class="flex items-center justify-between rounded-lg w-full">
               <div class="flex items-center gap-4">
                 <ngx-skeleton-loader class="size-13 m-0 p-0" count="1" appearance="circle" animation="progress" />
                 <div class="flex flex-col gap-0">
@@ -47,15 +47,15 @@
           }
         }@else{
           <h3 class="my-4">Miembros Actuales</h3>
-          <div class="space-y-3 overflow-y-auto scroll-smooth max-h-40">
+          <div class="space-y-3 pb-2 overflow-y-auto overflow-x-auto scroll-smooth max-h-40">
           @for (user of projectMembers; track $index) {
-            <div class="flex items-center justify-between rounded-lg">
+            <div class="flex items-center justify-between rounded-lg w-full">
               <div class="flex items-center gap-4">
                 <div class="inline-flex items-center justify-center w-10 h-10 border-2 border-complementary-purple
                       bg-gray-background rounded-full overflow-hidden" title="{{ user.email }}">
                   <span class="font-medium text-main-black">{{ user.email[0].toUpperCase() }}</span>
                 </div>
-                <div>
+                <div class="w-xs">
                   <p>{{ user.email }}</p>
                   <p class="text-sm text-black/60">Miembro</p>
                 </div>
