@@ -44,7 +44,7 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="m1 9 4-4-4-4" />
             </svg>
-            <a routerLink="/project/{{project()!.id}}" class="ms-1 text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name }}</a>
+            <a [routerLink]="['/project', project()!.id]" class="ms-1 text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name }}</a>
           </div>
         </li>
         <li>
