@@ -16,7 +16,7 @@ export class AssigneeSelectorComponent implements OnInit {
   authService = inject(AuthService);
   projectService = inject(ProjectService);
   project!:WritableSignal<Project | null>
-  team!: string[];
+  team: string[] = [];
   showMenu = false;
 
   @HostListener('document:click', ['$event'])
@@ -31,7 +31,12 @@ export class AssigneeSelectorComponent implements OnInit {
     this.project = this.projectService.currentProject;
     if (this.project() == null) return;
     const ownerEmail = await this.authService.getUserEmailById(this.project()!.owner);
-    this.team = [ownerEmail, ...this.project()!.members!]
+    this.team.push(ownerEmail)
+    for (const memberEmail of this.project()?.members!) {
+      if (await this.authService.userExists(memberEmail)){
+        this.team.push(memberEmail)
+      }
+    }
   }
 
   selectUser(userEmail:string | null) {
