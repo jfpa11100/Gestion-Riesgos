@@ -71,7 +71,7 @@
 
         <div class="flex gap-x-[1lh] items-center">
           <button class="btn-primary text-sm flex items-center py-1 px-3 gap-x-2"
-            (click)="goToPrioritizationList(sortedSprints()[openSprintIndex-1])">
+            (click)="goToPrioritizationList()">
             <svg class="size-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
               fill="currentColor" viewBox="0 0 24 24">
               <path fill-rule="evenodd"
@@ -82,7 +82,7 @@
           </button>
           <button
             class="btn-primary text-sm flex items-center py-1 px-4 border border-complementary-purple hover:border-complementary-blue"
-            (click)="goToPrioritizationMatrix(sortedSprints()[openSprintIndex-1])">
+            (click)="goToPrioritizationMatrix()">
             <img class="size-6 mr-2" src="grid.png" alt="">
             Matriz Priorización
           </button>

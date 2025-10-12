@@ -45,7 +45,11 @@ export class ProjectComponent implements OnInit {
     this.loading = false;
   }
 
-  goToTaxonomy(sprint: Sprint) {
+  goToTaxonomy(sprint?: Sprint) {
+    if (!sprint){
+      this.router.navigate(['project', this.project()!.id, 'taxonomy']);
+      return
+    }
     if (!sprint.available) {
       this.toast = {
         show: true,
@@ -86,7 +90,11 @@ export class ProjectComponent implements OnInit {
     return sprint.risks.length > 0 && !sprint.risks.some(risk => risk.impact === null || risk.probability === null);
   }
 
-  goToPrioritizationMatrix(sprint: Sprint) {
+  goToPrioritizationMatrix(sprint?: Sprint) {
+    if (!sprint){
+      this.router.navigate(['project', this.project()!.id, 'matrix']);
+      return
+    }
     // If there are no risks or there are incomplete risks
     if (!this.areAllRisksEvaluated(sprint)) {
       this.toast = {
@@ -100,7 +108,11 @@ export class ProjectComponent implements OnInit {
     this.router.navigate(['project', this.project()!.id, 'matrix'], { queryParams: { sprint: sprint.id } });
   }
 
-  goToPrioritizationList(sprint: Sprint) {
+  goToPrioritizationList(sprint?: Sprint) {
+    if (!sprint){
+      this.router.navigate(['project', this.project()!.id, 'list']);
+      return
+    }
     // if (!this.areAllRisksEvaluated(sprint)) {
     //   this.toast = {
     //     show: true,
