@@ -6,8 +6,8 @@ import { EditMembersModalComponent } from '../../../main/components/edit-members
 
 @Component({
   selector: 'app-side-menu',
-  standalone: true, 
-  imports: [RouterLink, EditMembersModalComponent],
+  standalone: true,
+  imports: [RouterModule, EditMembersModalComponent],
   templateUrl: './side-menu.component.html',
   styles: ''
 })
