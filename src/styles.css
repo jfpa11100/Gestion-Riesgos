@@ -59,4 +59,8 @@ html {
   .error-message {
     @apply text-red-600 text-sm mt-2 text-center;
   }
+  /* 🔹 Enlace activo del menú lateral */
+  .active-link {
+    @apply border-l-4 border-complementary-purple bg-gray-100 text-complementary-purple font-semibold;
+  }
 }
