@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { ToastComponent } from "../../../shared/components/toast/toast.component";
@@ -14,6 +14,7 @@ import { AssigneeSelectorComponent } from '../assignee-selector/assignee-selecto
 })
 export class RiskProjectDetailComponent implements OnInit {
   risksService = inject(RisksService);
+  renderer = inject(Renderer2);
   eRef = inject(ElementRef);
   @Input() sprint!: Sprint;
   @Input() risk!: Risk;
@@ -24,13 +25,26 @@ export class RiskProjectDetailComponent implements OnInit {
   openProbabilityMenu = false;
   toast: ToastInterface = {show: false, title: '', message: '', type: 'info'}
   openImpactMenu = false;
+  private clickListener?: () => void;
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    // Si el clic NO ocurrió dentro del componente
-    if (!this.eRef.nativeElement.contains(event.target)) {
-      this.openProbabilityMenu = false;
-      this.openImpactMenu = false;
+  // Activar el listener si hacen click por fuera
+  activateListener(menu:boolean) {
+    if (menu) {
+      this.clickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+        if (!this.eRef.nativeElement.contains(event.target)) {
+          menu = false;
+          this.removeClickListener();
+        }
+      });
+    } else {
+      this.removeClickListener();
+    }
+  }
+
+  private removeClickListener() {
+    if (this.clickListener) {
+      this.clickListener();
+      this.clickListener = undefined;
     }
   }
 
@@ -51,6 +65,10 @@ export class RiskProjectDetailComponent implements OnInit {
       this.currentProbability = this.risk.probability?.toString() || null
       this.currentImpact = this.risk.impact?.toString() || null
     }
+  }
+
+  ngOnDestroy() {
+    this.removeClickListener();
   }
 
   async changeProbability(probability: number) {

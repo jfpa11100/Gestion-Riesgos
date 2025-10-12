@@ -1,6 +1,6 @@
 <div class="relative inline-block">
   <!-- Botón avatar -->
-  <button (click)="showMenu = !showMenu" class="inline-flex align-middle items-center justify-center size-8 border-2 border-complementary-purple
+  <button (click)="toggleMenu()" class="inline-flex align-middle items-center justify-center size-8 border-2 border-complementary-purple
 bg-gray-background rounded-full overflow-hidden transform transition hover:scale-110 cursor-pointer" title="Responsable: {{risk.assignee}}">
   @if (risk.assignee) {
     <span class="font-medium text-main-black">{{ risk.assignee[0].toUpperCase() }}</span>

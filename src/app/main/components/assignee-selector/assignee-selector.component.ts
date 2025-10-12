@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, Input, OnInit, WritableSignal } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnDestroy, OnInit, Renderer2, WritableSignal } from '@angular/core';
 import { AuthService } from '../../../auth/services/auth.service';
 import { Project } from '../../interfaces/project.interface';
 import { Risk } from '../../interfaces/risk.interface';
@@ -10,21 +10,41 @@ import { ProjectService } from '../../services/projects/project.service';
   templateUrl: './assignee-selector.component.html',
   styles: ``
 })
-export class AssigneeSelectorComponent implements OnInit {
+export class AssigneeSelectorComponent implements OnInit, OnDestroy {
   @Input() risk!: Risk;
   eRef = inject(ElementRef);
   authService = inject(AuthService);
   projectService = inject(ProjectService);
+  renderer = inject(Renderer2);
   project!:WritableSignal<Project | null>
   team: string[] = [];
   showMenu = false;
+  private clickListener?: () => void;
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    // Si el clic NO ocurrió dentro del componente
-    if (!this.eRef.nativeElement.contains(event.target)) {
-      this.showMenu = false;
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
+    if (this.showMenu) {
+      // Activar el listener si hacen click por fuera
+      this.clickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+        if (!this.eRef.nativeElement.contains(event.target)) {
+          this.showMenu = false;
+          this.removeClickListener();
+        }
+      });
+    } else {
+      this.removeClickListener();
     }
+  }
+
+  private removeClickListener() {
+    if (this.clickListener) {
+      this.clickListener();
+      this.clickListener = undefined;
+    }
+  }
+
+  ngOnDestroy() {
+    this.removeClickListener();
   }
 
   async ngOnInit() {
