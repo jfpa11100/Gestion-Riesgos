@@ -1,0 +1,94 @@
+<div class="fixed top-13 inset-0 bg-opacity-50 backdrop-blur-sm flex lg:items-center lg:justify-center z-50" (click)="close.emit()">
+  <div class="bg-white rounded-lg shadow-lg w-6/10 md:w-full md:max-w-lg lg:max-w-xl max-h-fit min-h-fit relative" (click)="$event.stopPropagation()">
+    <div class="p-[1lh] border-b rounded-xs border-complementary-purple">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-xl font-">Miembros del Proyecto</h2>
+          <p class="text-sm text-black/60 mt-1">Mira y añade miembros.</p>
+        </div>
+        <button (click)="close.emit()" class="hover:text-gray-background transition-colors cursor-pointer">
+          <span class="text-xl">
+            &times;
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="flex flex-col px-[1lh] pb-[1lh] space-y-2 w-full">
+      <h1 class="block mb-1 text-xm mt-[1lh]">Añade miembros al equipo:</h1>
+      <div class="div-input">
+        @for (memberEmail of newMembers ; track $index) {
+          <span class="bg-blue-100 text-blue-900 px-3 py-1 rounded inline-flex items-center gap-2">
+            {{ memberEmail }}
+            <button type="button" (click)="removeMember($index)" aria-label="Eliminar email"
+              class="ml-1 cursor-pointer hover:text-red-600">&times;</button>
+          </span>
+        }
+        <input [formControl]="email" type="text" (keydown.enter)="addMember($event)" (keydown.comma)="addMember($event)"
+          (keydown.space)="addMember($event)" class="flex-grow input-style" />
+
+      </div>
+
+      @if (project()!.members!.length !== 0){
+        @if (loading) {
+          <ngx-skeleton-loader class="flex items-center w-50 mb-3" count="1" appearance="line" animation="progress" />
+          @for (i of [1,2]; track $index) {
+            <div class="flex items-center justify-between rounded-lg w-full">
+              <div class="flex items-center gap-4">
+                <ngx-skeleton-loader class="size-13 m-0 p-0" count="1" appearance="circle" animation="progress" />
+                <div class="flex flex-col gap-0 w-xs">
+                  <ngx-skeleton-loader class="w-50 max-h-6 m-0 p-0" count="1" appearance="line" animation="progress" />
+                  <ngx-skeleton-loader class="w-20 max-h-6 m-0 p-0" count="1" appearance="line" animation="progress" />
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <ngx-skeleton-loader class="w-15 m-0 p-0" count="1" appearance="line" animation="progress" />
+              </div>
+            </div>
+          }
+        }@else{
+          <h3 class="my-4">Miembros Actuales</h3>
+          <div class="space-y-3 pb-2 overflow-y-auto overflow-x-auto scroll-smooth max-h-40">
+          @for (user of projectMembers; track $index) {
+            <div class="flex items-center justify-between rounded-lg w-full">
+              <div class="flex items-center gap-4">
+                <div class="inline-flex items-center justify-center w-10 h-10 border-2 border-complementary-purple
+                      bg-gray-background rounded-full overflow-hidden" title="{{ user.email }}">
+                  <span class="font-medium text-main-black">{{ user.email[0].toUpperCase() }}</span>
+                </div>
+                <div class="w-xs">
+                  <p>{{ user.email }}</p>
+                  <p class="text-sm text-black/60">{{ user.isOwner ? 'Propietario' : 'Miembro'}}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="relative group">
+                  @if (user.exists) {
+                    <button
+                      class="flex items-center gap-2 bg-green-500/20 text-green-700 font-semibold text-xs px-3 py-1 rounded-sm">
+                      <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                      Activo
+                    </button>
+                  }@else {
+                    <button
+                      class="flex items-center gap-2 bg-red-500/20 text-red-700 font-semibold text-xs px-2 py-1 rounded-sm">
+                      <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                      Inactivo
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+    <button (click)="onInviteNewMembers()" class="block self-end btn-primary py-1 px-2 mt-1 transition-colors">
+      Guardar
+    </button>
+  </div>
+</div>
+
+  @if (toast.show) {
+  <app-toast [title]="toast.title" [message]="toast.message" [type]="toast.type" [timeout]="toast.timeout!"
+    (stopShowing)="toast.show = false" />
+  }

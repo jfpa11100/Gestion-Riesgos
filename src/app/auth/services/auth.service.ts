@@ -31,6 +31,17 @@ export class AuthService {
     return value.user.email;
   }
 
+  async getUserEmailById(userId:string){
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('email')
+      .eq('id', userId);
+    if (error || data.length === 0) {
+      return ;
+    }
+    return data[0].email;
+  }
+
   async getUserEmail(): Promise<string> {
     if (!this._session) {
       await this.getSession();
@@ -101,9 +112,8 @@ export class AuthService {
     const { data, error } = await this.supabase
       .from('users')
       .select('id')
-      .eq('email', email)
-      .single();
-    if (error) {
+      .eq('email', email);
+    if (error || data.length === 0) {
       return false;
     }
     return !!data;

@@ -2,11 +2,12 @@ import { Component, inject, OnInit, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { EditMembersModalComponent } from '../../../main/components/edit-members-modal/edit-members-modal.component';
 
 @Component({
   selector: 'app-side-menu',
   standalone: true, 
-  imports: [RouterModule], 
+  imports: [RouterLink, EditMembersModalComponent],
   templateUrl: './side-menu.component.html',
   styles: ''
 })
@@ -15,6 +16,7 @@ export class SideMenuComponent implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute)
   authService = inject(AuthService);
+  showMembersModal = false;
   open: WritableSignal<boolean> = this.localStorageService.isSideMenuOpen;
   projectId = this.route.snapshot.paramMap.get('id')
 
