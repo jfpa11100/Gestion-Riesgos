@@ -4,34 +4,43 @@
       <div class="flex justify-between items-start">
         <div>
           <h2 class="text-xl font-">Miembros del Proyecto</h2>
-          <p class="text-sm text-black/60 mt-1">Mira y añade miembros.</p>
+          <p class="text-sm text-white-letter mt-1">Mira el estado del equipo.</p>
         </div>
         <button (click)="close.emit()" class="hover:text-gray-background transition-colors cursor-pointer">
-          <span class="text-xl">
+          <span class="text-2xl">
             &times;
           </span>
         </button>
       </div>
     </div>
     <div class="flex flex-col px-[1lh] pb-[1lh] space-y-2 w-full">
-      <h1 class="block mb-1 text-xm mt-[1lh]">Añade miembros al equipo:</h1>
-      <div class="div-input">
-        @for (memberEmail of newMembers ; track $index) {
-          <span class="bg-blue-100 text-blue-900 px-3 py-1 rounded inline-flex items-center gap-2">
-            {{ memberEmail }}
-            <button type="button" (click)="removeMember($index)" aria-label="Eliminar email"
-              class="ml-1 cursor-pointer hover:text-red-600">&times;</button>
-          </span>
-        }
-        <input [formControl]="email" type="text" (keydown.enter)="addMember($event)" (keydown.comma)="addMember($event)"
-          (keydown.space)="addMember($event)" class="flex-grow input-style" />
+      @if (loading) {
+        <ngx-skeleton-loader class="block mt-[1lh] w-70" count="1" appearance="line" animation="progress" />
+        <ngx-skeleton-loader class="block mb-1 w-25 max-h-2" count="1" appearance="line" animation="progress" />
+        <ngx-skeleton-loader class="block my-[1lh] w-full" count="1" appearance="line" animation="progress" />
+      }@else{
+        @if (isUserOwner) {
+          <h1 class="block mb-1 text-lg my-[1lh]">Añade miembros al equipo</h1>
+          <p class="text-xs text-white-letter">Correo electrónico</p>
+          <div class="div-input">
+            @for (memberEmail of newMembers ; track $index) {
+              <span class="bg-blue-100 text-blue-900 px-3 py-1 rounded inline-flex items-center gap-2">
+                {{ memberEmail }}
+                <button type="button" (click)="removeMember($index)" aria-label="Eliminar email"
+                  class="ml-1 cursor-pointer hover:text-red-600">&times;</button>
+              </span>
+            }
+            <input [formControl]="email" type="text" (keydown.enter)="addMember($event)" (keydown.comma)="addMember($event)"
+              (keydown.space)="addMember($event)" class="flex-grow input-style" placeholder="ej: jhondoe@gmail.com" />
 
-      </div>
+          </div>
+        }
+      }
 
       @if (project()!.members!.length !== 0){
         @if (loading) {
           <ngx-skeleton-loader class="flex items-center w-50 mb-3" count="1" appearance="line" animation="progress" />
-          @for (i of [1,2]; track $index) {
+          @for (i of [1,2,3]; track $index) {
             <div class="flex items-center justify-between rounded-lg w-full">
               <div class="flex items-center gap-4">
                 <ngx-skeleton-loader class="size-13 m-0 p-0" count="1" appearance="circle" animation="progress" />
@@ -46,7 +55,7 @@
             </div>
           }
         }@else{
-          <h3 class="my-4">Miembros Actuales</h3>
+          <h3 class="text-lg my-4">Miembros Actuales</h3>
           <div class="space-y-3 pb-2 overflow-y-auto overflow-x-auto scroll-smooth max-h-40">
           @for (user of projectMembers; track $index) {
             <div class="flex items-center justify-between rounded-lg w-full">

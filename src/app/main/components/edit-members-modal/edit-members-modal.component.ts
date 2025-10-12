@@ -23,12 +23,14 @@ export class EditMembersModalComponent implements OnInit {
   projectMembers: { email: string, exists: boolean, isOwner:boolean }[] = [];
   newMembers: string[] = [];
   email = new FormControl('');
+  isUserOwner!:boolean;
 
   async ngOnInit() {
     this.project = this.projectService.currentProject;
     if (this.project() == null) return;
     // get owner email
     const ownerEmail = await this.authService.getUserEmailById(this.project()!.owner);
+    this.isUserOwner = this.project()?.owner === this.authService.getUserId();
     this.projectMembers.push({ email: ownerEmail, exists: true, isOwner:true })
     this.loading = false;
     // If user exists, show "Activo", else "Inactivo"
