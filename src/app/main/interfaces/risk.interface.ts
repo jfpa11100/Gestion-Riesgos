@@ -16,5 +16,6 @@ export interface Risk {
   risk: string;
   category:string;
   probability?: number;
+  assignee:string | null;
   impact?: number;
 }

@@ -1,18 +1,20 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
 import { Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { ToastComponent } from "../../../shared/components/toast/toast.component";
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 import { Sprint } from '../../interfaces/sprint.interface';
+import { AssigneeSelectorComponent } from '../assignee-selector/assignee-selector.component';
 
 @Component({
   selector: 'app-risk-project-detail',
-  imports: [ToastComponent],
+  imports: [ToastComponent, AssigneeSelectorComponent],
   templateUrl: './risk-project-detail.component.html',
   styles: '',
 })
 export class RiskProjectDetailComponent implements OnInit {
   risksService = inject(RisksService);
+  eRef = inject(ElementRef);
   @Input() sprint!: Sprint;
   @Input() risk!: Risk;
   @Output() updatedRisk = new EventEmitter<Risk>()
@@ -22,6 +24,15 @@ export class RiskProjectDetailComponent implements OnInit {
   openProbabilityMenu = false;
   toast: ToastInterface = {show: false, title: '', message: '', type: 'info'}
   openImpactMenu = false;
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    // Si el clic NO ocurrió dentro del componente
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      this.openProbabilityMenu = false;
+      this.openImpactMenu = false;
+    }
+  }
 
   ngOnInit() {
     if(this.sprint.prioritizationTechnique === 'qualitative'){

@@ -139,4 +139,13 @@ export class ProjectService {
 
     if (updateError) throw updateError;
   }
+
+  async changeRiskAssignee(risk:Risk, assignee:string|null){
+    const { error: updateError } = await this.supabase
+      .from('project_risks')
+      .update({ assignee: assignee })
+      .eq('risk_id', risk.id).eq('sprint_id', risk.sprintId);
+
+    if (updateError) throw updateError;
+  }
 }
