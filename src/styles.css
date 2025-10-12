@@ -63,4 +63,12 @@ html {
   .active-link {
     @apply border-l-4 border-complementary-purple bg-gray-100 text-complementary-purple font-semibold;
   }
+
+  .risk-text{
+    @apply text-xs m-1 lg:text-sm border rounded border-complementary-purple transition-transform duration-300 hover:scale-105
+  }
+
+  .matrix-article {
+    @apply flex w-full min-w-full h-full flex-col border-2 rounded border-secondary-blue sm:p-2 gap-y-px overflow-auto
+  }
 }
