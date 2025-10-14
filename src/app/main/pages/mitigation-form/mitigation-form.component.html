@@ -1,0 +1,350 @@
+<app-header [title]="'Formulario Mitigación'" [enableSideBar]="true" />
+<main class="flex">
+  <app-side-menu />
+  <section class="flex flex-col w-full m-[1lh] gap-y-[1lh]">
+    <nav aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+        <li class="inline-flex items-center">
+          <a routerLink="/dashboard"
+            class="inline-flex items-center text-xs md:text-sm cursor-pointer hover:text-complementary-purple">
+            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 20 20">
+              <path
+                d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+            </svg>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="rtl:rotate-180 w-3 h-3 text-white-letter mx-1" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 9 4-4-4-4" />
+            </svg>
+            <a [routerLink]="['/project', project()!.id]"
+              class="ms-1 text-xs md:text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name
+              }}</a>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="rtl:rotate-180 w-3 h-3 text-white-letter mx-1" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 9 4-4-4-4" />
+            </svg>
+            <a [routerLink]="['/project', project()!.id, comesFrom]" [queryParams]="{ sprint: risk.sprintId }"
+              class="ms-1 text-xs md:text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">Priorización</a>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="rtl:rotate-180 w-3 h-3 text-white-letter mx-1" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 9 4-4-4-4" />
+            </svg>
+            <a class="ms-1 text-xs md:text-sm font-medium text-white-letter hover:text-complementary-purple md:ms-2">Formulario de
+              mitigación</a>
+          </div>
+        </li>
+      </ol>
+    </nav>
+    <section class="self-center w-full md:max-w-6xl lg:max-w-3xl space-y-[1lh]">
+      <div class="text-center space-y-2">
+        <h1 class="text-3xl font-medium xt-gray-900">Plan de Mitigación del Riesgo</h1>
+        <p class="text-white-letter">Define las acciones necesarias para reducir o eliminar el riesgo identificado.</p>
+      </div>
+  
+      <!-- Risk Info Card -->
+      <div class="bg-white rounded-sm shadow-sm border border-white-letter/60 p-[1lh]">
+        <div class="flex items-start justify-between">
+          <div class="flex-1 space-y-2">
+            <div class="flex items-center gap-x-2">
+              <img class="size-4" src="logo.png" alt="riesgo">
+              <h3 class="text-lg font-medium">Categoría: {{ risk.category }}</h3>
+            </div>
+            <p class="text-sm">Nombre: {{ risk.risk }}</p>
+            <div class="flex items-center space-x-4">
+              <span class="inline-flex items-center px-3 py-1 rounded-sm text-xs font-medium border"
+                [class]="getRiskLevelClass()">
+                {{ getRiskLevelText() }}
+              </span>
+              <p class="text-sm text-white-letter">
+                Impacto: <span class="font-medium">{{ risk.impact }}</span>
+              </p>
+              <p class="text-sm text-white-letter">
+                Probabilidad: <span class="font-medium">{{ risk.probability }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Form -->
+      <form [formGroup]="mitigationForm" class="space-y-6">
+  
+        <!-- Main Form Card -->
+        <div class="bg-white rounded-sm shadow-sm border border-white-letter/60">
+  
+          <!-- Form Header -->
+          <div class="px-6 py-4 border-b border-white-letter/60">
+            <h2 class="text-lg font-medium">Detalles de la Acción</h2>
+          </div>
+  
+          <div class="p-6 space-y-6">
+  
+            <!-- Action Type -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">
+                Tipo de Acción <span class="text-red-600">*</span>
+              </label>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                @for (type of actionTypes; track $index) {
+                  <label class="relative flex cursor-pointer rounded-sm border p-4 focus:outline-none transition-all duration-200
+                    {{ mitigationForm.get('actionType')?.value === type.value ? 'border-complementary-purple bg-complementary-purple/20' 
+                    : 'border-white-letter hover:border-white-letter' }}">
+                    <input type="radio" formControlName="actionType" [value]="type.value" class="sr-only">
+                    <div class="flex-1">
+                      <div class="flex items-center">
+                        <div class="text-sm">
+                          <p class="font-medium {{ mitigationForm.get('actionType')?.value === type.value ? 'text-complementary-purple' : '' }} ">
+                            {{ type.label }}
+                          </p>
+                          <p class="text-xs {{ mitigationForm.get('actionType')?.value === type.value ? 
+                          'text-complementary-purple' : 'text-white-letter' }} ">
+                            {{ type.description }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @if (mitigationForm.get('actionType')?.value === type.value) {
+                      <svg class="size-4 text-complementary-purple" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"clip-rule="evenodd" />
+                      </svg>
+                    }
+                  </label> 
+                }
+              </div>
+              @if (hasError('actionType')) {
+                <p class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage('actionType') }}
+                </p>
+              }
+            </div>
+  
+            <!-- Description -->
+            <div class="space-y-2">
+              <label for="description" class="block text-sm font-medium">
+                Descripción de la Acción <span class="text-red-600">*</span>
+              </label>
+              <textarea formControlName="description" class="text-sm w-full px-3 py-2 border rounded-sm shadow-sm 
+                focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple 
+                transition-colors min-h-30 max-h-70 {{ hasError('description') ? 'border-red-300' : 'border-white-letter' }} "
+                placeholder="Describe detalladamente qué se hará para reducir el riesgo o su impacto...">
+              </textarea>
+              @if (mitigationForm.get('description')?.value?.length < 10) {
+                <p class="mt-1 text-xs text-white-letter">
+                  {{ mitigationForm.get('description')?.value?.length || 0 }} caracteres (mínimo 10)
+                </p>
+              }
+              @if (hasError('description')) {
+                <p class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage('description') }}
+                </p>
+              }
+            </div>
+  
+            <!-- Objective -->
+            <div class="space-y-2">
+              <label for="objective" class="block text-sm font-medium">
+                Objetivo de la Acción <span class="text-red-600">*</span>
+              </label>
+              <input id="objective" type="text" formControlName="objective" class="text-sm w-full px-3 py-2 border rounded-sm 
+                shadow-sm focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple
+                transition-colors {{ hasError('objective') ? 'border-red-300' : 'border-white-letter' }} "
+                placeholder='Ej: "Reducir el impacto en la planificación del sprint"'>
+              <p class="mt-1 text-xs text-white-letter">
+                Breve frase que indique el resultado esperado
+              </p>
+              @if (hasError('objective')) {
+                <p class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage('objective') }}
+                </p>
+              }
+            </div>
+  
+            <!-- Responsible -->
+            <div class="space-y-2">
+              <label for="responsible" class="block text-sm font-medium">
+                Responsable <span class="text-red-600">*</span>
+              </label>
+              <select formControlName="responsible"
+                class="text-sm w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1 
+                focus:ring-complementary-purple focus:border-complementary-purple transition-colors
+                {{ hasError('responsible') ? 'border-red-300' : 'border-white-letter' }}">
+                <option value="">Selecciona un miembro del equipo</option>
+                @for (memberEmail of teamMembers; track $index) {
+                  <option value="{{ memberEmail }}">{{ memberEmail }}</option>
+                }
+              </select>
+              @if (hasError('responsible')) {
+                <p class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage('responsible') }}
+                </p>
+              }
+            </div>
+  
+            <!-- Required Resources -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium">
+                Recursos Requeridos <span class="text-red-600">*</span>
+              </label>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                @for (resource of resourceOptions; track $index) {
+                  <button (click)="toggleResource(resource.value)" class="flex items-center justify-center px-4 py-3 border-2 
+                    rounded-sm text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-1
+                    focus:ring-complementary-purple {{ isResourceSelected(resource.value) ? 'border-complementary-purple bg-complementary-purple/20 text-complementary-purple' : 
+                    'border-white-letter hover:border-white-letter' }}">
+                    <span class="mr-2">{{ resource.icon }}</span>
+                    {{ resource.label }}
+                    @if (isResourceSelected(resource.value)) {
+                      <svg class="ml-2 h-4 w-4" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    }
+                  </button>
+                }
+              </div>
+              @if (hasError('requiredResources')) {
+                <p class="mt-2 text-sm text-red-600">
+                  {{ getErrorMessage('requiredResources') }}
+                </p>
+              }
+            </div>
+  
+            <!-- Dates -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label for="startDate" class="block text-sm font-medium">
+                  Fecha de Inicio <span class="text-red-600">*</span>
+                </label>
+                <input type="date" formControlName="startDate" (change)="validateDates()"
+                  class="w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple transition-colors"
+                  [class.border-red-300]="hasError('startDate')" [class.border-white-letter]="!hasError('startDate')">
+                <p *ngIf="hasError('startDate')" class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage('startDate') }}
+                </p>
+              </div>
+  
+              <div class="space-y-2">
+                <label for="endDate" class="block text-sm font-medium">
+                  Fecha de Finalización <span class="text-red-600">*</span>
+                </label>
+                <input id="endDate" type="date" formControlName="endDate" (change)="validateDates()"
+                  class="w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1
+                   focus:ring-complementary-purple focus:border-complementary-purple transition-colors
+                   {{ hasError('endDate') ? 'border-red-300' : 'border-white-letter' }}">
+                  @if (hasError('endDate')) {
+                    <p class="mt-1 text-sm text-red-600">
+                      {{ getErrorMessage('endDate') }}
+                    </p>
+                  }
+              </div>
+            </div>
+  
+            <!-- Status and Priority -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label for="status" class="block text-sm font-medium">
+                  Estado Actual <span class="text-red-600">*</span>
+                </label>
+                <select formControlName="status"
+                  class="w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple transition-colors"
+                  [class.border-red-300]="hasError('status')" [class.border-white-letter]="!hasError('status')">
+                  <option *ngFor="let status of statusOptions" [value]="status.value">
+                    {{ status.label }}
+                  </option>
+                </select>
+              </div>
+  
+              <div class="space-y-2">
+                <label for="priority" class="block text-sm font-medium">
+                  Prioridad <span class="text-red-600">*</span>
+                  <span class="text-xs text-white-letter font-normal ml-1">(Calculada automáticamente)</span>
+                </label>
+                <select formControlName="priority"
+                  class="w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple transition-colors"
+                  [class.border-red-300]="hasError('priority')" [class.border-white-letter]="!hasError('priority')">
+                  <option *ngFor="let priority of priorityOptions" [value]="priority.value">
+                    {{ priority.label }}
+                  </option>
+                </select>
+                <p class="text-xs text-white-letter">
+                  Basada en el nivel de riesgo (Impacto + Probabilidad)
+                </p>
+              </div>
+            </div>
+  
+          </div>
+        </div>
+  
+        <!-- Form Actions -->
+        <div class="flex items-center gap-x-2 justify-end">
+            <button type="button" (click)="onCancel()"
+              class="btn-secondary px-3 py-1">
+              Cancelar
+            </button>
+
+  
+            <button (click)="onSubmit()" [disabled]="isSubmitting()" class="btn-primary px-3 py-1 focus:ring-offset-2 
+              disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
+              @if (isSubmitting()) {
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              }@else {
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              }
+              {{ isSubmitting() ? 'Guardando...' : 'Crear Plan' }}
+            </button>
+          </div>  
+      </form>
+  
+      <!-- Help Section -->
+      <div class=" bg-complementary-purple/20 border border-complementary-purple/30 rounded-sm p-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-complementary-purple" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-complementary-purple">Guía para completar el plan de mitigación</h3>
+            <div class="text-sm text-complementary-purple">
+              <ul class="list-disc list-inside space-y-1">
+                <li><strong>Tipo de Acción:</strong> Selecciona la estrategia más adecuada según el riesgo</li>
+                <li><strong>Descripción:</strong> Detalla los pasos específicos a seguir</li>
+                <li><strong>Objetivo:</strong> Define claramente qué esperas lograr</li>
+                <li><strong>Responsable:</strong> Asigna un único responsable del seguimiento</li>
+                <li><strong>Recursos:</strong> Identifica todo lo necesario para ejecutar la acción</li>
+                <li><strong>Fechas:</strong> Establece plazos realistas y alcanzables</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+  </section>

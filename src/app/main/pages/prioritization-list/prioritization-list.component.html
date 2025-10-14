@@ -45,11 +45,12 @@
           </li>
         </ol>
       </nav>
-      <div class="block self-end flex-col w-3/10 justify-end items-end text-sm">
+      <div class="block self-start md:self-end flex-col w-3/10 md:w-2/10 justify-end items-center text-sm">
         @if (loading) {
 
         }@else {
-          <button type="button" class="peer group w-full text-left px-4 pr-2 py-2 border rounded bg-white text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
+          <button type="button" class="peer group w-full text-center px-2 py-2 border rounded bg-white 
+          text-main-black border-complementary-purple shadow-sm hover:bg-white-letter/40 focus:outline-none">
               <span>Sprint {{ currentSprint().sprint }}</span>
               <svg class="w-5 h-5 inline float-right transition-transform duration-300 -rotate-90 group-focus:rotate-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#6B7280">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
@@ -90,26 +91,29 @@
               </ul>
             }
           </div>
-          <app-search-bar class="block text-sm w-full md:w-4/10 lg:w-3/10" (onSearch)="searchTerm = $event" />
+          <app-search-bar class="block text-sm w-full md:w-6/10 lg:w-5/10 xl:w-4/10 " (onSearch)="searchTerm = $event" />
         </div>
         <table class="w-full text-sm text-left rtl:text-right text-white-letter shadow-md
           sm:rounded scroll-smooth">
             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                 <tr>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-4 py-3">
                         Categoría
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-4 py-3">
                         Nombre
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-4 py-3">
                         Impacto
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-4 py-3">
                         Probabilidad
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-4 py-3">
                         Riesgo
+                    </th>
+                    <th scope="col" class="px-4 py-3">
+                        Mitigación
                     </th>
                 </tr>
             </thead>
@@ -119,20 +123,29 @@
                     risk.category.toLowerCase().includes(searchTerm.toLowerCase())) {
                   @if (!selectedCategory || risk.category === selectedCategory){
                     <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
-                        <th scope="row" class="px-6 py-4 font-medium text-main-black whitespace-nowrap">
+                        <th scope="row" class="px-4 py-4 font-medium text-main-black whitespace-nowrap">
                             {{ risk.category }}
                         </th>
-                        <td class="px-6 py-4">
+                        <td class="px-4 py-4 text-main-black">
                             {{ risk.risk }}
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-4 py-4">
                             {{ risk.impact || 'N/A' }}
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-4 py-4">
                             {{ risk.probability || 'N/A' }}
                         </td>
-                        <td class="px-6 py-4">
-                            {{ risk.probability && risk.impact ? risk.probability*risk.impact : 'N/A'}}
+                        <td class="px-4 py-4">
+                          {{ risk.probability && risk.impact ? risk.probability*risk.impact : 'N/A'}}
+                        </td>
+                        <td class="px-4 py-4">
+                          <svg (click)="goToMitigationForm(risk)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6.827 6.827" fill="currentColor"
+                            class="size-6 transition-transform cursor-pointer hover:scale-105 text-gray-600 hover:text-complementary-purple"><g>
+                              <path d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z" />
+                              <path d="M1.007 1.59H5.82v.214H1.007z" /><circle cx="1.432" cy="1.325" r=".158" /><circle cx="1.962" cy="1.325" r=".158" /><circle cx="2.492" cy="1.325" r=".158" />
+                              <path d="m3.51 3.34 1.435 2.487a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/>
+                              <path d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z" /><circle cx="3.413" cy="5.451" r=".107" /></g>
+                          </svg>
                         </td>
                     </tr>
                   }
@@ -144,7 +157,7 @@
 
     @if (!loading) {
       <footer class="flex w-full justify-end">
-        <button class="btn-secondary w-30 h-8 mb-4" routerLink="/project/{{project()!.id}}">Volver</button>
+        <button class="btn-secondary w-30 h-8 mb-4" [routerLink]="['/project', project()!.id]">Volver</button>
       </footer>
     }
 

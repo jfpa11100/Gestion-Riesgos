@@ -7,6 +7,7 @@ import { HeaderComponent } from "../../../shared/components/layout/header/header
 import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 import { SearchBarComponent } from "../../../shared/components/search-bar/search-bar.component";
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { Risk } from '../../interfaces/risk.interface';
 
 @Component({
   selector: 'app-prioritization-list',
@@ -79,5 +80,9 @@ export class PrioritizationListComponent implements OnInit {
   setCurrentSprint(sprint: Sprint) {
     this.currentSprint.set(sprint)
     this.categoriesList = ['', ...new Set(this.currentSprint()?.risks.map(risk => risk.category))]
+  }
+
+  goToMitigationForm(risk: Risk){
+      this.router.navigate(['project', this.project()!.id, 'list', 'mitigation'], { queryParams: { sprint: risk.sprintId, risk: risk.id }});
   }
 }
