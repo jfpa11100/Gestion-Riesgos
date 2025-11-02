@@ -6,6 +6,7 @@ import { ProjectComponent } from './main/pages/project/project.component';
 import { TaxonomyComponent } from './main/pages/taxonomy/taxonomy.component';
 import { PrioritizationMatrixComponent } from './main/pages/prioritization-matrix/prioritization-matrix.component';
 import { PrioritizationListComponent } from './main/pages/prioritization-list/prioritization-list.component';
+import { MitigationFormComponent } from './main/pages/mitigation-form/mitigation-form.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,10 @@ export const routes: Routes = [
   {
     path: 'project/:id/list',
     component: PrioritizationListComponent
+  },
+  {
+    path: 'project/:id/:prioritization/mitigation',
+    component: MitigationFormComponent
   },
   {
     path: '**',

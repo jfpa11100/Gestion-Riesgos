@@ -102,6 +102,10 @@ export class PrioritizationMatrixComponent implements OnInit {
   }
 
   goBackToProject() {
-    this.router.navigate(['/project', this.route.snapshot.paramMap.get('id')!]);
+    this.router.navigate(['project', this.route.snapshot.paramMap.get('id')!]);
+  }
+
+  goToMitigationForm(risk: Risk){
+    this.router.navigate(['project', this.route.snapshot.paramMap.get('id')!, 'matrix', 'mitigation'], { queryParams: { sprint: risk.sprintId, risk: risk.id }});
   }
 }

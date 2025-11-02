@@ -50,16 +50,8 @@ export class RiskProjectDetailComponent implements OnInit {
 
   ngOnInit() {
     if(this.sprint.prioritizationTechnique === 'qualitative'){
-      this.currentProbability =
-        this.risk.probability === 2 ? 'Alta'
-          : this.risk.probability === 1 ? 'Media'
-            : this.risk.probability === 0 ? 'Baja'
-              : null;
-      this.currentImpact =
-        this.risk.impact === 2 ? 'Alto'
-          : this.risk.impact === 1 ? 'Medio'
-            : this.risk.impact === 0 ? 'Bajo'
-              : null;
+      this.currentProbability = this.risksService.getProbabilityLabel(this.risk.probability);
+      this.currentImpact = this.risksService.getImpactLabel(this.risk.impact);
     }
     else {
       this.currentProbability = this.risk.probability?.toString() || null
