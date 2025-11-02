@@ -1,18 +1,21 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { Risk } from '../../interfaces/risk.interface';
 import { RisksService } from '../../services/risks/risks.service';
 import { ToastComponent } from "../../../shared/components/toast/toast.component";
 import { ToastInterface } from '../../../shared/interfaces/toast.interface';
 import { Sprint } from '../../interfaces/sprint.interface';
+import { AssigneeSelectorComponent } from '../assignee-selector/assignee-selector.component';
 
 @Component({
   selector: 'app-risk-project-detail',
-  imports: [ToastComponent],
+  imports: [ToastComponent, AssigneeSelectorComponent],
   templateUrl: './risk-project-detail.component.html',
   styles: '',
 })
 export class RiskProjectDetailComponent implements OnInit {
   risksService = inject(RisksService);
+  renderer = inject(Renderer2);
+  eRef = inject(ElementRef);
   @Input() sprint!: Sprint;
   @Input() risk!: Risk;
   @Output() updatedRisk = new EventEmitter<Risk>()
@@ -22,24 +25,42 @@ export class RiskProjectDetailComponent implements OnInit {
   openProbabilityMenu = false;
   toast: ToastInterface = {show: false, title: '', message: '', type: 'info'}
   openImpactMenu = false;
+  private clickListener?: () => void;
+
+  // Activar el listener si hacen click por fuera
+  activateListener(menu:boolean) {
+    if (menu) {
+      this.clickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+        if (!this.eRef.nativeElement.contains(event.target)) {
+          menu = false;
+          this.removeClickListener();
+        }
+      });
+    } else {
+      this.removeClickListener();
+    }
+  }
+
+  private removeClickListener() {
+    if (this.clickListener) {
+      this.clickListener();
+      this.clickListener = undefined;
+    }
+  }
 
   ngOnInit() {
     if(this.sprint.prioritizationTechnique === 'qualitative'){
-      this.currentProbability =
-        this.risk.probability === 2 ? 'Alta'
-          : this.risk.probability === 1 ? 'Media'
-            : this.risk.probability === 0 ? 'Baja'
-              : null;
-      this.currentImpact =
-        this.risk.impact === 2 ? 'Alto'
-          : this.risk.impact === 1 ? 'Medio'
-            : this.risk.impact === 0 ? 'Bajo'
-              : null;
+      this.currentProbability = this.risksService.getProbabilityLabel(this.risk.probability);
+      this.currentImpact = this.risksService.getImpactLabel(this.risk.impact);
     }
     else {
       this.currentProbability = this.risk.probability?.toString() || null
       this.currentImpact = this.risk.impact?.toString() || null
     }
+  }
+
+  ngOnDestroy() {
+    this.removeClickListener();
   }
 
   async changeProbability(probability: number) {
@@ -55,7 +76,7 @@ export class RiskProjectDetailComponent implements OnInit {
       this.risk.probability = probability
       this.updatedRisk.emit(this.risk)
     } catch (error) {
-      this.toast = {show:true, title: 'No se pudo actualizar la probabilidad', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000}
+      this.toast = {show:true, title: 'No se pudo actualizar la probabilidad', 'message': 'Intenta de nuevo', type: 'error', timeout: 2000}
       this.currentImpact = before;
     }
 
@@ -75,18 +96,30 @@ export class RiskProjectDetailComponent implements OnInit {
       this.updatedRisk.emit(this.risk)
     } catch (error) {
       this.currentImpact = before;
-      this.toast = {show:true, title: 'No se pudo actualizar el impacto', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000}
+      this.toast = {show:true, title: 'No se pudo actualizar el impacto', 'message': 'Intenta de nuevo', type: 'error', timeout: 2000}
     }
   }
 
   toggleProbabilityMenu() {
+    if (!this.sprint.available){
+      this.toast = {show:true, title: 'El sprint está bloqueado', 'message': 'No se pueden cambiar valores', type: 'error', timeout: 2000}
+      return
+    }
     this.openProbabilityMenu = !this.openProbabilityMenu;
   }
   toggleImpactMenu() {
+    if (!this.sprint.available){
+      this.toast = {show:true, title: 'El sprint está bloqueado', 'message': 'No se pueden cambiar valores', type: 'error', timeout: 3000}
+      return
+    }
     this.openImpactMenu = !this.openImpactMenu;
   }
 
   onDeleteClick() {
+    if (!this.sprint.available){
+      this.toast = {show:true, title: 'El sprint está bloqueado', 'message': 'No se pueden eliminar riesgos', type: 'error', timeout: 2000}
+      return
+    }
     this.toast = { show:true, title: 'Vas a eliminar el riesgo del proyecto', 'message': '¿Estás seguro?', type: 'confirmation' }
   }
 
@@ -96,7 +129,7 @@ export class RiskProjectDetailComponent implements OnInit {
       this.toast = { show:true, title: 'Riesgo eliminado', 'message': '', type: 'info', timeout: 1000 }
       this.deleteRisk.emit(this.risk)
     } catch (error) {
-      this.toast = { show:true, title: 'No se pudo eliminar el riesgo', 'message': 'Intenta de nuevo', type: 'error', timeout: 3000 }
+      this.toast = { show:true, title: 'No se pudo eliminar el riesgo', 'message': 'Intenta de nuevo', type: 'error', timeout: 2000 }
     }
   }
 }

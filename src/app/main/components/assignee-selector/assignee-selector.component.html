@@ -1,0 +1,35 @@
+<div class="relative inline-block">
+  <!-- Botón avatar -->
+  <button (click)="toggleMenu()" class="inline-flex align-middle items-center justify-center size-8 border-2 border-complementary-purple
+bg-gray-background rounded-full overflow-hidden transform transition hover:scale-110 cursor-pointer" title="Responsable: {{risk.assignee}}">
+  @if (risk.assignee) {
+    <span class="font-medium text-main-black">{{ risk.assignee[0].toUpperCase() }}</span>
+  }@else {
+    <img src="user.png" alt="assignee">
+  }
+  </button>
+
+  <!-- TODO: Fix dropdown to appear on top of everything -->
+  <!-- Menú desplegable -->
+   @if (showMenu) {
+      <div class="absolute right-0 min-w-fit bg-white rounded-sm shadow-lg border border-gray-background z-50 max-h-40 overflow-y-auto scroll-smooth">
+        <button (click)="selectUser(null)" class="flex p-2 gap-x-2 items-center w-full hover:bg-gray-100 transition rounded-xs" title="Sin asignar">
+          <div class="inline-flex items-center justify-center size-7 border-2 border-complementary-purple
+          bg-gray-background rounded-full overflow-hidden">
+            <img src="user.png" alt="sin asignar">
+          </div>
+          <span class="text-sm text-gray-700">Sin asignar</span>
+        </button>
+      <!-- Lista de usuarios -->
+        @for (memberEmail of team; track $index) {
+          <button (click)="selectUser(memberEmail)" class="flex p-2 gap-x-2 items-center w-full hover:bg-gray-100 transition rounded-xs" title="Responsable: {{memberEmail}}">
+            <div class="inline-flex items-center justify-center size-7 border-2 border-complementary-purple
+            bg-gray-background rounded-full overflow-hidden">
+              <span class="font-medium text-main-black">{{ memberEmail[0].toUpperCase() }}</span>
+            </div>
+            <span class="text-sm text-gray-700">{{ memberEmail }}</span>
+          </button>
+        }
+      </div>
+   }
+</div>

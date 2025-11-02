@@ -44,7 +44,7 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="m1 9 4-4-4-4" />
             </svg>
-            <a routerLink="/project/{{project()!.id}}" class="ms-1 text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name }}</a>
+            <a [routerLink]="['/project', project()!.id]" class="ms-1 text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name }}</a>
           </div>
         </li>
         <li>
@@ -75,7 +75,9 @@
 
       <ul class="hidden overflow-hidden peer-focus:block w-full bg-white border border-gray-300 rounded shadow-md mt-px py-1">
         @for (sprint of sortedSprints; track $index) {
-          <li (mousedown)="selectedSprint=sprint" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+          @if (sprint.available) {
+            <li (mousedown)="selectedSprint=sprint" class="px-4 py-2 hover:bg-complementary-purple/80 hover:text-white cursor-pointer">Sprint {{sprint.sprint}}</li>
+          }
         }
       </ul>
     </div>

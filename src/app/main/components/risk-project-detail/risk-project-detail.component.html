@@ -1,149 +1,157 @@
-<section class="flex justify-between w-full h-20 gap-x-2 px-2 sm:h-10 md:pl-5 md:py-3 xl:pl-10
+<section class="flex justify-between w-full h-20 gap-x-2 px-2 min-h-fit md:pl-5 md:py-3 xl:pl-10
 border border-secondary-blue rounded bg-gradient-to-r from-gray-background to-secondary-blue">
   <div class="flex items-center text-sm">
     <h1>{{ risk.category }} | {{ risk.risk }}</h1>
   </div>
-  <nav class="flex items-center gap-x-2">
-    <div title="Probabilidad" class="flex flex-col w-full text-sm relative">
-      <button (click)="toggleProbabilityMenu()"
-        class="relative z-10 group h-8 flex items-center justify-between w-full text-left px-2 cursor-pointer
-          py-2 border-2 rounded bg-white border-complementary-purple shadow-sm
-          hover:bg-gray-50 focus:outline-none">
+  <section class="flex items-center gap-x-2 min-h-fit py-1">
+    <article class="flex flex-col gap-1 md:flex-row">
+      <nav class="flex-col">
+        <h1 class="text-xs text-center text-gray-background">Probabilidad</h1>
+        <div title="Probabilidad" class="flex flex-col w-full text-sm relative">
+          <button (click)="toggleProbabilityMenu()"
+            class="relative z-10 group h-8 flex items-center justify-between w-full text-left px-2 cursor-pointer
+              py-2 border-2 rounded bg-white border-complementary-purple shadow-sm
+              hover:bg-gray-50 focus:outline-none">
 
-        <div class="flex h-min items-center gap-2">
-          @if (!currentProbability) {
-            <span class="w-12"></span>
-          }
-          @else {
-            @if (this.sprint.prioritizationTechnique === 'qualitative') {
-              <span class=" w-12 {{ currentProbability === 'Alta' ? 'text-red-500' : currentProbability === 'Media' ? 'text-yellow-600' : 'text-green-400' }}">
-                {{ currentProbability }}
-              </span>
-            }@else {
-              <span class="w-12">
-                {{ currentProbability }}
-              </span>
-            }
-          }
-        </div>
-        <svg width="10" height="13" viewBox="0 0 11 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.92546 6L5.68538 1L1.44531 6" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5"
-          stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M1.44564 11L5.68571 16L9.92578 11" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5"
-          stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+            <div class="flex h-min items-center gap-2">
+              @if (!currentProbability) {
+                <span class="w-12"></span>
+              }
+              @else {
+                @if (this.sprint.prioritizationTechnique === 'qualitative') {
+                  <span class=" w-12 {{ currentProbability === 'Alta' ? 'text-red-500' : currentProbability === 'Media' ? 'text-yellow-600' : 'text-green-400' }}">
+                    {{ currentProbability }}
+                  </span>
+                }@else {
+                  <span class="w-12">
+                    {{ currentProbability }}
+                  </span>
+                }
+              }
+            </div>
+            <svg width="10" height="13" viewBox="0 0 11 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.92546 6L5.68538 1L1.44531 6" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1.44564 11L5.68571 16L9.92578 11" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
 
-      <!-- TODO: Fix dropdown to appear on top of everything -->
-      <!-- menú desplegable -->
-      @if(openProbabilityMenu){
-        <ul class="absolute z-50 top-full left-0 w-full bg-white border border-gray-300 rounded shadow-md mt-1 py-2">
-          @if (sprint.prioritizationTechnique === 'qualitative') {
-            <li class="px-2 py-2 flex items-center gap-2 text-red-500 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(2)">Alta</li>
-            <li class="px-2 py-2 flex items-center gap-2 text-yellow-600 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(1)">Media</li>
-            <li class="px-2 py-2 flex items-center gap-2 text-green-400 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(0)">Baja</li>
-          }@else {
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(0)">0</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(1)">1</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(2)">2</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(3)">3</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(5)">5</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(8)">8</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(13)">13</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(21)">21</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(34)">34</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(55)">55</li>
-            <!-- <li class="text-2xl px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeProbability(200)">&#8734;</li> -->
-          }
-        </ul>
-      }
-    </div>
-
-    <div title="Impacto" class="flex flex-col w-full text-sm relative cursor-pointer">
-      <button
-        class="group h-8 flex items-center justify-between w-full text-left px-2 cursor-pointer
-          py-2 border-2 rounded bg-white text-gray-700 border-complementary-purple shadow-sm
-          hover:bg-gray-50 focus:outline-none"
-        (click)="toggleImpactMenu()">
-
-        <div class="flex h-min items-center gap-2 ">
-          @if (!currentImpact) {
-            <span class="w-12"></span>
-          }
-          @else {
-            @if (sprint.prioritizationTechnique === 'qualitative') {
-              <span class=" w-12 {{ currentImpact === 'Alto' ? 'text-red-500' : currentImpact === 'Medio' ? 'text-yellow-600' : 'text-green-400' }}">
-                {{ currentImpact }}
-              </span>
-            } @else {
-              <span class="w-12"> {{ currentImpact }}</span>
-            }
+          <!-- TODO: Fix dropdown to appear on top of everything -->
+          <!-- menú desplegable -->
+          @if(openProbabilityMenu){
+            <ul class="absolute z-50 top-full left-0 w-full bg-white border border-gray-300 rounded shadow-md mt-1 py-2">
+              @if (sprint.prioritizationTechnique === 'qualitative') {
+                <li class="px-2 py-2 flex items-center gap-2 text-red-500 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(2)">Alta</li>
+                <li class="px-2 py-2 flex items-center gap-2 text-yellow-600 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(1)">Media</li>
+                <li class="px-2 py-2 flex items-center gap-2 text-green-400 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(0)">Baja</li>
+              }@else {
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(0)">0</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(1)">1</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(2)">2</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(3)">3</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(5)">5</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(8)">8</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(13)">13</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(21)">21</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(34)">34</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(55)">55</li>
+                <!-- <li class="text-2xl px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeProbability(200)">&#8734;</li> -->
+              }
+            </ul>
           }
         </div>
+      </nav>
+      <nav class="flex-col">
+        <h1 class="text-xs text-center text-gray-background">Impacto</h1>
+        <div title="Impacto" class="flex flex-col w-full text-sm relative cursor-pointer">
+          <button
+            class="group h-8 flex items-center justify-between w-full text-left px-2 cursor-pointer
+              py-2 border-2 rounded bg-white text-gray-700 border-complementary-purple shadow-sm
+              hover:bg-gray-50 focus:outline-none"
+            (click)="toggleImpactMenu()">
 
-        <svg class="transition-transform hover:scale-125" width="10" height="13" viewBox="0 0 11 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.92546 6L5.68538 1L1.44531 6" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M1.44564 11L5.68571 16L9.92578 11" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+            <div class="flex h-min items-center gap-2 ">
+              @if (!currentImpact) {
+                <span class="w-12"></span>
+              }
+              @else {
+                @if (sprint.prioritizationTechnique === 'qualitative') {
+                  <span class=" w-12 {{ currentImpact === 'Alto' ? 'text-red-500' : currentImpact === 'Medio' ? 'text-yellow-600' : 'text-green-400' }}">
+                    {{ currentImpact }}
+                  </span>
+                } @else {
+                  <span class="w-12"> {{ currentImpact }}</span>
+                }
+              }
+            </div>
 
-      <!-- menú desplegable -->
-      @if(openImpactMenu){
-        <ul class="z-50 absolute top-full left-0 w-full bg-white border border-gray-300 rounded shadow-md mt-1 py-2">
-          @if (this.sprint.prioritizationTechnique === 'qualitative') {
-            <li class="px-2 py-2 flex items-center gap-2 text-red-500 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(2)">Alto</li>
-            <li class="px-2 py-2 flex items-center gap-2 text-yellow-600 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(1)">Medio</li>
-            <li class="px-2 py-2 flex items-center gap-2 text-green-400 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(0)">Bajo</li>
-          }@else {
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(0)">0</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(1)">1</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(2)">2</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(3)">3</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(5)">5</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(8)">8</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(13)">13</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(21)">21</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(34)">34</li>
-            <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(55)">55</li>
-            <!-- <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
-                (click)="changeImpact(200)">&#8734;</li> -->
+            <svg class="transition-transform hover:scale-125" width="10" height="13" viewBox="0 0 11 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.92546 6L5.68538 1L1.44531 6" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1.44564 11L5.68571 16L9.92578 11" stroke="#6B7280" stroke-opacity="0.7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <!-- menú desplegable -->
+          @if(openImpactMenu){
+            <ul class="z-50 absolute top-full left-0 w-full bg-white border border-gray-300 rounded shadow-md mt-1 py-2">
+              @if (this.sprint.prioritizationTechnique === 'qualitative') {
+                <li class="px-2 py-2 flex items-center gap-2 text-red-500 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(2)">Alto</li>
+                <li class="px-2 py-2 flex items-center gap-2 text-yellow-600 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(1)">Medio</li>
+                <li class="px-2 py-2 flex items-center gap-2 text-green-400 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(0)">Bajo</li>
+              }@else {
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(0)">0</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(1)">1</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(2)">2</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(3)">3</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(5)">5</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(8)">8</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(13)">13</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(21)">21</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(34)">34</li>
+                <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(55)">55</li>
+                <!-- <li class="px-2 py-2 flex justify-center items-center gap-2 hover:bg-gray-background cursor-pointer"
+                    (click)="changeImpact(200)">&#8734;</li> -->
+              }
+            </ul>
           }
-        </ul>
-      }
-    </div>
+        </div>
+      </nav>
+    </article>
+    <app-assignee-selector [risk]="risk" />
     <button (click)="onDeleteClick()" class="size-6 text-white transition-transform hover:scale-110 hover:text-white-letter hover:cursor-pointer">
       <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
       </svg>
     </button>
-  </nav>
+  </section>
 </section>
 
 @if (toast.show) {

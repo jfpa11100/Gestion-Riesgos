@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../../../shared/services/supabase/supabase.service';
-import { CategoryRisk, Risk } from '../../interfaces/risk.interface';
+import { CategoryRisk } from '../../interfaces/risk.interface';
 import { ProjectService } from '../projects/project.service';
+import { MitigationAction } from '../../interfaces/mitigation.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,20 @@ import { ProjectService } from '../projects/project.service';
 export class RisksService {
   supabase: SupabaseClient = inject(SupabaseService).supabase;
   projectService = inject(ProjectService)
+
+  getProbabilityLabel(probability?: number): string | null {
+    return probability === 2 ? 'Alta'
+      : probability === 1 ? 'Media'
+        : probability === 0 ? 'Baja'
+          : null;
+  }
+
+  getImpactLabel(impact?: number): string | null {
+    return impact === 2 ? 'Alto'
+      : impact === 1 ? 'Medio'
+        : impact === 0 ? 'Bajo'
+          : null;
+  }
 
   async getRisksByCategory(): Promise<CategoryRisk[]> {
     const { data, error } = await this.supabase.from('categories').select(`
@@ -58,5 +73,35 @@ export class RisksService {
     if (error) {
       throw error;
     }
+  }
+
+  async updateRiskMitigation(mitigationData: MitigationAction) {
+
+    try {
+      const updateData = {
+        assignee: mitigationData.responsible,
+        action_type: mitigationData.actionType,
+        action_description: mitigationData.description,
+        action_goal: mitigationData.objective,
+        required_resources: mitigationData.requiredResources,
+        start_date: mitigationData.startDate,
+        end_date: mitigationData.endDate,
+        status: mitigationData.status,
+        priority: mitigationData.priority
+      };
+
+      const { data, error } = await this.supabase
+        .from('project_risks')
+        .update(updateData)
+        .eq('risk_id', mitigationData.riskId)
+        .eq('sprint_id', mitigationData.sprintId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data;
+
+    } catch (error) { throw error }
   }
 }

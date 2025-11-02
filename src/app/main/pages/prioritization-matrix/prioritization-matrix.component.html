@@ -58,49 +58,113 @@
       <h1 class="text-center content-center text-md font-semibold h-7">Impacto</h1>
     </span>
 
-    <div class="flex w-full gap-x-2">
-      <span class="flex justify-center items-center w-full h-7 rounded bg-green-400 ml-19 md:ml-20">
-        <h1 class="text-sm">Bajo</h1>
-      </span>
-      <span class="flex justify-center items-center w-full h-7 rounded bg-orange-300">
-        <h1 class="text-sm">Medio</h1>
-      </span>
-      <span class="flex justify-center items-center w-full h-7 rounded bg-red-400">
-        <h1 class="text-sm">Alto</h1>
-      </span>
-    </div>
+    @if (currentSprint.prioritizationTechnique === 'qualitative') {
+      <div class="flex w-full gap-x-2">
+        <span class="flex justify-center items-center w-full h-7 rounded bg-green-400 ml-19 md:ml-20">
+          <h1 class="text-sm">Bajo</h1>
+        </span>
+        <span class="flex justify-center items-center w-full h-7 rounded bg-orange-300">
+          <h1 class="text-sm">Medio</h1>
+        </span>
+        <span class="flex justify-center items-center w-full h-7 rounded bg-red-400">
+          <h1 class="text-sm">Alto</h1>
+        </span>
+      </div>
+    }
 
     <section class="flex gap-x-2 w-full h-full items-center">
       <span class="flex justify-center items-center w-7 h-full xl:h-[95%] border-2 rounded border-secondary-blue">
         <h1 class="-rotate-90 text-md font-semibold">Probabilidad</h1>
       </span>
 
-      <div class="flex flex-col gap-y-2 justify-center items-center w-10 h-full">
-        <span class="flex justify-center items-center h-full w-7 rounded  xl:mt-3 bg-green-400">
-          <h1 class="-rotate-90 text-sm">Baja</h1>
-        </span>
-        <span class="flex justify-center items-center h-full w-7 rounded bg-orange-300">
-          <h1 class="-rotate-90 text-sm">Media</h1>
-        </span>
-        <span class="flex justify-center items-center h-full w-7 rounded  xl:mb-3 bg-red-400">
-          <h1 class="-rotate-90 text-sm">Alta</h1>
-        </span>
-      </div>
+      @if (currentSprint.prioritizationTechnique === 'qualitative') {
+        <div class="flex flex-col gap-y-2 justify-center items-center w-10 h-full">
+          <span class="flex justify-center items-center h-full w-7 rounded  xl:mt-3 bg-green-400">
+            <h1 class="-rotate-90 text-sm">Baja</h1>
+          </span>
+          <span class="flex justify-center items-center h-full w-7 rounded bg-orange-300">
+            <h1 class="-rotate-90 text-sm">Media</h1>
+          </span>
+          <span class="flex justify-center items-center h-full w-7 rounded  xl:mb-3 bg-red-400">
+            <h1 class="-rotate-90 text-sm">Alta</h1>
+          </span>
+        </div>
+      }
 
       <!-- Grid -->
       <div class="grid grid-cols-3 grid-rows-3 gap-2 text-center xl:h-120 w-full h-full">
-        @for (i of [0,1,2]; track $index) {
-          @for (j of [0,1,2]; track $index) {
-            <article class="flex w-full min-w-full h-full flex-col border-2 rounded border-secondary-blue sm:p-2 gap-y-px overflow-auto">
-              @for (risk of riskMatrix[i][j]; track $index) {
-                <span title="{{ risk.category }}" class="text-xs m-1 lg:text-sm border rounded border-complementary-purple
-                  transition-transform duration-300 hover:scale-105"> {{ risk.risk }}
-                </span>
-              }
-            </article>
+        <article class="matrix-article bg-gray-500/20">
+          @for (risk of riskMatrix[0][0]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
           }
-        }
-
+        </article>
+        <article class="matrix-article bg-green-500/20">
+          @for (risk of riskMatrix[0][1]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-yellow-400/20">
+          @for (risk of riskMatrix[0][2]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-green-500/20">
+          @for (risk of riskMatrix[1][0]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-yellow-400/20">
+          @for (risk of riskMatrix[1][1]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-orange-600/20">
+          @for (risk of riskMatrix[1][2]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-yellow-400/20">
+          @for (risk of riskMatrix[2][0]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-orange-600/20">
+          @for (risk of riskMatrix[2][1]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
+        <article class="matrix-article bg-red-700/40">
+          @for (risk of riskMatrix[2][2]; track $index) {
+            <span (click)="goToMitigationForm(risk)" title="{{ 'Categoría: '+ risk.category+'\n'+'Ir a mitigación' }}" class="risk-text flex justify-evenly">
+              {{ risk.risk }}
+              <svg class="size-5 transition-transform hover:scale-105" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="655.359" height="655.359" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 6.827 6.827"><g id="Layer_x0020_1"><g id="_558164264"><path id="_558165008" class="fil0" d="M1.06.84h4.706a.207.207 0 0 1 .207.207v3.767a.206.206 0 0 1-.207.207H4.234l-.03-.053-.79-1.369-.791 1.37-.03.052H1.06a.206.206 0 0 1-.207-.207V1.047A.207.207 0 0 1 1.06.84zm4.7.213H1.067v3.755H2.47l.851-1.475.092-.16.092.16.852 1.475H5.76V1.053z"/><path id="_558164744" class="fil0" d="M1.007 1.59H5.82v.214H1.007z"/><circle id="_558164408" class="fil1" cx="1.432" cy="1.325" r=".158"/><circle id="_558164864" class="fil1" cx="1.962" cy="1.325" r=".158"/><circle id="_558164120" class="fil1" cx="2.492" cy="1.325" r=".158"/><path id="_558164384" class="fil0" d="m3.51 3.34 1.435 2.487-.092.053.092-.053a.107.107 0 0 1-.093.16H1.974a.107.107 0 0 1-.089-.167l1.436-2.487a.107.107 0 0 1 .188.007zm1.159 2.433L3.413 3.6 2.158 5.773h2.51z"/><path id="_558164360" class="fil0" d="M3.52 4.164a.107.107 0 0 0-.213 0v.997a.107.107 0 0 0 .213 0v-.997z"/><circle id="_558163952" class="fil1" cx="3.413" cy="5.451" r=".107"/></g></g><path style="fill:none" d="M0 0h6.827v6.827H0z"/></svg>
+            </span>
+          }
+        </article>
       </div>
     </section>
 

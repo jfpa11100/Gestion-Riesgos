@@ -7,6 +7,7 @@ import { HeaderComponent } from "../../../shared/components/layout/header/header
 import { SideMenuComponent } from "../../../shared/components/side-menu/side-menu.component";
 import { SearchBarComponent } from "../../../shared/components/search-bar/search-bar.component";
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { Risk } from '../../interfaces/risk.interface';
 
 @Component({
   selector: 'app-prioritization-list',
@@ -28,6 +29,7 @@ export class PrioritizationListComponent implements OnInit {
     sprint: 0,
     mitigation_date: new Date,
     risks: [],
+    available: true,
     created_at: new Date
   })
   categoriesList: string[] = []
@@ -53,9 +55,8 @@ export class PrioritizationListComponent implements OnInit {
       [...this.project()!.sprints].sort((a, b) => a.sprint - b.sprint)
     );
     this.route.queryParams.subscribe(params => {
-      params['sprint']
-        ? this.setCurrentSprint(this.sortedSprints()[params['sprint'] - 1])
-        : this.setCurrentSprint(this.sortedSprints()[0]);
+      let selectedSprint = this.sortedSprints().find(sp => sp.id === params['sprint'])
+      this.setCurrentSprint(selectedSprint || this.sortedSprints()[0]);
     })
     this.loading = false;
   }
@@ -79,5 +80,9 @@ export class PrioritizationListComponent implements OnInit {
   setCurrentSprint(sprint: Sprint) {
     this.currentSprint.set(sprint)
     this.categoriesList = ['', ...new Set(this.currentSprint()?.risks.map(risk => risk.category))]
+  }
+
+  goToMitigationForm(risk: Risk){
+      this.router.navigate(['project', this.project()!.id, 'list', 'mitigation'], { queryParams: { sprint: risk.sprintId, risk: risk.id }});
   }
 }

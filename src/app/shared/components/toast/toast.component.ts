@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-toast',
@@ -7,7 +7,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   templateUrl: './toast.component.html',
   styles: ``
 })
-export class ToastComponent implements OnInit {
+export class ToastComponent implements OnInit, AfterViewInit {
+  @ViewChildren('toast') toast!: QueryList<ElementRef>;
   @Input() title = '';
   @Input() message = '';
   @Input() type: 'success' | 'error' | 'info' | 'confirmation' = 'info';
@@ -24,8 +25,20 @@ export class ToastComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(){
+    // Scroll to the toast
+    const toastElement = this.toast.first.nativeElement;
+    if (toastElement) {
+      toastElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }
+
+
   confirm(confirmed: boolean){
-    if (confirmed) 
+    if (confirmed)
       this.confirmed.emit(confirmed);
     this.stopShowing.emit();
   }

@@ -1,0 +1,20 @@
+<div class="text-xs inline-flex rounded-xs bg-gray-100 p-0.5 w-full justify-evenly">
+  @if (!togglePermission && sprint.available || togglePermission) {
+    <button (click)="toggleState($event, true)" [attr.aria-pressed]="enabled === true"
+      class="w-full py-px rounded-xs transition focus:outline-none {{togglePermission ? 'cursor-pointer' : ''}}"
+      [ngClass]="enabled === true
+              ? 'bg-green-100 text-green-700 shadow-sm'
+              : 'text-gray-600 hover:bg-white'">
+      Habilitado
+    </button>
+  }
+  @if (!togglePermission && !sprint.available || togglePermission) {
+    <button (click)="toggleState($event, false)" type="button" [attr.aria-pressed]="enabled === false"
+      class="w-full py-px rounded-xs transition {{togglePermission ? 'cursor-pointer' : ''}} focus:outline-none"
+      [ngClass]="enabled === false
+              ? 'bg-red-100 text-red-700 shadow-sm'
+              : 'text-gray-600 hover:bg-white hover:border hover:border-red-200'">
+      Bloqueado
+    </button>
+  }
+</div>

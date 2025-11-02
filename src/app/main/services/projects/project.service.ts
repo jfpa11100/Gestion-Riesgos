@@ -110,4 +110,42 @@ export class ProjectService {
     const { error } = await this.supabase.from("project_sprints").update({prioritization_technique:technique}).eq("id", sprint.id)
     if (error) throw error;
   }
+
+  async inviteNewMembers(projectId: string, newMembers: string[]) {
+    const { data: project, error: fetchError } = await this.supabase
+      .from('projects')
+      .select('members')
+      .eq('id', projectId)
+      .single();
+    if (fetchError) throw fetchError;
+
+    // Combinar los miembros actuales con los nuevos (evitando duplicados)
+    const currentMembers: string[] = project.members || [];
+    const updatedMembers = Array.from(new Set([...currentMembers, ...newMembers]));
+
+    const { error: updateError } = await this.supabase
+      .from('projects')
+      .update({ members: updatedMembers })
+      .eq('id', projectId);
+
+    if (updateError) throw updateError;
+  }
+
+  async toggleSprintAvailability(sprintId:string, value:boolean){
+    const { error: updateError } = await this.supabase
+      .from('project_sprints')
+      .update({ available: value })
+      .eq('id', sprintId);
+
+    if (updateError) throw updateError;
+  }
+
+  async changeRiskAssignee(risk:Risk, assignee:string|null){
+    const { error: updateError } = await this.supabase
+      .from('project_risks')
+      .update({ assignee: assignee })
+      .eq('risk_id', risk.id).eq('sprint_id', risk.sprintId);
+
+    if (updateError) throw updateError;
+  }
 }
