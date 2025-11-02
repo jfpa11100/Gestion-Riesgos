@@ -1,8 +1,8 @@
 import { ActionPriority, ActionStatus, ActionType } from "../pages/mitigation-form/mitigation-form.component";
 
 export interface MitigationAction {
-    id?: string;
     riskId: string;
+    sprintId: string;
     actionType: ActionType;
     description: string;
     objective: string;
@@ -16,7 +16,7 @@ export interface MitigationAction {
     updatedAt?: string;
     createdBy?: string;
   }
-  
+
   export interface MitigationActionResponse {
     data: MitigationAction;
     message: string;

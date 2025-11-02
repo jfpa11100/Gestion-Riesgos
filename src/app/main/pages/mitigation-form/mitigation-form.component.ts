@@ -9,6 +9,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MitigationAction } from '../../interfaces/mitigation.interface';
 import { AuthService } from '../../../auth/services/auth.service';
+import { RisksService } from '../../services/risks/risks.service';
+import { ToastInterface } from '../../../shared/interfaces/toast.interface';
+import { ToastComponent } from '../../../shared/components/toast/toast.component';
+import { Sprint } from '../../interfaces/sprint.interface';
 
 export type ActionType = 'preventive' | 'corrective' | 'contingency' | 'transfer' | 'acceptance';
 export type ActionStatus = 'pending' | 'in_progress' | 'completed' | 'not_viable';
@@ -16,20 +20,24 @@ export type ActionPriority = 'high' | 'medium' | 'low';
 
 @Component({
   selector: 'app-mitigation-form',
-  imports: [SideMenuComponent, HeaderComponent, RouterLink, CommonModule, ReactiveFormsModule],
+  imports: [SideMenuComponent, HeaderComponent, RouterLink, CommonModule, ReactiveFormsModule, ToastComponent],
   templateUrl: './mitigation-form.component.html',
   styles: ``
 })
 export class MitigationFormComponent implements OnInit {
+  toast: ToastInterface = { show: false, title: '0', message: '', type: 'info' };
+  loading = true;
   comesFrom!: string;
   fb = inject(FormBuilder)
   projectService = inject(ProjectService)
+  riskService = inject(RisksService)
   route = inject(ActivatedRoute)
   router = inject(Router)
   authService = inject(AuthService)
 
   project!: WritableSignal<Project | null>
   risk!: Risk
+  sprint!: Sprint
   isSubmitting = signal(false);
   mitigationForm!: FormGroup;
   teamMembers: string[] = [];
@@ -82,18 +90,20 @@ export class MitigationFormComponent implements OnInit {
       }
     }
     this.route.queryParams.subscribe(params => {
-      this.risk = this.project()!.sprints.find(s => s.id === params['sprint'])?.risks.find(r => r.id === params['risk'])!
+      this.sprint = this.project()!.sprints.find(s => s.id === params['sprint'])!;
+      this.risk = this.sprint.risks.find(r => r.id === params['risk'])!
     })
 
     const ownerEmail = await this.authService.getUserEmailById(this.project()!.owner);
     this.teamMembers.push(ownerEmail)
     for (const memberEmail of this.project()?.members!) {
-      if (await this.authService.userExists(memberEmail)){
+      if (await this.authService.userExists(memberEmail)) {
         this.teamMembers.push(memberEmail)
       }
     }
 
     this.initializeForm();
+    this.loading = false;
   }
 
 
@@ -105,14 +115,14 @@ export class MitigationFormComponent implements OnInit {
     const defaultEndDate = nextMonth.toISOString().split('T')[0];
 
     this.mitigationForm = this.fb.group({
-      actionType: ['preventive', Validators.required],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      objective: ['', [Validators.required, Validators.minLength(5)]],
-      responsible: ['', Validators.required],
-      requiredResources: [[], Validators.required],
-      startDate: [today, Validators.required],
-      endDate: [defaultEndDate, Validators.required],
-      status: ['pending', Validators.required],
+      actionType: [this.risk.action_type || 'preventive', Validators.required],
+      description: [this.risk.action_description, [Validators.required, Validators.minLength(10)]],
+      objective: [this.risk.action_goal, [Validators.required, Validators.minLength(5)]],
+      responsible: [this.risk.assignee, Validators.required],
+      requiredResources: [this.risk.required_resources || [], Validators.required],
+      startDate: [this.risk.start_date || today, Validators.required],
+      endDate: [this.risk.end_date || defaultEndDate, Validators.required],
+      status: [this.risk.status, Validators.required],
       priority: [automaticPriority, Validators.required]
     });
   }
@@ -175,27 +185,51 @@ export class MitigationFormComponent implements OnInit {
     try {
       const mitigationAction: MitigationAction = {
         riskId: this.risk.id,
+        sprintId: this.risk.sprintId,
         ...this.mitigationForm.value
       };
 
-      // Aquí harías la llamada a tu servicio para guardar la acción de mitigación
-      // await this.mitigationService.createAction(mitigationAction);
+      const riskUpdated = await this.riskService.updateRiskMitigation(mitigationAction);
+      this.toast = {
+        show: true,
+        title: 'Mitigación creada',
+        message: 'La acción de mitigación se ha creado exitosamente.',
+        type: 'success',
+        timeout: 2000
+      };
 
-      console.log('Mitigation action to save:', mitigationAction);
+      this.project.update(project => {
+        if (!project) return project;
+        return {
+          ...project,
+          sprints: project.sprints.map(sprint =>
+            sprint.id === riskUpdated.sprintId
+              ? {
+                ...sprint,
+                risks: sprint.risks.map(risk =>
+                  risk.id === riskUpdated.id ? { ...risk, ...riskUpdated } : risk
+                )
+              }
+              : sprint
+          )
+        };
+      });
 
-      // Simular llamada API
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      // TODO: Show toast success
+      console.log('Mitigation action created:', this.project()!.sprints);
 
       // Redirigir después de mostrar el mensaje
-      // setTimeout(() => {
-      //   this.router.navigate([`/projects/${this.project()!.id}/risks`]);
-      // }, 2000);
+      setTimeout(() => {
+        this.router.navigate([`/project/${this.project()!.id}`]);
+      }, 2000);
 
     } catch (error) {
-      console.error('Error saving mitigation action:', error);
-      // Aquí mostrarías un toast de error
+      this.toast = {
+        show: true,
+        title: 'Error al crear la mitigación',
+        message: 'Intenta de nuevo más tarde',
+        type: 'error',
+        timeout: 2000
+      }
     } finally {
       this.isSubmitting.set(false);
     }
@@ -217,6 +251,7 @@ export class MitigationFormComponent implements OnInit {
 
   // Helper methods para el template
   hasError(field: string): boolean {
+    if (this.loading) return false;
     const control = this.mitigationForm.get(field);
     return !!(control && control.invalid && control.touched);
   }

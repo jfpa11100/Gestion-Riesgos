@@ -22,9 +22,13 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="m1 9 4-4-4-4" />
             </svg>
+            @if (loading){
+
+            } @else {
             <a [routerLink]="['/project', project()!.id]"
               class="ms-1 text-xs md:text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">{{project()!.name
               }}</a>
+            }
           </div>
         </li>
         <li>
@@ -34,8 +38,13 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="m1 9 4-4-4-4" />
             </svg>
+            @if (loading) {
+
+            } @else {
             <a [routerLink]="['/project', project()!.id, comesFrom]" [queryParams]="{ sprint: risk.sprintId }"
-              class="ms-1 text-xs md:text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">Priorización</a>
+              class="ms-1 text-xs md:text-sm font-medium cursor-pointer hover:text-complementary-purple md:ms-2">
+              Priorización</a>
+            }
           </div>
         </li>
         <li>
@@ -45,7 +54,8 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="m1 9 4-4-4-4" />
             </svg>
-            <a class="ms-1 text-xs md:text-sm font-medium text-white-letter hover:text-complementary-purple md:ms-2">Formulario de
+            <a class="ms-1 text-xs md:text-sm font-medium text-white-letter hover:text-complementary-purple md:ms-2">Formulario
+              de
               mitigación</a>
           </div>
         </li>
@@ -56,8 +66,9 @@
         <h1 class="text-3xl font-medium xt-gray-900">Plan de Mitigación del Riesgo</h1>
         <p class="text-white-letter">Define las acciones necesarias para reducir o eliminar el riesgo identificado.</p>
       </div>
-  
+
       <!-- Risk Info Card -->
+      @if (!loading) {
       <div class="bg-white rounded-sm shadow-sm border border-white-letter/60 p-[1lh]">
         <div class="flex items-start justify-between">
           <div class="flex-1 space-y-2">
@@ -72,29 +83,33 @@
                 {{ getRiskLevelText() }}
               </span>
               <p class="text-sm text-white-letter">
-                Impacto: <span class="font-medium">{{ risk.impact }}</span>
+                Impacto: <span class="font-medium">{{ sprint.prioritizationTechnique === 'qualitative' ? riskService.getImpactLabel(risk.impact) : risk.impact }}</span>
               </p>
               <p class="text-sm text-white-letter">
-                Probabilidad: <span class="font-medium">{{ risk.probability }}</span>
+                Probabilidad: <span class="font-medium">{{ sprint.prioritizationTechnique === 'qualitative' ? riskService.getProbabilityLabel(risk.probability) : risk.probability }}</span>
               </p>
             </div>
           </div>
         </div>
       </div>
-  
+      }
+
       <!-- Form -->
+      @if (loading) {
+
+      } @else {
       <form [formGroup]="mitigationForm" class="space-y-6">
-  
+
         <!-- Main Form Card -->
         <div class="bg-white rounded-sm shadow-sm border border-white-letter/60">
-  
+
           <!-- Form Header -->
           <div class="px-6 py-4 border-b border-white-letter/60">
             <h2 class="text-lg font-medium">Detalles de la Acción</h2>
           </div>
-  
+
           <div class="p-6 space-y-6">
-  
+
             <!-- Action Type -->
             <div class="space-y-2">
               <label class="block text-sm font-medium">
@@ -102,100 +117,106 @@
               </label>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 @for (type of actionTypes; track $index) {
-                  <label class="relative flex cursor-pointer rounded-sm border p-4 focus:outline-none transition-all duration-200
-                    {{ mitigationForm.get('actionType')?.value === type.value ? 'border-complementary-purple bg-complementary-purple/20' 
-                    : 'border-white-letter hover:border-white-letter' }}">
-                    <input type="radio" formControlName="actionType" [value]="type.value" class="sr-only">
-                    <div class="flex-1">
-                      <div class="flex items-center">
-                        <div class="text-sm">
-                          <p class="font-medium {{ mitigationForm.get('actionType')?.value === type.value ? 'text-complementary-purple' : '' }} ">
-                            {{ type.label }}
-                          </p>
-                          <p class="text-xs {{ mitigationForm.get('actionType')?.value === type.value ? 
-                          'text-complementary-purple' : 'text-white-letter' }} ">
-                            {{ type.description }}
-                          </p>
-                        </div>
+                <label class="relative flex cursor-pointer rounded-sm border p-4 focus:outline-none transition-all duration-200
+                       {{ mitigationForm.get('actionType')?.value === type.value ? 'border-complementary-purple bg-complementary-purple/20'
+                       : 'border-white-letter hover:border-white-letter' }}">
+                  <input type="radio" formControlName="actionType" [value]="type.value" class="sr-only">
+                  <div class="flex-1">
+                    <div class="flex items-center">
+                      <div class="text-sm">
+                        <p
+                          class="font-medium {{ mitigationForm.get('actionType')?.value === type.value ? 'text-complementary-purple' : '' }} ">
+                          {{ type.label }}
+                        </p>
+                        <p class="text-xs {{ mitigationForm.get('actionType')?.value === type.value ?
+                             'text-complementary-purple' : 'text-white-letter' }} ">
+                          {{ type.description }}
+                        </p>
                       </div>
                     </div>
-                    @if (mitigationForm.get('actionType')?.value === type.value) {
-                      <svg class="size-4 text-complementary-purple" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"clip-rule="evenodd" />
-                      </svg>
-                    }
-                  </label> 
+                  </div>
+                  @if (mitigationForm.get('actionType')?.value === type.value) {
+                  <svg class="size-4 text-complementary-purple" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  }
+                </label>
                 }
               </div>
               @if (hasError('actionType')) {
-                <p class="mt-1 text-sm text-red-600">
-                  {{ getErrorMessage('actionType') }}
-                </p>
+              <p class="mt-1 text-sm text-red-600">
+                {{ getErrorMessage('actionType') }}
+              </p>
               }
             </div>
-  
+
             <!-- Description -->
             <div class="space-y-2">
               <label for="description" class="block text-sm font-medium">
                 Descripción de la Acción <span class="text-red-600">*</span>
               </label>
-              <textarea formControlName="description" class="text-sm w-full px-3 py-2 border rounded-sm shadow-sm 
-                focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple 
-                transition-colors min-h-30 max-h-70 {{ hasError('description') ? 'border-red-300' : 'border-white-letter' }} "
+              <textarea formControlName="description"
+                class="text-sm w-full px-3 py-2 border rounded-sm shadow-sm
+                   focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple
+                   transition-colors min-h-30 max-h-70 {{ hasError('description') ? 'border-red-300' : 'border-white-letter' }} "
                 placeholder="Describe detalladamente qué se hará para reducir el riesgo o su impacto...">
-              </textarea>
-              @if (mitigationForm.get('description')?.value?.length < 10) {
-                <p class="mt-1 text-xs text-white-letter">
-                  {{ mitigationForm.get('description')?.value?.length || 0 }} caracteres (mínimo 10)
+                 </textarea>
+              @if (loading) {
+
+              } @else {
+              @if (mitigationForm.get('description')?.value?.length < 10) { <p class="mt-1 text-xs text-white-letter">
+                {{ mitigationForm.get('description')?.value?.length || 0 }} caracteres (mínimo 10)
                 </p>
-              }
-              @if (hasError('description')) {
+                }
+                @if (hasError('description')) {
                 <p class="mt-1 text-sm text-red-600">
                   {{ getErrorMessage('description') }}
                 </p>
-              }
+                }
+                }
             </div>
-  
+
             <!-- Objective -->
             <div class="space-y-2">
               <label for="objective" class="block text-sm font-medium">
                 Objetivo de la Acción <span class="text-red-600">*</span>
               </label>
-              <input id="objective" type="text" formControlName="objective" class="text-sm w-full px-3 py-2 border rounded-sm 
-                shadow-sm focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple
-                transition-colors {{ hasError('objective') ? 'border-red-300' : 'border-white-letter' }} "
+              <input id="objective" type="text" formControlName="objective" class="text-sm w-full px-3 py-2 border rounded-sm
+                   shadow-sm focus:outline-none focus:ring-1 focus:ring-complementary-purple focus:border-complementary-purple
+                   transition-colors {{ hasError('objective') ? 'border-red-300' : 'border-white-letter' }} "
                 placeholder='Ej: "Reducir el impacto en la planificación del sprint"'>
               <p class="mt-1 text-xs text-white-letter">
                 Breve frase que indique el resultado esperado
               </p>
               @if (hasError('objective')) {
-                <p class="mt-1 text-sm text-red-600">
-                  {{ getErrorMessage('objective') }}
-                </p>
+              <p class="mt-1 text-sm text-red-600">
+                {{ getErrorMessage('objective') }}
+              </p>
               }
             </div>
-  
+
             <!-- Responsible -->
             <div class="space-y-2">
               <label for="responsible" class="block text-sm font-medium">
                 Responsable <span class="text-red-600">*</span>
               </label>
-              <select formControlName="responsible"
-                class="text-sm w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1 
-                focus:ring-complementary-purple focus:border-complementary-purple transition-colors
-                {{ hasError('responsible') ? 'border-red-300' : 'border-white-letter' }}">
+              <select formControlName="responsible" class="text-sm w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1
+                   focus:ring-complementary-purple focus:border-complementary-purple transition-colors
+                   {{ hasError('responsible') ? 'border-red-300' : 'border-white-letter' }}">
                 <option value="">Selecciona un miembro del equipo</option>
                 @for (memberEmail of teamMembers; track $index) {
-                  <option value="{{ memberEmail }}">{{ memberEmail }}</option>
+                <option value="{{ memberEmail }}">{{ memberEmail }}</option>
                 }
               </select>
               @if (hasError('responsible')) {
-                <p class="mt-1 text-sm text-red-600">
-                  {{ getErrorMessage('responsible') }}
-                </p>
+              <p class="mt-1 text-sm text-red-600">
+                {{ getErrorMessage('responsible') }}
+              </p>
               }
             </div>
-  
+
             <!-- Required Resources -->
             <div class="space-y-2">
               <label class="block text-sm font-medium">
@@ -203,30 +224,29 @@
               </label>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                 @for (resource of resourceOptions; track $index) {
-                  <button (click)="toggleResource(resource.value)" class="flex items-center justify-center px-4 py-3 border-2 
-                    rounded-sm text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-1
-                    focus:ring-complementary-purple {{ isResourceSelected(resource.value) ? 'border-complementary-purple bg-complementary-purple/20 text-complementary-purple' : 
-                    'border-white-letter hover:border-white-letter' }}">
-                    <span class="mr-2">{{ resource.icon }}</span>
-                    {{ resource.label }}
-                    @if (isResourceSelected(resource.value)) {
-                      <svg class="ml-2 h-4 w-4" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clip-rule="evenodd" />
-                      </svg>
-                    }
-                  </button>
+                <button (click)="toggleResource(resource.value)" class="flex items-center justify-center px-4 py-3 border-2
+                       rounded-sm text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-1
+                       focus:ring-complementary-purple {{ isResourceSelected(resource.value) ? 'border-complementary-purple bg-complementary-purple/20 text-complementary-purple' :
+                       'border-white-letter hover:border-white-letter' }}">
+                  <span class="mr-2">{{ resource.icon }}</span>
+                  {{ resource.label }}
+                  @if (isResourceSelected(resource.value)) {
+                  <svg class="ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  }
+                </button>
                 }
               </div>
               @if (hasError('requiredResources')) {
-                <p class="mt-2 text-sm text-red-600">
-                  {{ getErrorMessage('requiredResources') }}
-                </p>
+              <p class="mt-2 text-sm text-red-600">
+                {{ getErrorMessage('requiredResources') }}
+              </p>
               }
             </div>
-  
+
             <!-- Dates -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-2">
@@ -240,23 +260,22 @@
                   {{ getErrorMessage('startDate') }}
                 </p>
               </div>
-  
+
               <div class="space-y-2">
                 <label for="endDate" class="block text-sm font-medium">
                   Fecha de Finalización <span class="text-red-600">*</span>
                 </label>
-                <input id="endDate" type="date" formControlName="endDate" (change)="validateDates()"
-                  class="w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1
-                   focus:ring-complementary-purple focus:border-complementary-purple transition-colors
-                   {{ hasError('endDate') ? 'border-red-300' : 'border-white-letter' }}">
-                  @if (hasError('endDate')) {
-                    <p class="mt-1 text-sm text-red-600">
-                      {{ getErrorMessage('endDate') }}
-                    </p>
-                  }
+                <input id="endDate" type="date" formControlName="endDate" (change)="validateDates()" class="w-full px-3 py-2 border rounded-sm shadow-sm focus:outline-none focus:ring-1
+                      focus:ring-complementary-purple focus:border-complementary-purple transition-colors
+                      {{ hasError('endDate') ? 'border-red-300' : 'border-white-letter' }}">
+                @if (hasError('endDate')) {
+                <p class="mt-1 text-sm text-red-600">
+                  {{ getErrorMessage('endDate') }}
+                </p>
+                }
               </div>
             </div>
-  
+
             <!-- Status and Priority -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="space-y-2">
@@ -271,7 +290,7 @@
                   </option>
                 </select>
               </div>
-  
+
               <div class="space-y-2">
                 <label for="priority" class="block text-sm font-medium">
                   Prioridad <span class="text-red-600">*</span>
@@ -289,35 +308,37 @@
                 </p>
               </div>
             </div>
-  
+
           </div>
         </div>
-  
+
         <!-- Form Actions -->
         <div class="flex items-center gap-x-2 justify-end">
-            <button type="button" (click)="onCancel()"
-              class="btn-secondary px-3 py-1">
-              Cancelar
-            </button>
+          <button type="button" (click)="onCancel()" class="btn-secondary px-3 py-1">
+            Cancelar
+          </button>
 
-  
-            <button (click)="onSubmit()" [disabled]="isSubmitting()" class="btn-primary px-3 py-1 focus:ring-offset-2 
-              disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
-              @if (isSubmitting()) {
-                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              }@else {
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-              }
-              {{ isSubmitting() ? 'Guardando...' : 'Crear Plan' }}
-            </button>
-          </div>  
+
+          <button (click)="onSubmit()" [disabled]="isSubmitting()" class="btn-primary px-3 py-1 focus:ring-offset-2
+                 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center">
+            @if (isSubmitting()) {
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+            }@else {
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            }
+            {{ isSubmitting() ? 'Guardando...' : 'Crear Plan' }}
+          </button>
+        </div>
       </form>
-  
+      }
+
       <!-- Help Section -->
       <div class=" bg-complementary-purple/20 border border-complementary-purple/30 rounded-sm p-6">
         <div class="flex">
@@ -344,7 +365,9 @@
         </div>
       </div>
     </section>
-
-
-
   </section>
+
+  @if (toast.show) {
+  <app-toast [title]="toast.title" [message]="toast.message" [type]="toast.type" [timeout]="toast.timeout!"
+    (stopShowing)="toast.show = false" />
+  }
